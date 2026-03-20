@@ -283,7 +283,7 @@
       box-shadow: 0 20px 30px -10px #00000080;
     }
 
-    /* ===== FOCUS AREAS (no logo placeholder) ===== */
+    /* focus areas */
     .focus-header {
       text-align: center;
       margin-bottom: 3rem;
@@ -332,6 +332,66 @@
       line-height: 1.4;
     }
 
+    /* careers section */
+    .careers-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .career-card {
+      background: #151515;
+      border-radius: 30px;
+      padding: 2rem;
+      width: 320px;
+      transition: var(--transition);
+      border: 1px solid #2d2d2d;
+      text-align: center;
+    }
+    .career-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 30px 30px -10px rgba(255,255,255,0.1), 0 0 0 1px white;
+    }
+    .career-card i {
+      font-size: 3rem;
+      color: white;
+      margin-bottom: 1.5rem;
+    }
+    .career-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+    .career-card p {
+      color: #aaa;
+      margin-bottom: 0.5rem;
+    }
+    .career-card .location {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 1rem;
+    }
+    .career-card .description {
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+    .career-card .btn-sm {
+      display: inline-block;
+      padding: 0.6rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      text-decoration: none;
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      transition: var(--transition);
+    }
+    .career-card .btn-sm:hover {
+      background: white;
+      color: #0a0a0a;
+    }
+
     /* projects */
     .coming-soon-block {
       text-align: center;
@@ -346,7 +406,7 @@
       text-shadow: 0 0 30px rgba(255,255,255,0.4);
     }
 
-    /* CONTACT SECTION – centered card */
+    /* contact */
     .contact-section {
       display: flex;
       flex-direction: column;
@@ -481,6 +541,9 @@
       .focus-card {
         width: 260px;
       }
+      .career-card {
+        width: 280px;
+      }
     }
     @media (max-width: 600px) {
       .hero-btns {
@@ -490,7 +553,8 @@
       .container {
         padding: 0 1.2rem;
       }
-      .focus-card {
+      .focus-card,
+      .career-card {
         width: 100%;
         max-width: 360px;
       }
@@ -513,6 +577,7 @@
         <a href="#about">About</a>
         <a href="#focus">Focus Areas</a>
         <a href="#projects">Projects</a>
+        <a href="#careers">Careers</a>
         <a href="#contact">Contact</a>
         <a href="#contact" class="nav-cta">Partner With Us</a>
       </div>
@@ -566,7 +631,7 @@
     </div>
   </section>
 
-  <!-- FOCUS AREAS (logo placeholder removed) -->
+  <!-- FOCUS AREAS -->
   <section id="focus" class="fade-section">
     <div class="container">
       <h2 class="focus-header">Focus <span class="accent">Areas</span></h2>
@@ -601,6 +666,53 @@
     </div>
   </section>
 
+  <!-- CAREERS SECTION (updated with mailto links and Hardware Engineer role) -->
+  <section id="careers" class="fade-section">
+    <div class="container">
+      <h2 style="text-align: center;">Join the <span class="accent">Team</span></h2>
+      <p style="text-align: center; max-width: 700px; margin: 0 auto 3rem auto; color: #aaa; font-size: 1.2rem;">
+        Be part of a forward-thinking team shaping the future of immersive technology. We're looking for passionate individuals to help us build extraordinary experiences.
+      </p>
+      <div class="careers-grid">
+        <!-- XR Developer -->
+        <div class="career-card">
+          <i class="fas fa-vr-cardboard"></i>
+          <h3>XR Developer</h3>
+          <p class="location">Full-time · Chennai, India</p>
+          <p class="description">Build immersive VR/AR experiences with Unity/Unreal. Strong C#/C++ skills required.</p>
+          <a href="mailto:careers@thazhamvr.com?subject=Application%20for%20XR%20Developer%20Role" class="btn-sm">Apply Now</a>
+        </div>
+        <!-- 3D Artist -->
+        <div class="career-card">
+          <i class="fas fa-paintbrush-fine"></i>
+          <h3>3D Artist</h3>
+          <p class="location">Full-time · Chennai, India</p>
+          <p class="description">Create high-quality 3D assets, environments, and animations for VR projects.</p>
+          <a href="mailto:careers@thazhamvr.com?subject=Application%20for%203D%20Artist%20Role" class="btn-sm">Apply Now</a>
+        </div>
+        <!-- Frontend Engineer -->
+        <div class="career-card">
+          <i class="fas fa-code"></i>
+          <h3>Frontend Engineer</h3>
+          <p class="location">Full-time · Remote</p>
+          <p class="description">Develop web-based interfaces for our VR platforms. React/Three.js experience a plus.</p>
+          <a href="mailto:careers@thazhamvr.com?subject=Application%20for%20Frontend%20Engineer%20Role" class="btn-sm">Apply Now</a>
+        </div>
+        <!-- Hardware Engineer (new) -->
+        <div class="career-card">
+          <i class="fas fa-microchip"></i>
+          <h3>Hardware Engineer</h3>
+          <p class="location">Full-time · Chennai, India</p>
+          <p class="description">Design and test VR hardware prototypes, PCB design, and embedded systems.</p>
+          <a href="mailto:careers@thazhamvr.com?subject=Application%20for%20Hardware%20Engineer%20Role" class="btn-sm">Apply Now</a>
+        </div>
+      </div>
+      <p style="text-align: center; margin-top: 3rem; color: #888;">
+        Don't see a role that fits? <a href="mailto:careers@thazhamvr.com?subject=General%20Application" style="color: white;">Send us your resume</a> and we'll keep you in mind.
+      </p>
+    </div>
+  </section>
+
   <!-- PROJECTS SECTION -->
   <section id="projects" class="fade-section">
     <div class="container">
@@ -612,14 +724,14 @@
     </div>
   </section>
 
-  <!-- CONTACT SECTION – centered card, mailto link, location updated -->
+  <!-- CONTACT SECTION -->
   <section id="contact" class="fade-section contact-section">
     <div class="container" style="display: flex; flex-direction: column; align-items: center;">
       <h2 style="text-align: center; width: 100%;">Contact <span class="accent">Us</span></h2>
       <div class="contact-card">
         <div style="font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem;">Thazham VR</div>
         <div style="color: #ccc; font-size: 1.3rem; margin-bottom: 2rem;">Chennai, Tamil Nadu, India</div>
-        <div class="contact-item"><i class="fas fa-phone-alt"></i> 9894866586  |  8838715160</div>
+        <div class="contact-item"><i class="fas fa-phone-alt"></i> 9894866586  |  8838715160</div>
         <div class="contact-item">
           <i class="fas fa-envelope"></i>
           <a href="mailto:info@thazhamvr.com">info@thazhamvr.com</a>
@@ -645,6 +757,7 @@
           <a href="#about">About</a>
           <a href="#focus">Focus Areas</a>
           <a href="#projects">Projects</a>
+          <a href="#careers">Careers</a>
           <a href="#contact">Contact</a>
         </div>
       </div>
