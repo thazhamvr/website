@@ -565,270 +565,403 @@
   </style>
 </head>
 <body>
-  <!-- STICKY HEADER with logo icon -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="logo">
-        <img src="thazham-logo.png" alt="Thazham VR" style="height: 40px; width: auto;">
-        THAZHAM <span>VR</span>
-      </div>
-      <div class="menu-toggle"><i class="fas fa-bars"></i></div>
-      <div class="nav-links">
-        <a href="#about">About</a>
-        <a href="#focus">Focus Areas</a>
-        <a href="#projects">Projects</a>
-        <a href="#careers">Careers</a>
-        <a href="#contact">Contact</a>
-        <a href="#contact" class="nav-cta">Partner With Us</a>
-      </div>
-    </div>
-  </nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-content container">
-      <h1>Reimagining Culture, Education and Heritage Through Virtual Reality</h1>
-      <p class="hero-sub">Thazham VR is an immersive technology company focused on preserving knowledge, transforming education, and creating innovative experiences through Virtual Reality.</p>
-      <div class="hero-btns">
-        <a href="#" class="btn btn-primary">Explore Our Work</a>
-        <a href="#contact" class="btn btn-outline">Partner With Us</a>
-      </div>
-    </div>
-  </section>
+<div class="scroll-progress" id="scrollProgress"></div>
 
-  <!-- STATS ROW -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo">
+      <img src="thazham-logo.png" alt="Thazham VR logo" onerror="this.style.display='none'">
+      THAZHAM <span>VR</span>
+    </div>
+    <button class="menu-toggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#demos">Demos</a>
+      <a href="#focus">Focus Areas</a>
+      <a href="#projects">Projects</a>
+      <a href="#careers">Careers</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="nav-cta">Partner With Us</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="metadata"></video>
+  <div class="hero-scrim"></div>
+  <div class="hero-content container">
+    <span class="eyebrow"><span class="dot"></span> <span data-field="hero.eyebrow">Immersive Technology Studio · Chennai, India</span></span>
+    <h1 data-field="hero.title">Reimagining Culture, Education &amp; Heritage Through Virtual Reality</h1>
+    <p class="hero-sub" data-field="hero.subtitle">Thazham VR is an immersive technology company focused on preserving knowledge, transforming education, and creating innovative experiences through Virtual Reality.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary" id="showreelBtn"><i class="fas fa-play"></i> Watch Showreel</button>
+      <a href="#demos" class="btn btn-outline">Explore Demos</a>
+      <a href="#contact" class="btn btn-outline">Partner With Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="container">
+  <div class="stats-row fade-section" id="statsRow"></div>
+</div>
+
+<!-- PARTNERS -->
+<section class="partners fade-section" aria-label="Collaborating partners">
+  <div class="container"><p class="partners-title" data-field="partners.title">Collaborating With</p></div>
+  <div class="marquee"><div class="marquee-track" id="marqueeRow1"></div></div>
+  <div class="marquee"><div class="marquee-track reverse" id="marqueeRow2"></div></div>
+</section>
+
+<!-- DEMOS -->
+<section id="demos" class="fade-section">
   <div class="container">
-    <div class="stats-row fade-section">
-      <div class="stat-item">
-        <div class="stat-highlight">3+</div>
-        <div class="stat-label">Active Projects</div>
+    <div class="section-head">
+      <h2>Video <span class="accent">Demos</span></h2>
+      <p>Step inside our immersive builds. Click any card to play a walkthrough of the experience.</p>
+    </div>
+    <div class="video-grid" id="demosGrid"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="fade-section">
+  <div class="container">
+    <h2><span data-field="about.heading">About Thazham VR</span></h2>
+    <div class="about-grid">
+      <div>
+        <p style="font-size:1.32rem;color:#ddd;margin-bottom:1.8rem;" data-field="about.lead"></p>
+        <p style="color:#a5a5a5;font-size:1.02rem;" data-field="about.body"></p>
       </div>
-      <div class="stat-item">
-        <div class="stat-highlight">VR / AR</div>
-        <div class="stat-label">Technology Focus</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-highlight">Immersive</div>
-        <div class="stat-label">Experience Design</div>
+      <div class="vision-card">
+        <h3 data-field="about.visionTitle">Our Vision</h3>
+        <p data-field="about.visionText"></p>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- ABOUT SECTION -->
-  <section id="about" class="fade-section">
-    <div class="container">
-      <h2>About <span class="accent">Thazham VR</span></h2>
-      <div class="about-grid">
-        <div>
-          <p style="font-size: 1.4rem; color: #dddddd; margin-bottom: 2rem;">Thazham VR is an immersive technology company dedicated to preserving knowledge systems and redefining how people learn, explore, and experience culture.</p>
-          <p style="color: #aaa;">We believe technology should enhance heritage rather than replace it. Through Virtual Reality, 3D production, and immersive design, we create digital ecosystems that connect the past, present, and future.</p>
-        </div>
-        <div class="vision-card">
-          <h3 style="color: white; margin-bottom: 1.2rem;">Our Vision</h3>
-          <p style="font-size: 1.25rem; color: #ccc;">To become a global leader in immersive cultural and educational technology by making knowledge systems accessible through experiential digital platforms.</p>
-        </div>
+<!-- FOCUS -->
+<section id="focus" class="fade-section">
+  <div class="container">
+    <div class="section-head">
+      <h2><span data-field="focus.title">Focus Areas</span></h2>
+      <p data-field="focus.subtitle">Five pillars that shape everything we build.</p>
+    </div>
+    <div class="focus-grid" id="focusGrid"></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="fade-section">
+  <div class="container">
+    <div class="section-head"><h2><span class="accent">Projects</span></h2></div>
+    <div class="coming-soon-block">
+      <h3 data-field="projects.title">Coming Soon</h3>
+      <p style="font-size:1.28rem;color:#a5a5a5;max-width:620px;margin:1.6rem auto 0;" data-field="projects.text"></p>
+    </div>
+  </div>
+</section>
+
+<!-- CAREERS -->
+<section id="careers" class="fade-section">
+  <div class="container">
+    <div class="section-head">
+      <h2><span data-field="careers.heading">Join the Team</span></h2>
+      <p data-field="careers.intro"></p>
+    </div>
+    <div class="careers-grid" id="careersGrid"></div>
+    <p style="text-align:center;margin-top:3rem;color:#8a8a8a;">
+      <span data-field="careers.outro"></span>
+      <a href="mailto:careers@thazhamvr.com?subject=General%20Application" style="color:#fff;">Send us your resume</a>
+    </p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="fade-section contact-section">
+  <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+    <h2 style="text-align:center;width:100%;">Contact <span class="accent">Us</span></h2>
+    <div class="contact-card">
+      <div style="font-size:2rem;font-weight:800;margin-bottom:.4rem;" data-field="contact.company"></div>
+      <div style="color:#c4c4c4;font-size:1.18rem;margin-bottom:1.8rem;" data-field="contact.location"></div>
+      <div class="contact-item"><i class="fas fa-phone-alt"></i> <span id="contactPhones"></span></div>
+      <div class="contact-item"><i class="fas fa-envelope"></i> <a id="contactEmail" href="#"></a></div>
+      <div style="margin-top:2.2rem;border-top:1px solid #2e2e2e;padding-top:1.6rem;color:#a5a5a5;">
+        <i class="fas fa-map-marker-alt" style="color:#fff;margin-right:.7rem;"></i><span data-field="contact.address"></span>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOCUS AREAS -->
-  <section id="focus" class="fade-section">
-    <div class="container">
-      <h2 class="focus-header">Focus <span class="accent">Areas</span></h2>
-
-      <div class="focus-grid">
-        <div class="focus-card">
-          <div class="card-img"><i class="fas fa-landmark"></i></div>
-          <h3>Immersive Heritage Museums</h3>
-          <p>Interactive VR environments allowing users to explore historical spaces.</p>
-        </div>
-        <div class="focus-card">
-          <div class="card-img"><i class="fas fa-archive"></i></div>
-          <h3>Digital Cultural Archive</h3>
-          <p>3D documentation and immersive preservation of artifacts and traditional knowledge.</p>
-        </div>
-        <div class="focus-card">
-          <div class="card-img"><i class="fas fa-graduation-cap"></i></div>
-          <h3>VR Education Modules</h3>
-          <p>Experience-based learning simulations designed for immersive classrooms.</p>
-        </div>
-        <div class="focus-card">
-          <div class="card-img"><i class="fas fa-vr-cardboard"></i></div>
-          <h3>Custom VR Hardware</h3>
-          <p>VR systems designed for educational and training environments.</p>
-        </div>
-        <div class="focus-card">
-          <div class="card-img"><i class="fas fa-cubes"></i></div>
-          <h3>VR & 3D Production</h3>
-          <p>VR application development, 3D environments, and immersive studios.</p>
-        </div>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">THAZHAM <span>VR</span></div>
+      <p style="margin:1.1rem 0 1.8rem;color:#9a9a9a;max-width:300px;" data-field="footer.tagline"></p>
+      <p style="color:#5f5f5f;" data-field="footer.copyright"></p>
+    </div>
+    <div>
+      <h4 style="color:#fff;margin-bottom:1.4rem;">Explore</h4>
+      <div class="footer-links">
+        <a href="#about">About</a><a href="#demos">Demos</a><a href="#focus">Focus Areas</a>
+        <a href="#projects">Projects</a><a href="#careers">Careers</a><a href="#contact">Contact</a>
       </div>
     </div>
-  </section>
+    <div class="footer-contact">
+      <h4 style="color:#fff;margin-bottom:1.4rem;">Connect</h4>
+      <p><i class="fas fa-phone" style="width:1.6rem;color:#fff;"></i> <span id="footerPhones"></span></p>
+      <p><i class="fas fa-envelope" style="color:#fff;width:1.6rem;"></i> <a id="footerEmail" href="#"></a></p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>Built with immersive intent in Chennai, India.</span>
+    <span>Thazham VR — Immersive Technology Studio</span>
+  </div>
+</footer>
 
-  <!-- CAREERS SECTION (updated with mailto links and Hardware Engineer role) -->
-  <section id="careers" class="fade-section">
-    <div class="container">
-      <h2 style="text-align: center;">Join the <span class="accent">Team</span></h2>
-      <p style="text-align: center; max-width: 700px; margin: 0 auto 3rem auto; color: #aaa; font-size: 1.2rem;">
-        Be part of a forward-thinking team shaping the future of immersive technology. We're looking for passionate individuals to help us build extraordinary experiences.
-      </p>
-      <div class="careers-grid">
-        <!-- XR Developer -->
+<!-- VIDEO MODAL -->
+<div class="video-modal" id="videoModal" aria-hidden="true">
+  <div class="video-modal-backdrop" data-close></div>
+  <div class="video-modal-inner" role="dialog" aria-modal="true">
+    <button class="modal-close" data-close aria-label="Close"><i class="fas fa-times"></i></button>
+    <video id="modalVideo" controls playsinline preload="metadata"></video>
+    <div class="modal-caption">
+      <h3 id="modalTitle"></h3>
+      <p id="modalDesc"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const $ = (s,el=document)=>el.querySelector(s);
+  const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
+
+  /* ============================================================
+     CONTENT — fetch content.json, fall back to static HTML
+     ============================================================ */
+  async function loadContent(){
+    try {
+      const r = await fetch('content.json?t=' + Date.now(), { cache:'no-store' });
+      if (!r.ok) throw new Error('no content.json');
+      return await r.json();
+    } catch(e){
+      console.info('[Thazham VR] content.json not loaded — using static defaults.');
+      return null;
+    }
+  }
+
+  function applyContent(c){
+    if (!c) return;
+    // Simple text fields
+    $$('[data-field]').forEach(el => {
+      const path = el.dataset.field.split('.');
+      let v = c;
+      for (const k of path){ v = v == null ? v : v[k]; }
+      if (v != null && typeof v === 'string') el.textContent = v;
+    });
+
+    // Hero video
+    if (c.hero?.heroVideo){
+      const v = $('#heroVideo');
+      v.src = c.hero.heroVideo;
+      v.load();
+      v.play().catch(()=>{});
+    }
+
+    // Showreel button
+    if (c.hero?.showreel?.url){
+      const b = $('#showreelBtn');
+      b.dataset.video = c.hero.showreel.url;
+      b.dataset.title = c.hero.showreel.title || '';
+      b.dataset.desc  = c.hero.showreel.desc  || '';
+    }
+
+    // Stats
+    if (Array.isArray(c.stats)){
+      $('#statsRow').innerHTML = c.stats.map(s => `
+        <div class="stat-item">
+          <div class="stat-highlight">${esc(s.value)}</div>
+          <div class="stat-label">${esc(s.label)}</div>
+        </div>`).join('');
+    }
+
+    // Partners
+    if (c.partners){
+      $('#marqueeRow1').innerHTML = (c.partners.row1||[]).map(chipHTML).join('');
+      $('#marqueeRow2').innerHTML = (c.partners.row2||[]).map(chipHTML).join('');
+      duplicateMarquee();
+    }
+
+    // Demos
+    if (Array.isArray(c.demos)){
+      $('#demosGrid').innerHTML = c.demos.map(d => `
+        <article class="video-card"
+                 data-video="${esc(d.videoUrl)}"
+                 data-title="${esc(d.title)}"
+                 data-desc="${esc(d.desc)}">
+          <div class="video-thumb">
+            <i class="${esc(d.icon||'fas fa-play')} watermark"></i>
+            <div class="play-btn"><i class="fas fa-play"></i></div>
+            ${d.duration ? `<span class="duration">${esc(d.duration)}</span>` : ''}
+          </div>
+          <div class="video-info">
+            <h3>${esc(d.title)}</h3>
+            <p>${esc(d.desc)}</p>
+            ${d.tag ? `<span class="tag">${esc(d.tag)}</span>` : ''}
+          </div>
+        </article>`).join('');
+      wireVideoCards();
+    }
+
+    // Focus
+    if (c.focus?.items){
+      $('#focusGrid').innerHTML = c.focus.items.map(f => `
+        <div class="focus-card">
+          <div class="card-img"><i class="${esc(f.icon)}"></i></div>
+          <h3>${esc(f.title)}</h3>
+          <p>${esc(f.desc)}</p>
+        </div>`).join('');
+    }
+
+    // Careers
+    if (c.careers?.items){
+      $('#careersGrid').innerHTML = c.careers.items.map(j => `
         <div class="career-card">
-          <i class="fas fa-vr-cardboard"></i>
-          <h3>XR Developer</h3>
-          <p class="location">Full-time · Chennai, India</p>
-          <p class="description">Build immersive VR/AR experiences with Unity/Unreal. Strong C#/C++ skills required.</p>
-          <a href="mailto:careers@thazhamvr.com?subject=Application%20for%20XR%20Developer%20Role" class="btn-sm">Apply Now</a>
-        </div>
-        <!-- 3D Artist -->
-        <div class="career-card">
-          <i class="fas fa-paintbrush-fine"></i>
-          <h3>3D Artist</h3>
-          <p class="location">Full-time · Chennai, India</p>
-          <p class="description">Create high-quality 3D assets, environments, and animations for VR projects.</p>
-          <a href="mailto:careers@thazhamvr.com?subject=Application%20for%203D%20Artist%20Role" class="btn-sm">Apply Now</a>
-        </div>
-        <!-- Frontend Engineer -->
-        <div class="career-card">
-          <i class="fas fa-code"></i>
-          <h3>Frontend Engineer</h3>
-          <p class="location">Full-time · Remote</p>
-          <p class="description">Develop web-based interfaces for our VR platforms. React/Three.js experience a plus.</p>
-          <a href="mailto:careers@thazhamvr.com?subject=Application%20for%20Frontend%20Engineer%20Role" class="btn-sm">Apply Now</a>
-        </div>
-        <!-- Hardware Engineer (new) -->
-        <div class="career-card">
-          <i class="fas fa-microchip"></i>
-          <h3>Hardware Engineer</h3>
-          <p class="location">Full-time · Chennai, India</p>
-          <p class="description">Design and test VR hardware prototypes, PCB design, and embedded systems.</p>
-          <a href="mailto:careers@thazhamvr.com?subject=Application%20for%20Hardware%20Engineer%20Role" class="btn-sm">Apply Now</a>
-        </div>
-      </div>
-      <p style="text-align: center; margin-top: 3rem; color: #888;">
-        Don't see a role that fits? <a href="mailto:careers@thazhamvr.com?subject=General%20Application" style="color: white;">Send us your resume</a> and we'll keep you in mind.
-      </p>
-    </div>
-  </section>
+          <i class="${esc(j.icon)} role"></i>
+          <h3>${esc(j.title)}</h3>
+          <p class="location">${esc(j.location)}</p>
+          <p class="description">${esc(j.desc)}</p>
+          <a href="mailto:${esc(j.email)}?subject=Application%20for%20${encodeURIComponent(j.title)}%20Role" class="btn-sm">Apply Now</a>
+        </div>`).join('');
+    }
 
-  <!-- PROJECTS SECTION -->
-  <section id="projects" class="fade-section">
-    <div class="container">
-      <h2 style="text-align: center;"><span class="accent">Projects</span></h2>
-      <div class="coming-soon-block">
-        <h3>Coming Soon</h3>
-        <p style="font-size: 1.4rem; color: #aaa; max-width: 600px; margin: 1.8rem auto 0;">We are currently developing immersive experiences that will be showcased here soon.</p>
-      </div>
-    </div>
-  </section>
+    // Contact
+    if (c.contact){
+      const phones = (c.contact.phones||[]).join('  |  ');
+      $('#contactPhones').textContent = phones;
+      $('#footerPhones').textContent = phones;
+      $('#contactEmail').textContent = c.contact.email;
+      $('#contactEmail').href = 'mailto:' + c.contact.email;
+      $('#footerEmail').textContent = c.contact.email;
+      $('#footerEmail').href = 'mailto:' + c.contact.email;
+    }
+  }
 
-  <!-- CONTACT SECTION -->
-  <section id="contact" class="fade-section contact-section">
-    <div class="container" style="display: flex; flex-direction: column; align-items: center;">
-      <h2 style="text-align: center; width: 100%;">Contact <span class="accent">Us</span></h2>
-      <div class="contact-card">
-        <div style="font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem;">Thazham VR</div>
-        <div style="color: #ccc; font-size: 1.3rem; margin-bottom: 2rem;">Chennai, Tamil Nadu, India</div>
-        <div class="contact-item"><i class="fas fa-phone-alt"></i> 9894866586  |  8838715160</div>
-        <div class="contact-item">
-          <i class="fas fa-envelope"></i>
-          <a href="mailto:info@thazhamvr.com">info@thazhamvr.com</a>
-        </div>
-        <div style="margin-top: 2.5rem; border-top: 1px solid #333; padding-top: 1.8rem; color: #aaa;">
-          <i class="fas fa-map-marker-alt" style="color: white; margin-right: 0.8rem;"></i> Chennai, Tamil Nadu, India
-        </div>
-      </div>
-    </div>
-  </section>
+  function chipHTML(p){
+    const inner = p.image
+      ? `<img src="${esc(p.image)}" alt="${esc(p.label)}">`
+      : `<i class="${esc(p.icon||'fas fa-star')}"></i>`;
+    return `<div class="logo-chip">${inner} ${esc(p.label)}</div>`;
+  }
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-logo">THAZHAM <span>VR</span></div>
-        <p style="margin: 1.2rem 0 2rem; color: #aaa; max-width: 300px;">Immersive Culture. Experiential Education. Future Innovation.</p>
-        <p style="color: #666;">© 2025 Thazham VR</p>
-      </div>
-      <div>
-        <h4 style="color: white; margin-bottom: 1.5rem;">Explore</h4>
-        <div class="footer-links">
-          <a href="#about">About</a>
-          <a href="#focus">Focus Areas</a>
-          <a href="#projects">Projects</a>
-          <a href="#careers">Careers</a>
-          <a href="#contact">Contact</a>
-        </div>
-      </div>
-      <div class="footer-contact">
-        <h4 style="color: white; margin-bottom: 1.5rem;">Connect</h4>
-        <p><i class="fas fa-phone" style="width: 1.8rem; color: white;"></i> 9894866586 | 8838715160</p>
-        <p><i class="fas fa-envelope" style="color: white;"></i> <a href="mailto:info@thazhamvr.com">info@thazhamvr.com</a></p>
-      </div>
-    </div>
-  </footer>
+  function duplicateMarquee(){
+    ['marqueeRow1','marqueeRow2'].forEach(id => {
+      const t = document.getElementById(id);
+      if (!t || t.dataset.duped) return;
+      t.insertAdjacentHTML('beforeend', t.innerHTML);
+      t.dataset.duped = '1';
+    });
+  }
 
-  <!-- JavaScript (ensures smooth scroll and mobile menu) -->
-  <script>
-    (function() {
-      // Mobile menu toggle
-      const toggle = document.querySelector('.menu-toggle');
-      const navMenu = document.querySelector('.nav-links');
-      const icon = toggle.querySelector('i');
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-      if (toggle) {
-        toggle.addEventListener('click', (e) => {
-          e.stopPropagation();
-          navMenu.classList.toggle('active');
-          if (navMenu.classList.contains('active')) {
-            icon.classList.remove('fa-bars');
-            icon.classList.add('fa-times');
-          } else {
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
-          }
-        });
-      }
+  /* ============================================================
+     INTERACTIONS
+     ============================================================ */
+  // Mobile menu
+  const toggle = document.querySelector('.menu-toggle');
+  const navMenu = document.querySelector('.nav-links');
+  const icon = toggle?.querySelector('i');
+  toggle?.addEventListener('click', e => {
+    e.stopPropagation();
+    navMenu.classList.toggle('active');
+    const open = navMenu.classList.contains('active');
+    icon.classList.toggle('fa-bars', !open);
+    icon.classList.toggle('fa-times', open);
+  });
+  $$('.nav-links a').forEach(a => a.addEventListener('click', () => {
+    navMenu.classList.remove('active');
+    icon?.classList.add('fa-bars'); icon?.classList.remove('fa-times');
+  }));
 
-      // Close mobile menu when a link is clicked
-      document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-          navMenu.classList.remove('active');
-          if (icon) {
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
-          }
-        });
-      });
+  // Scroll progress
+  const bar = document.getElementById('scrollProgress');
+  const upBar = () => {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY/h)*100 : 0) + '%';
+  };
+  window.addEventListener('scroll', upBar, { passive:true }); upBar();
 
-      // Fade-in sections on scroll
-      const faders = document.querySelectorAll('.fade-section');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
+  // Fade-in
+  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')),
+    { threshold:.12, rootMargin:'0px 0px -40px 0px' });
+  $$('.fade-section').forEach(el => io.observe(el));
 
-      faders.forEach(section => observer.observe(section));
+  // Smooth scroll
+  const navbar = document.querySelector('.navbar');
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const href = a.getAttribute('href');
+    if (!href || href === '#') return;
+    const t = document.querySelector(href);
+    if (!t) return;
+    e.preventDefault();
+    const top = t.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight - 12;
+    window.scrollTo({ top, behavior:'smooth' });
+  });
 
-      // Smooth scroll with offset for sticky header
-      const navHeight = document.querySelector('.navbar').offsetHeight;
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-          const href = this.getAttribute('href');
-          if (href === "#" || href === "") return;
-          const target = document.querySelector(href);
-          if (target) {
-            e.preventDefault();
-            const targetPos = target.getBoundingClientRect().top + window.scrollY - navHeight - 10;
-            window.scrollTo({ top: targetPos, behavior: 'smooth' });
-          }
-        });
-      });
-    })();
-  </script>
+  // Video modal
+  const modal = $('#videoModal');
+  const modalVideo = $('#modalVideo');
+  const modalTitle = $('#modalTitle');
+  const modalDesc = $('#modalDesc');
+
+  function openVideo(src, title, desc){
+    if (!src) return;
+    modalVideo.src = src;
+    modalTitle.textContent = title || '';
+    modalDesc.textContent = desc || '';
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    modalVideo.play().catch(()=>{});
+  }
+  function closeVideo(){
+    modalVideo.pause();
+    modalVideo.removeAttribute('src');
+    modalVideo.load();
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function wireVideoCards(){
+    $$('[data-video]').forEach(el => {
+      el.addEventListener('click', () => openVideo(el.dataset.video, el.dataset.title, el.dataset.desc));
+    });
+  }
+  modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeVideo));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeVideo(); });
+
+  // Initial wire (in case content.json fails, static cards still work)
+  wireVideoCards();
+
+  // Pause hero video on hidden tab
+  const heroVideo = $('#heroVideo');
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) heroVideo.pause();
+    else heroVideo.play().catch(()=>{});
+  });
+
+  /* ============================================================
+     GO
+     ============================================================ */
+  loadContent().then(applyContent);
+})();
+</script>
 </body>
 </html>
