@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thazham VR · Admin Console</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0a;--panel:#121212;--panel2:#181818;--line:#262626;--line2:#333;
+  --txt:#eaeaea;--dim:#9a9a9a;--dim2:#6a6a6a;--white:#fff;
+  --ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--accent:#fff;
+}
+body{background:var(--bg);color:var(--txt);font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.5;overflow-x:hidden}
+button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+
+/* ---------- LOGIN ---------- */
+#login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 20%,#161616,#0a0a0a 70%);z-index:1000;padding:2rem}
+#login.hidden{display:none}
+.login-card{background:#111;border:1px solid var(--line2);border-radius:24px;padding:3rem;max-width:480px;width:100%;box-shadow:0 40px 80px -30px #000}
+.login-card h1{font-size:1.8rem;font-weight:800;margin-bottom:.4rem}
+.login-card .sub{color:var(--dim);margin-bottom:2rem;font-size:.95rem}
+.login-card label{display:block;font-size:.8rem;font-weight:600;color:#cfcfcf;margin:1.1rem 0 .4rem;letter-spacing:.04em;text-transform:uppercase}
+.login-card input{width:100%;background:#0d0d0d;border:1px solid var(--line2);border-radius:10px;padding:.85rem 1rem;color:#fff;transition:.2s}
+.login-card input:focus{outline:none;border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.08)}
+.login-card .btn-full{margin-top:2rem;width:100%;background:#fff;color:#0a0a0a;font-weight:700;padding:1rem;border-radius:12px;transition:.2s}
+.login-card .btn-full:hover{background:#e2e2e2;box-shadow:0 0 30px rgba(255,255,255,.4)}
+.login-card .hint{margin-top:1.2rem;font-size:.8rem;color:var(--dim2);line-height:1.6}
+.login-card .hint a{color:#ccc}
+.login-err{color:var(--err);font-size:.9rem;margin-top:1rem;display:none}
+.login-err.show{display:block}
+
+/* ---------- APP SHELL ---------- */
+#app{display:none;min-height:100vh}
+#app.ready{display:grid;grid-template-columns:260px 1fr}
+
+/* sidebar */
+aside{background:#0d0d0d;border-right:1px solid var(--line);padding:1.5rem 0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.side-brand{display:flex;align-items:center;gap:.7rem;padding:0 1.5rem 1.5rem;border-bottom:1px solid var(--line);margin-bottom:1rem}
+.side-brand .logo-icon{width:38px;height:38px;background:#1c1c1c;border:1px solid var(--line2);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem}
+.side-brand .name{font-weight:800;font-size:1.05rem;letter-spacing:-.01em}
+.side-brand .name small{display:block;font-weight:500;font-size:.72rem;color:var(--dim2);letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
+.nav-item{display:flex;align-items:center;gap:.85rem;padding:.7rem 1.5rem;color:#b5b5b5;font-size:.92rem;font-weight:500;transition:.15s;cursor:pointer;border-left:2px solid transparent}
+.nav-item i{width:18px;text-align:center;font-size:.95rem;color:#7a7a7a}
+.nav-item:hover{background:#141414;color:#fff}
+.nav-item:hover i{color:#fff}
+.nav-item.active{background:#151515;color:#fff;border-left-color:#fff}
+.nav-item.active i{color:#fff}
+.nav-sep{font-size:.68rem;font-weight:700;color:var(--dim2);letter-spacing:.14em;text-transform:uppercase;padding:1.2rem 1.5rem .5rem}
+.side-foot{padding:1.5rem;border-top:1px solid var(--line);margin-top:1rem;font-size:.78rem;color:var(--dim2)}
+.side-foot a{color:#bbb;text-decoration:none}
+.side-foot a:hover{color:#fff}
+
+/* main */
+main{display:flex;flex-direction:column;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:1rem 2rem;display:flex;align-items:center;gap:1.5rem}
+.topbar h2{font-size:1.15rem;font-weight:700;flex:1}
+.repo-pill{font-size:.78rem;color:var(--dim);background:#141414;border:1px solid var(--line2);padding:.4rem .85rem;border-radius:40px;display:flex;align-items:center;gap:.5rem}
+.repo-pill i{color:#fff}
+.dirty-dot{width:8px;height:8px;border-radius:50%;background:var(--warn);box-shadow:0 0 8px var(--warn);display:none}
+.dirty-dot.on{display:inline-block}
+.topbar .btn{padding:.6rem 1.3rem;border-radius:10px;font-size:.88rem;font-weight:600;transition:.2s;display:inline-flex;align-items:center;gap:.5rem}
+.btn-ghost{background:transparent;border:1px solid var(--line2);color:#ddd}
+.btn-ghost:hover{background:#1a1a1a;color:#fff;border-color:#555}
+.btn-save{background:#fff;color:#0a0a0a}
+.btn-save:hover{background:#e2e2e2;box-shadow:0 0 24px rgba(255,255,255,.35)}
+.btn-save:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.btn-save.saving{background:var(--warn);color:#000}
+
+/* panel */
+.panel{padding:2rem;max-width:920px;width:100%}
+.panel-head{margin-bottom:2rem}
+.panel-head h3{font-size:1.6rem;font-weight:800;margin-bottom:.3rem}
+.panel-head p{color:var(--dim);font-size:.95rem}
+.field{margin-bottom:1.4rem}
+.field label{display:block;font-size:.78rem;font-weight:600;color:#c5c5c5;margin-bottom:.4rem;letter-spacing:.04em;text-transform:uppercase}
+.field input,.field textarea,.field select{width:100%;background:#0e0e0e;border:1px solid var(--line2);border-radius:10px;padding:.85rem 1rem;color:#fff;transition:.18s;font-size:.95rem}
+.field textarea{resize:vertical;min-height:90px;line-height:1.55}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.07);background:#0a0a0a}
+.field .hint{font-size:.78rem;color:var(--dim2);margin-top:.4rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem}
+
+/* list editor */
+.list{display:flex;flex-direction:column;gap:1rem;margin-top:.5rem}
+.list-item{background:#111;border:1px solid var(--line);border-radius:16px;padding:1.2rem;transition:.2s}
+.list-item:hover{border-color:var(--line2)}
+.list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.list-head .num{font-size:.72rem;font-weight:700;color:var(--dim2);letter-spacing:.12em;text-transform:uppercase}
+.list-actions{display:flex;gap:.4rem}
+.list-actions button{width:32px;height:32px;border-radius:8px;background:#1a1a1a;border:1px solid var(--line2);color:#b5b5b5;font-size:.8rem;display:flex;align-items:center;justify-content:center;transition:.15s}
+.list-actions button:hover{background:#252525;color:#fff;border-color:#555}
+.list-actions button.del:hover{background:#2a1010;color:#ff8080;border-color:#5a2020}
+.list-actions button:disabled{opacity:.25;cursor:not-allowed}
+.btn-add{background:transparent;border:1.5px dashed var(--line2);color:#ccc;padding:.9rem;border-radius:14px;font-weight:600;font-size:.9rem;transition:.2s;display:flex;align-items:center;justify-content:center;gap:.6rem}
+.btn-add:hover{border-color:#fff;color:#fff;background:#141414}
+
+/* icon/image field */
+.icon-preview{display:flex;align-items:center;gap:.8rem;margin-top:.5rem}
+.icon-preview .fa-box{width:42px;height:42px;border-radius:10px;background:#1a1a1a;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
+.icon-preview code{font-size:.82rem;color:var(--dim);font-family:'SF Mono',Consolas,monospace}
+.img-thumb{max-height:60px;border-radius:8px;border:1px solid var(--line2);background:#0d0d0d}
+
+/* raw json */
+.raw-editor textarea{font-family:'SF Mono',Consolas,monospace;font-size:.82rem;min-height:520px;line-height:1.6;background:#0b0b0b}
+.raw-err{color:var(--err);font-size:.85rem;margin-top:.8rem;display:none}
+.raw-err.show{display:block}
+
+/* dashboard */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+.dash-card{background:#111;border:1px solid var(--line);border-radius:16px;padding:1.4rem}
+.dash-card .lbl{font-size:.75rem;color:var(--dim2);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:.5rem}
+.dash-card .val{font-size:1.8rem;font-weight:800}
+.dash-card .val.sm{font-size:1.1rem;font-weight:600;color:#ddd}
+.dash-actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1rem}
+
+/* toast */
+#toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;display:flex;flex-direction:column;gap:.7rem}
+.toast{background:#181818;border:1px solid var(--line2);border-left:3px solid #fff;border-radius:12px;padding:1rem 1.2rem;min-width:280px;max-width:400px;box-shadow:0 20px 40px -10px #000;animation:slideIn .3s cubic-bezier(.2,.9,.3,1);display:flex;align-items:flex-start;gap:.8rem}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:none;opacity:1}}
+.toast.ok{border-left-color:var(--ok)}
+.toast.err{border-left-color:var(--err)}
+.toast i{font-size:1.05rem;margin-top:2px}
+.toast.ok i{color:var(--ok)} .toast.err i{color:var(--err)} .toast.info i{color:#fff}
+.toast .body{flex:1}
+.toast .body strong{display:block;font-weight:600;font-size:.9rem;margin-bottom:.15rem}
+.toast .body span{font-size:.82rem;color:var(--dim)}
+
+/* spinner */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* mobile */
+.mobile-menu-btn{display:none;background:#1a1a1a;border:1px solid var(--line2);width:38px;height:38px;border-radius:10px;color:#fff;font-size:1rem}
+@media (max-width:900px){
+  #app.ready{grid-template-columns:1fr}
+  aside{position:fixed;left:0;top:0;width:260px;z-index:200;transform:translateX(-100%);transition:.3s}
+  aside.open{transform:none}
+  .mobile-menu-btn{display:flex;align-items:center;justify-content:center}
+  .panel{padding:1.5rem}
+  .topbar{padding:1rem 1.2rem;gap:.8rem}
+  .topbar h2{font-size:1rem}
+  .repo-pill{display:none}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ============= LOGIN ============= -->
+<div id="login">
+  <div class="login-card">
+    <h1>Thazham VR Console</h1>
+    <p class="sub">Sign in with a GitHub Personal Access Token to manage site content.</p>
+
+    <label for="lOwner">GitHub username / org</label>
+    <input id="lOwner" placeholder="e.g. thazhamvr" autocomplete="off">
+
+    <label for="lRepo">Repository name</label>
+    <input id="lRepo" placeholder="e.g. thazhamvr.github.io" autocomplete="off">
+
+    <label for="lBranch">Branch</label>
+    <input id="lBranch" placeholder="main" value="main" autocomplete="off">
+
+    <label for="lToken">Personal Access Token</label>
+    <input id="lToken" type="password" placeholder="ghp_…" autocomplete="off">
+
+    <button class="btn-full" id="loginBtn">Connect to Repository</button>
+    <div class="login-err" id="loginErr"></div>
+
+    <p class="hint">
+      Create a fine-grained token with <strong>Contents: Read &amp; Write</strong> permission on this repo.
+      <br>Token is stored only in your browser (localStorage) — never sent anywhere except api.github.com.
+    </p>
+  </div>
+</div>
+
+<!-- ============= APP ============= -->
+<div id="app">
+  <aside id="sidebar">
+    <div class="side-brand">
+      <div class="logo-icon"><i class="fas fa-vr-cardboard"></i></div>
+      <div class="name">Thazham VR<small>Admin Console</small></div>
+    </div>
+
+    <div class="nav-sep">Overview</div>
+    <div class="nav-item active" data-view="dashboard"><i class="fas fa-gauge-high"></i> Dashboard</div>
+
+    <div class="nav-sep">Content</div>
+    <div class="nav-item" data-view="hero"><i class="fas fa-star"></i> Hero</div>
+    <div class="nav-item" data-view="stats"><i class="fas fa-chart-simple"></i> Stats</div>
+    <div class="nav-item" data-view="partners"><i class="fas fa-handshake"></i> Partners</div>
+    <div class="nav-item" data-view="demos"><i class="fas fa-play"></i> Video Demos</div>
+    <div class="nav-item" data-view="about"><i class="fas fa-circle-info"></i> About</div>
+    <div class="nav-item" data-view="focus"><i class="fas fa-bullseye"></i> Focus Areas</div>
+    <div class="nav-item" data-view="projects"><i class="fas fa-cubes"></i> Projects</div>
+    <div class="nav-item" data-view="careers"><i class="fas fa-briefcase"></i> Careers</div>
+    <div class="nav-item" data-view="contact"><i class="fas fa-envelope"></i> Contact</div>
+    <div class="nav-item" data-view="footer"><i class="fas fa-shoe-prints"></i> Footer</div>
+
+    <div class="nav-sep">Advanced</div>
+    <div class="nav-item" data-view="raw"><i class="fas fa-code"></i> Raw JSON</div>
+    <div class="nav-item" data-view="settings"><i class="fas fa-gear"></i> Settings</div>
+
+    <div class="side-foot">
+      <a href="/" target="_blank"><i class="fas fa-arrow-up-right-from-square"></i> View live site</a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <button class="mobile-menu-btn" id="mobileMenu"><i class="fas fa-bars"></i></button>
+      <h2 id="viewTitle">Dashboard</h2>
+      <div class="repo-pill"><i class="fas fa-code-branch"></i> <span id="repoPill">—</span></div>
+      <span class="dirty-dot" id="dirtyDot" title="Unsaved changes"></span>
+      <button class="btn btn-ghost" id="discardBtn" disabled><i class="fas fa-rotate-left"></i> Discard</button>
+      <button class="btn btn-save" id="saveBtn" disabled><i class="fas fa-cloud-arrow-up"></i> <span>Publish</span></button>
+    </div>
+
+    <div class="panel" id="panel"></div>
+  </main>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* =========================================================
+     CONFIG & STATE
+     ========================================================= */
+  const STORAGE_KEY = 'thazham_admin_cfg';
+  const CONTENT_PATH = 'content.json';
+
+  const cfg = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  const state = {
+    content: null,       // current working copy
+    original: null,      // last saved copy (for discard)
+    sha: null,           // GitHub file sha
+    dirty: false,
+    view: 'dashboard',
+    saving: false
+  };
+
+  const $  = (s, el=document) => el.querySelector(s);
+  const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+
+  /* =========================================================
+     BASE64 (UTF-8 safe)
+     ========================================================= */
+  function b64encode(str){
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    bytes.forEach(b => bin += String.fromCharCode(b));
+    return btoa(bin);
+  }
+  function b64decode(b64){
+    const bin = atob(b64.replace(/\s/g,''));
+    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  }
+
+  /* =========================================================
+     GITHUB API
+     ========================================================= */
+  const GH = 'https://api.github.com';
+
+  function ghHeaders(){
+    return {
+      'Authorization': 'Bearer ' + cfg.token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    };
+  }
+
+  async function ghGet(path){
+    const url = `${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}?ref=${encodeURIComponent(cfg.branch)}&t=${Date.now()}`;
+    const r = await fetch(url, { headers: ghHeaders(), cache: 'no-store' });
+    if (r.status === 404) return null;
+    if (!r.ok) throw new Error(`GitHub GET ${r.status}: ${await r.text()}`);
+    return r.json();
+  }
+
+  async function ghPut(path, contentStr, message, sha){
+    const body = {
+      message: message || `Update ${path} via admin console`,
+      content: b64encode(contentStr),
+      branch: cfg.branch
+    };
+    if (sha) body.sha = sha;
+    const r = await fetch(`${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) throw new Error(`GitHub PUT ${r.status}: ${await r.text()}`);
+    return r.json();
+  }
+
+  async function ghUploadImage(file){
+    const safeName = file.name.replace(/[^\w.\-]+/g,'_');
+    const path = `assets/${Date.now()}_${safeName}`;
+    const buf = await file.arrayBuffer();
+    let bin = '';
+    new Uint8Array(buf).forEach(b => bin += String.fromCharCode(b));
+    const content = btoa(bin);
+    const r = await fetch(`${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `Upload ${path} via admin console`,
+        content,
+        branch: cfg.branch
+      })
+    });
+    if (!r.ok) throw new Error(`Upload failed: ${r.status}`);
+    const data = await r.json();
+    return data.content.download_url;
+  }
+
+  /* =========================================================
+     PATH HELPERS
+     ========================================================= */
+  function getPath(obj, path){
+    return path.split('.').reduce((a,k) => (a == null ? a : a[k]), obj);
+  }
+  function setPath(obj, path, val){
+    const keys = path.split('.');
+    let cur = obj;
+    for (let i=0; i<keys.length-1; i++){
+      const k = keys[i];
+      if (cur[k] == null) cur[k] = /^\d+$/.test(keys[i+1]) ? [] : {};
+      cur = cur[k];
+    }
+    cur[keys[keys.length-1]] = val;
+  }
+
+  function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+
+  /* =========================================================
+     TOASTS
+     ========================================================= */
+  function toast(kind, title, msg){
+    const el = document.createElement('div');
+    el.className = 'toast ' + kind;
+    const icon = kind === 'ok' ? 'fa-circle-check' : kind === 'err' ? 'fa-circle-exclamation' : 'fa-circle-info';
+    el.innerHTML = `<i class="fas ${icon}"></i><div class="body"><strong>${title}</strong><span>${msg||''}</span></div>`;
+    $('#toasts').appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(120%)'; el.style.transition = '.3s'; setTimeout(()=>el.remove(),300); }, 3800);
+  }
+
+  /* =========================================================
+     LOGIN
+     ========================================================= */
+  const login = $('#login');
+  const lOwner = $('#lOwner'), lRepo = $('#lRepo'), lBranch = $('#lBranch'), lToken = $('#lToken');
+  const loginErr = $('#loginErr');
+
+  if (cfg.owner) lOwner.value = cfg.owner;
+  if (cfg.repo)  lRepo.value  = cfg.repo;
+  if (cfg.branch) lBranch.value = cfg.branch;
+  if (cfg.token) lToken.value = cfg.token;
+
+  $('#loginBtn').addEventListener('click', doLogin);
+  [lOwner,lRepo,lBranch,lToken].forEach(el => el.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); }));
+
+  async function doLogin(){
+    const owner = lOwner.value.trim();
+    const repo  = lRepo.value.trim();
+    const branch = (lBranch.value.trim() || 'main');
+    const token = lToken.value.trim();
+    loginErr.classList.remove('show');
+
+    if (!owner || !repo || !token){ showErr('All fields are required.'); return; }
+
+    const btn = $('#loginBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Connecting…';
+
+    Object.assign(cfg, { owner, repo, branch, token });
+
+    try {
+      // verify access
+      const r = await fetch(`${GH}/repos/${owner}/${repo}`, { headers: ghHeaders() });
+      if (!r.ok) throw new Error(`Repo not accessible (${r.status}). Check token & repo name.`);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+      await boot();
+    } catch (e){
+      btn.disabled = false; btn.textContent = 'Connect to Repository';
+      showErr(e.message);
+    }
+  }
+
+  function showErr(msg){ loginErr.textContent = msg; loginErr.classList.add('show'); }
+
+  /* =========================================================
+     BOOT — load content.json
+     ========================================================= */
+  async function boot(){
+    try {
+      const file = await ghGet(CONTENT_PATH);
+      if (!file){
+        state.content = deepClone(DEFAULTS);
+        state.sha = null;
+        toast('info','No content.json found','Using defaults. Publish to create the file.');
+      } else {
+        const text = b64decode(file.content);
+        state.content = JSON.parse(text);
+        state.sha = file.sha;
+        state.content = deepMerge(deepClone(DEFAULTS), state.content);
+      }
+      state.original = deepClone(state.content);
+      state.dirty = false;
+
+      login.classList.add('hidden');
+      $('#app').classList.add('ready');
+      $('#repoPill').textContent = `${cfg.owner}/${cfg.repo} · ${cfg.branch}`;
+      render();
+    } catch(e){
+      showErr(e.message);
+      $('#loginBtn').disabled = false;
+      $('#loginBtn').textContent = 'Connect to Repository';
+    }
+  }
+
+  function deepMerge(base, over){
+    if (Array.isArray(over)) return over;
+    if (over && typeof over === 'object'){
+      const out = Array.isArray(base) ? [] : { ...base };
+      Object.keys(over).forEach(k => { out[k] = deepMerge(base && base[k], over[k]); });
+      return out;
+    }
+    return over === undefined ? base : over;
+  }
+
+  /* =========================================================
+     DEFAULT CONTENT (fallback if no content.json yet)
+     ========================================================= */
+  const DEFAULTS = {
+    meta: { updatedAt: new Date().toISOString(), version: 1 },
+    hero: {
+      eyebrow: "Immersive Technology Studio · Chennai, India",
+      title: "Reimagining Culture, Education & Heritage Through Virtual Reality",
+      subtitle: "Thazham VR is an immersive technology company focused on preserving knowledge, transforming education, and creating innovative experiences through Virtual Reality.",
+      heroVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      showreel: {
+        url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+        title: "Thazham VR — Studio Showreel",
+        desc: "A quick look at the immersive worlds, heritage reconstructions and VR learning modules we build."
+      }
+    },
+    stats: [
+      { value:"3+", label:"Active Projects" },
+      { value:"VR / AR", label:"Technology Focus" },
+      { value:"Immersive", label:"Experience Design" }
+    ],
+    partners: {
+      title: "Collaborating With",
+      row1: [
+        { icon:"fas fa-university", label:"Anna University", image:"" },
+        { icon:"fas fa-landmark", label:"Heritage Trust", image:"" },
+        { icon:"fas fa-microchip", label:"TechNova Labs", image:"" },
+        { icon:"fas fa-cube", label:"MetaForge Studios", image:"" }
+      ],
+      row2: [
+        { icon:"fas fa-vr-cardboard", label:"ImmerseX", image:"" },
+        { icon:"fas fa-flask", label:"IIT Research Park", image:"" },
+        { icon:"fas fa-brain", label:"CogniLearn", image:"" },
+        { icon:"fas fa-film", label:"FrameNine Media", image:"" }
+      ]
+    },
+    demos: [
+      { title:"Heritage Museum Walkthrough", desc:"A fully explorable VR reconstruction of a historic temple complex with interactive artefacts.", tag:"Heritage", duration:"02:14", videoUrl:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", icon:"fas fa-landmark" }
+    ],
+    about: {
+      heading:"About Thazham VR",
+      lead:"Thazham VR is an immersive technology company dedicated to preserving knowledge systems and redefining how people learn, explore, and experience culture.",
+      body:"We believe technology should enhance heritage rather than replace it. Through Virtual Reality, 3D production, and immersive design, we create digital ecosystems that connect the past, present, and future.",
+      visionTitle:"Our Vision",
+      visionText:"To become a global leader in immersive cultural and educational technology by making knowledge systems accessible through experiential digital platforms."
+    },
+    focus: {
+      title:"Focus Areas",
+      subtitle:"Five pillars that shape everything we build.",
+      items: [
+        { icon:"fas fa-landmark", title:"Immersive Heritage Museums", desc:"Interactive VR environments allowing users to explore historical spaces." }
+      ]
+    },
+    projects: { title:"Coming Soon", text:"We are currently developing immersive experiences that will be showcased here soon." },
+    careers: {
+      heading:"Join the Team",
+      intro:"Be part of a forward-thinking team shaping the future of immersive technology.",
+      items: [
+        { icon:"fas fa-vr-cardboard", title:"XR Developer", location:"Full-time · Chennai, India", desc:"Build immersive VR/AR experiences with Unity/Unreal.", email:"careers@thazhamvr.com" }
+      ],
+      outro:"Don't see a role that fits? Send us your resume and we'll keep you in mind."
+    },
+    contact: {
+      company:"Thazham VR",
+      location:"Chennai, Tamil Nadu, India",
+      phones:["9894866586","8838715160"],
+      email:"info@thazhamvr.com",
+      address:"Chennai, Tamil Nadu, India"
+    },
+    footer: { tagline:"Immersive Culture. Experiential Education. Future Innovation.", copyright:"© 2025 Thazham VR" }
+  };
+
+  /* =========================================================
+     FIELD TEMPLATES
+     ========================================================= */
+  function field(path, label, opts={}){
+    const val = getPath(state.content, path);
+    const type = opts.type || 'text';
+    const hint = opts.hint ? `<div class="hint">${opts.hint}</div>` : '';
+    const attrs = `data-path="${path}" ${opts.placeholder?`placeholder="${esc(opts.placeholder)}"`:''}`;
+
+    if (type === 'textarea'){
+      return `<div class="field"><label>${label}</label><textarea ${attrs} rows="${opts.rows||4}">${esc(val||'')}</textarea>${hint}</div>`;
+    }
+    if (type === 'icon'){
+      return `<div class="field"><label>${label}</label><input ${attrs} value="${esc(val||'')}">
+        <div class="icon-preview"><div class="fa-box"><i class="${esc(val||'fas fa-star')}"></i></div><code>${esc(val||'')}</code></div>${hint}</div>`;
+    }
+    if (type === 'image'){
+      return `<div class="field"><label>${label}</label>
+        <div style="display:flex;gap:.6rem;align-items:center">
+          <input ${attrs} value="${esc(val||'')}" placeholder="https://… or upload">
+          <button class="btn btn-ghost" data-upload="${path}" style="white-space:nowrap"><i class="fas fa-upload"></i> Upload</button>
+        </div>
+        ${val ? `<div class="icon-preview"><img src="${esc(val)}" class="img-thumb" alt=""></div>` : ''}
+        ${hint}</div>`;
+    }
+    return `<div class="field"><label>${label}</label><input ${attrs} value="${esc(val==null?'':val)}" ${opts.type?`type="${opts.type}"`:''}>${hint}</div>`;
+  }
+
+  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function listEditor(path, title, fields, opts={}){
+    const items = getPath(state.content, path) || [];
+    const min = opts.min || 0;
+    const max = opts.max || 999;
+    return `
+      <div style="margin-top:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem">
+          <h4 style="font-size:1rem;font-weight:700;color:#ddd">${title} <span style="color:var(--dim2);font-weight:500">(${items.length})</span></h4>
+        </div>
+        <div class="list">
+          ${items.map((it,i) => `
+            <div class="list-item">
+              <div class="list-head">
+                <span class="num">Item ${i+1}</span>
+                <div class="list-actions">
+                  <button data-move="${path}" data-idx="${i}" data-dir="-1" ${i===0?'disabled':''} title="Move up"><i class="fas fa-arrow-up"></i></button>
+                  <button data-move="${path}" data-idx="${i}" data-dir="1" ${i===items.length-1?'disabled':''} title="Move down"><i class="fas fa-arrow-down"></i></button>
+                  <button class="del" data-remove="${path}" data-idx="${i}" ${items.length<=min?'disabled':''} title="Remove"><i class="fas fa-trash"></i></button>
+                </div>
+              </div>
+              ${fields.map(f => field(`${path}.${i}.${f.key}`, f.label, f)).join('')}
+            </div>
+          `).join('')}
+          ${items.length < max ? `<button class="btn-add" data-add="${path}"><i class="fas fa-plus"></i> Add ${opts.singular||'item'}</button>` : ''}
+        </div>
+      </div>`;
+  }
+
+  /* =========================================================
+     VIEWS
+     ========================================================= */
+  const VIEWS = {
+    dashboard(){
+      const c = state.content;
+      const counts = {
+        stats: c.stats?.length || 0,
+        partners: (c.partners?.row1?.length||0) + (c.partners?.row2?.length||0),
+        demos: c.demos?.length || 0,
+        careers: c.careers?.items?.length || 0,
+        focus: c.focus?.items?.length || 0
+      };
+      return `
+        <div class="panel-head">
+          <h3>Welcome back 👋</h3>
+          <p>Manage all public content of thazhamvr.com from here. Changes publish to your GitHub repo.</p>
+        </div>
+
+        <div class="dash-grid">
+          <div class="dash-card"><div class="lbl">Video Demos</div><div class="val">${counts.demos}</div></div>
+          <div class="dash-card"><div class="lbl">Partner Logos</div><div class="val">${counts.partners}</div></div>
+          <div class="dash-card"><div class="lbl">Open Roles</div><div class="val">${counts.careers}</div></div>
+          <div class="dash-card"><div class="lbl">Focus Areas</div><div class="val">${counts.focus}</div></div>
+        </div>
+
+        <div class="dash-card" style="margin-bottom:1.5rem">
+          <div class="lbl">Repository</div>
+          <div class="val sm" style="margin-top:.4rem">${esc(cfg.owner)}/${esc(cfg.repo)} · ${esc(cfg.branch)}</div>
+        </div>
+
+        <div class="dash-card">
+          <div class="lbl">Quick Actions</div>
+          <div class="dash-actions">
+            <button class="btn btn-ghost" data-goto="demos"><i class="fas fa-play"></i> Manage Demos</button>
+            <button class="btn btn-ghost" data-goto="partners"><i class="fas fa-handshake"></i> Manage Partners</button>
+            <button class="btn btn-ghost" data-goto="careers"><i class="fas fa-briefcase"></i> Manage Careers</button>
+            <a class="btn btn-ghost" href="/" target="_blank"><i class="fas fa-arrow-up-right-from-square"></i> View Site</a>
+          </div>
+        </div>
+      `;
+    },
+
+    hero(){
+      return `
+        <div class="panel-head"><h3>Hero Section</h3><p>The first thing visitors see — headline, subtitle and background video.</p></div>
+        ${field('hero.eyebrow','Eyebrow / badge','text')}
+        ${field('hero.title','Main heading','textarea',{rows:2})}
+        ${field('hero.subtitle','Sub-heading paragraph','textarea',{rows:3})}
+        ${field('hero.heroVideo','Background video URL','text',{hint:'MP4 direct link. Leave blank for a plain dark background.'})}
+
+        <h4 style="font-size:1rem;font-weight:700;color:#ddd;margin:2rem 0 1rem">Showreel Button</h4>
+        ${field('hero.showreel.url','Showreel video URL')}
+        ${field('hero.showreel.title','Showreel title')}
+        ${field('hero.showreel.desc','Showreel description','textarea',{rows:2})}
+      `;
+    },
+
+    stats(){
+      return `
+        <div class="panel-head"><h3>Stats Row</h3><p>Three highlight numbers that sit under the hero.</p></div>
+        ${listEditor('stats','Stats',[
+          { key:'value', label:'Value', placeholder:'3+' },
+          { key:'label', label:'Label', placeholder:'Active Projects' }
+        ], { min:1, max:6, singular:'stat' })}
+      `;
+    },
+
+    partners(){
+      return `
+        <div class="panel-head"><h3>Collaborating Partners</h3><p>Logos scroll infinitely in two opposite rows. Add an image URL to replace the icon.</p></div>
+        ${field('partners.title','Section title')}
+
+        ${listEditor('partners.row1','Row 1 (scrolls left)',[
+          { key:'label', label:'Partner name' },
+          { key:'icon', label:'Icon class (Font Awesome)', type:'icon', hint:'e.g. fas fa-university' },
+          { key:'image', label:'Logo image (optional, overrides icon)', type:'image' }
+        ], { singular:'partner' })}
+
+        ${listEditor('partners.row2','Row 2 (scrolls right)',[
+          { key:'label', label:'Partner name' },
+          { key:'icon', label:'Icon class (Font Awesome)', type:'icon' },
+          { key:'image', label:'Logo image (optional, overrides icon)', type:'image' }
+        ], { singular:'partner' })}
+      `;
+    },
+
+    demos(){
+      return `
+        <div class="panel-head"><h3>Video Demos</h3><p>Cards that open a full-screen video player. Great for walkthroughs &amp; showreels.</p></div>
+        ${listEditor('demos','Demo Videos',[
+          { key:'title', label:'Title' },
+          { key:'tag', label:'Tag / category', placeholder:'Heritage' },
+          { key:'duration', label:'Duration label', placeholder:'02:14' },
+          { key:'icon', label:'Preview icon', type:'icon' },
+          { key:'desc', label:'Description', type:'textarea', rows:2 },
+          { key:'videoUrl', label:'Video URL (MP4)', hint:'Direct MP4 link — YouTube embed URLs will not work in the player.' }
+        ], { min:1, max:12, singular:'demo' })}
+      `;
+    },
+
+    about(){
+      return `
+        <div class="panel-head"><h3>About Section</h3><p>Company story and vision card.</p></div>
+        ${field('about.heading','Section heading')}
+        ${field('about.lead','Lead paragraph (large)','textarea',{rows:3})}
+        ${field('about.body','Supporting paragraph','textarea',{rows:3})}
+        <h4 style="font-size:1rem;font-weight:700;color:#ddd;margin:2rem 0 1rem">Vision Card</h4>
+        ${field('about.visionTitle','Vision title')}
+        ${field('about.visionText','Vision text','textarea',{rows:3})}
+      `;
+    },
+
+    focus(){
+      return `
+        <div class="panel-head"><h3>Focus Areas</h3><p>The five (or more) pillars of your work.</p></div>
+        ${field('focus.title','Section title')}
+        ${field('focus.subtitle','Section subtitle')}
+        ${listEditor('focus.items','Focus Cards',[
+          { key:'icon', label:'Icon', type:'icon' },
+          { key:'title', label:'Title' },
+          { key:'desc', label:'Description', type:'textarea', rows:2 }
+        ], { min:1, max:10, singular:'focus area' })}
+      `;
+    },
+
+    projects(){
+      return `
+        <div class="panel-head"><h3>Projects Section</h3><p>Currently a "Coming Soon" block.</p></div>
+        ${field('projects.title','Big heading')}
+        ${field('projects.text','Supporting text','textarea',{rows:3})}
+      `;
+    },
+
+    careers(){
+      return `
+        <div class="panel-head"><h3>Careers</h3><p>Open roles shown on the site. Email is used for the Apply Now mailto link.</p></div>
+        ${field('careers.heading','Section heading')}
+        ${field('careers.intro','Intro paragraph','textarea',{rows:3})}
+        ${listEditor('careers.items','Open Roles',[
+          { key:'title', label:'Role title' },
+          { key:'location', label:'Location / type', placeholder:'Full-time · Chennai, India' },
+          { key:'icon', label:'Icon', type:'icon' },
+          { key:'desc', label:'Description', type:'textarea', rows:2 },
+          { key:'email', label:'Application email' }
+        ], { max:12, singular:'role' })}
+        ${field('careers.outro','Footer note under cards','textarea',{rows:2})}
+      `;
+    },
+
+    contact(){
+      return `
+        <div class="panel-head"><h3>Contact</h3><p>Shown in the contact card and footer.</p></div>
+        ${field('contact.company','Company name')}
+        ${field('contact.location','Location line')}
+        ${field('contact.email','Email address')}
+        ${field('contact.address','Address (footer)')}
+
+        <h4 style="font-size:1rem;font-weight:700;color:#ddd;margin:2rem 0 1rem">Phone Numbers</h4>
+        ${listEditor('contact.phones','Phone numbers',[
+          { key:'_value', label:'Number' }
+        ], { min:0, max:6, singular:'phone number' }).replace(/contact\.phones\.(\d+)\._value/g,'contact.phones.$1')}
+      `;
+    },
+
+    footer(){
+      return `
+        <div class="panel-head"><h3>Footer</h3><p>Tagline &amp; copyright at the bottom of every page.</p></div>
+        ${field('footer.tagline','Tagline')}
+        ${field('footer.copyright','Copyright line')}
+      `;
+    },
+
+    raw(){
+      return `
+        <div class="panel-head"><h3>Raw JSON Editor</h3><p>Advanced — edit the full content structure directly. Invalid JSON won't save.</p></div>
+        <div class="field raw-editor">
+          <textarea id="rawEditor" spellcheck="false">${esc(JSON.stringify(state.content, null, 2))}</textarea>
+          <div class="raw-err" id="rawErr"></div>
+        </div>
+        <button class="btn btn-ghost" id="applyRaw"><i class="fas fa-check"></i> Apply JSON</button>
+      `;
+    },
+
+    settings(){
+      return `
+        <div class="panel-head"><h3>Settings</h3><p>Repository connection &amp; backups.</p></div>
+        <div class="field"><label>GitHub owner</label><input value="${esc(cfg.owner)}" disabled></div>
+        <div class="field"><label>Repository</label><input value="${esc(cfg.repo)}" disabled></div>
+        <div class="field"><label>Branch</label><input value="${esc(cfg.branch)}" disabled></div>
+
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.5rem">
+          <button class="btn btn-ghost" id="downloadJson"><i class="fas fa-download"></i> Download content.json</button>
+          <button class="btn btn-ghost" id="reloadJson"><i class="fas fa-rotate"></i> Re-fetch from GitHub</button>
+          <button class="btn btn-ghost" id="logoutBtn" style="color:#ff9a9a;border-color:#5a2020"><i class="fas fa-right-from-bracket"></i> Sign out</button>
+        </div>
+
+        <div class="dash-card" style="margin-top:2rem">
+          <div class="lbl">Token scope required</div>
+          <div style="font-size:.9rem;color:#bbb;margin-top:.4rem;line-height:1.7">
+            Fine-grained token → <strong>Contents: Read &amp; Write</strong> on this repo.<br>
+            Or classic token with <code style="color:#fff">repo</code> scope.
+          </div>
+        </div>
+      `;
+    }
+  };
+
+  /* =========================================================
+     RENDER
+     ========================================================= */
+  function render(){
+    $('#viewTitle').textContent = ({
+      dashboard:'Dashboard', hero:'Hero Section', stats:'Stats Row', partners:'Partners',
+      demos:'Video Demos', about:'About', focus:'Focus Areas', projects:'Projects',
+      careers:'Careers', contact:'Contact', footer:'Footer', raw:'Raw JSON', settings:'Settings'
+    })[state.view] || state.view;
+
+    const panel = $('#panel');
+    panel.innerHTML = (VIEWS[state.view] || VIEWS.dashboard)();
+    panel.scrollTop = 0;
+    window.scrollTo({top:0, behavior:'smooth'});
+
+    $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === state.view));
+    if (state.view === 'raw') wireRaw();
+    if (state.view === 'settings') wireSettings();
+  }
+
+  function setDirty(d){
+    state.dirty = d;
+    $('#dirtyDot').classList.toggle('on', d);
+    $('#saveBtn').disabled = !d;
+    $('#discardBtn').disabled = !d;
+  }
+
+  /* =========================================================
+     INPUT HANDLING (delegated)
+     ========================================================= */
+  document.addEventListener('input', e => {
+    const el = e.target;
+    if (!el.dataset || !el.dataset.path) return;
+    setPath(state.content, el.dataset.path, el.value);
+    state.content.meta = state.content.meta || {};
+    state.content.meta.updatedAt = new Date().toISOString();
+    setDirty(true);
+
+    // live icon preview
+    if (el.previousElementSibling === null || el.parentElement.querySelector('.icon-preview')){
+      const prev = el.parentElement.querySelector('.icon-preview .fa-box i');
+      if (prev) { prev.className = el.value || 'fas fa-star'; }
+      const code = el.parentElement.querySelector('.icon-preview code');
+      if (code) code.textContent = el.value;
+    }
+  });
+
+  document.addEventListener('click', async e => {
+    const nav = e.target.closest('.nav-item');
+    if (nav){ state.view = nav.dataset.view; render(); $('#sidebar').classList.remove('open'); return; }
+
+    const goto = e.target.closest('[data-goto]');
+    if (goto){ state.view = goto.dataset.goto; render(); return; }
+
+    const add = e.target.closest('[data-add]');
+    if (add){
+      const path = add.dataset.add;
+      const arr = getPath(state.content, path) || [];
+      // create a new item with the same shape as the first
+      const sample = arr[0];
+      const blank = sample ? JSON.parse(JSON.stringify(sample)) : {};
+      Object.keys(blank).forEach(k => {
+        if (typeof blank[k] === 'string') blank[k] = '';
+        else if (Array.isArray(blank[k])) blank[k] = [];
+        else if (typeof blank[k] === 'object') blank[k] = {};
+      });
+      arr.push(blank);
+      setPath(state.content, path, arr);
+      setDirty(true); render();
+      return;
+    }
+
+    const rm = e.target.closest('[data-remove]');
+    if (rm){
+      const path = rm.dataset.remove, idx = +rm.dataset.idx;
+      const arr = getPath(state.content, path) || [];
+      arr.splice(idx,1);
+      setDirty(true); render();
+      return;
+    }
+
+    const mv = e.target.closest('[data-move]');
+    if (mv){
+      const path = mv.dataset.move, idx = +mv.dataset.idx, dir = +mv.dataset.dir;
+      const arr = getPath(state.content, path) || [];
+      const ni = idx + dir;
+      if (ni < 0 || ni >= arr.length) return;
+      [arr[idx], arr[ni]] = [arr[ni], arr[idx]];
+      setDirty(true); render();
+      return;
+    }
+
+    const up = e.target.closest('[data-upload]');
+    if (up){
+      const input = document.createElement('input');
+      input.type = 'file'; input.accept = 'image/*';
+      input.onchange = async () => {
+        if (!input.files[0]) return;
+        const btn = up; const orig = btn.innerHTML;
+        btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+        try {
+          const url = await ghUploadImage(input.files[0]);
+          setPath(state.content, up.dataset.upload, url);
+          setDirty(true); render();
+          toast('ok','Image uploaded','Set as logo. Publish to make it live.');
+        } catch(err){ toast('err','Upload failed', err.message); }
+        finally { btn.disabled = false; btn.innerHTML = orig; }
+      };
+      input.click();
+      return;
+    }
+
+    if (e.target.closest('#mobileMenu')){ $('#sidebar').classList.toggle('open'); return; }
+  });
+
+  /* =========================================================
+     SAVE / DISCARD
+     ========================================================= */
+  $('#saveBtn').addEventListener('click', publish);
+  $('#discardBtn').addEventListener('click', () => {
+    if (!confirm('Discard all unsaved changes?')) return;
+    state.content = deepClone(state.original);
+    setDirty(false); render();
+    toast('info','Changes discarded');
+  });
+
+  async function publish(){
+    if (state.saving) return;
+    state.saving = true;
+    const btn = $('#saveBtn');
+    btn.classList.add('saving');
+    btn.innerHTML = '<span class="spin"></span> <span>Publishing…</span>';
+
+    try {
+      const text = JSON.stringify(state.content, null, 2) + '\n';
+      const res = await ghPut(CONTENT_PATH, text, `Content update — ${new Date().toLocaleString()}`, state.sha);
+      state.sha = res.content.sha;
+      state.original = deepClone(state.content);
+      setDirty(false);
+      toast('ok','Published successfully','Your site will update in ~30 seconds.');
+    } catch(err){
+      toast('err','Publish failed', err.message);
+    } finally {
+      state.saving = false;
+      btn.classList.remove('saving');
+      btn.innerHTML = '<i class="fas fa-cloud-arrow-up"></i> <span>Publish</span>';
+    }
+  }
+
+  /* =========================================================
+     RAW JSON VIEW
+     ========================================================= */
+  function wireRaw(){
+    const ta = $('#rawEditor'), err = $('#rawErr');
+    $('#applyRaw').addEventListener('click', () => {
+      try {
+        const parsed = JSON.parse(ta.value);
+        state.content = parsed;
+        setDirty(true); render();
+        toast('ok','JSON applied','Publish to save.');
+      } catch(e){
+        err.textContent = 'Invalid JSON: ' + e.message;
+        err.classList.add('show');
+      }
+    });
+  }
+
+  /* =========================================================
+     SETTINGS VIEW
+     ========================================================= */
+  function wireSettings(){
+    $('#downloadJson').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(state.content, null, 2)], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'content.json'; a.click();
+      URL.revokeObjectURL(a.href);
+    });
+    $('#reloadJson').addEventListener('click', async () => {
+      if (state.dirty && !confirm('You have unsaved changes. Reload anyway?')) return;
+      await boot();
+      toast('ok','Reloaded from GitHub');
+    });
+    $('#logoutBtn').addEventListener('click', () => {
+      if (!confirm('Sign out? You will need to re-enter your token.')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    });
+  }
+
+  /* =========================================================
+     KEYBOARD SHORTCUTS
+     ========================================================= */
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's'){
+      e.preventDefault();
+      if (!state.saving && state.dirty) publish();
+    }
+  });
+
+  window.addEventListener('beforeunload', e => {
+    if (state.dirty){ e.preventDefault(); e.returnValue = ''; }
+  });
+
+  /* =========================================================
+     AUTO LOGIN
+     ========================================================= */
+  if (cfg.owner && cfg.repo && cfg.token && cfg.branch){
+    boot();
+  }
+})();
+</script>
+</body>
+</html>
