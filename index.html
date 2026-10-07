@@ -1,577 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thazham VR</title>
-  <!-- Font Awesome 6 (free) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thazham VR</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    body {
-      background-color: #0a0a0a;
-      color: #eaeaea;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.5;
-      scroll-behavior: smooth;
-    }
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
 
-    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
+:root{
+  --bg-deep:#0a0a0a;
+  --bg-card:#151515;
+  --accent:#ffffff;
+  --accent-glow:rgba(255,255,255,.25);
+  --text-light:#f0f0f0;
+  --text-dim:#a0a0a0;
+  --border-light:#2a2a2a;
+  --transition:all .25s ease;
+}
 
-    :root {
-      --bg-deep: #0a0a0a;
-      --bg-card: #151515;
-      --accent: #ffffff;
-      --accent-glow: rgba(255, 255, 255, 0.25);
-      --text-light: #f0f0f0;
-      --text-dim: #a0a0a0;
-      --border-light: #2a2a2a;
-      --transition: all 0.25s ease;
-    }
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg-deep);
+  color:#eaeaea;
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  line-height:1.5;
+  overflow-x:hidden;
+}
 
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      position: relative;
-      z-index: 2;
-    }
+.container{max-width:1280px;margin:0 auto;padding:0 2rem;position:relative;z-index:2}
+section{padding:5rem 0;position:relative}
 
-    section {
-      padding: 5rem 0;
-      position: relative;
-    }
+h1,h2,h3,h4{font-weight:800;letter-spacing:-.02em}
+h1{font-size:clamp(2.8rem,7vw,5.2rem);line-height:1.08}
+h2{font-size:clamp(2.2rem,5.5vw,3.6rem);margin-bottom:1.2rem}
+h2 .accent{color:var(--accent)}
 
-    h1, h2, h3 {
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
+.section-head{text-align:center;max-width:760px;margin:0 auto 3rem}
+.section-head p{color:var(--text-dim);font-size:1.1rem;margin-top:.5rem}
 
-    h1 {
-      font-size: clamp(3.2rem, 10vw, 5.8rem);
-      line-height: 1.1;
-    }
+/* ================= BUTTONS ================= */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
+  padding:1rem 2.3rem;border-radius:60px;font-weight:600;font-size:1.05rem;
+  text-decoration:none;transition:var(--transition);border:1px solid transparent;
+  cursor:pointer;font-family:inherit;
+}
+.btn-primary{background:var(--accent);color:#0a0a0a;box-shadow:0 0 20px rgba(255,255,255,.3)}
+.btn-primary:hover{background:#ddd;color:#000;box-shadow:0 0 35px rgba(255,255,255,.6),0 0 60px rgba(255,255,255,.3);transform:scale(1.02)}
+.btn-outline{border:1.5px solid var(--accent);color:var(--accent);background:transparent;box-shadow:0 0 15px rgba(255,255,255,.15)}
+.btn-outline:hover{background:var(--accent);color:#0a0a0a;box-shadow:0 0 30px rgba(255,255,255,.5);transform:scale(1.02)}
 
-    h2 {
-      font-size: clamp(2.5rem, 6vw, 3.8rem);
-      margin-bottom: 1.5rem;
-    }
+/* ================= SCROLL PROGRESS ================= */
+.scroll-progress{
+  position:fixed;top:0;left:0;height:3px;width:0;z-index:300;
+  background:linear-gradient(90deg,#ffffff,#8a8a8a);
+  box-shadow:0 0 14px rgba(255,255,255,.6);
+  transition:width .1s linear;
+}
 
-    h2 .accent {
-      color: var(--accent);
-    }
+/* ================= NAVBAR ================= */
+.navbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,10,.88);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid #2a2a2a;
+  padding:1rem 2rem;
+}
+.nav-container{display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:.75rem;font-size:1.7rem;font-weight:800;color:#fff}
+.logo img{height:38px;width:auto;display:block}
+.logo span{color:#8f8f8f}
+.nav-links{display:flex;gap:2.2rem;align-items:center}
+.nav-links a{text-decoration:none;color:#ddd;font-weight:500;font-size:1rem;transition:var(--transition);cursor:pointer}
+.nav-links a:hover{color:#fff;text-shadow:0 0 12px rgba(255,255,255,.5)}
+.nav-cta{background:transparent;border:2px solid #fff;color:#fff;padding:.6rem 2rem;border-radius:50px;font-weight:700;font-size:1rem;cursor:pointer;transition:var(--transition);font-family:inherit}
+.nav-cta:hover{background:#fff;color:#0a0a0a;box-shadow:0 0 25px #fff}
+.menu-toggle{display:none;font-size:1.8rem;color:#fff;cursor:pointer;background:none;border:none}
 
-    /* buttons */
-    .btn {
-      display: inline-block;
-      padding: 1rem 2.5rem;
-      border-radius: 60px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: var(--transition);
-      border: 1px solid transparent;
-      font-size: 1.1rem;
-      cursor: pointer;
-    }
+/* ================= HERO ================= */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  position:relative;isolation:isolate;overflow:hidden;padding:6rem 0 4rem;
+}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;z-index:0;pointer-events:none}
+.hero-scrim{
+  position:absolute;inset:0;z-index:1;
+  background:
+    radial-gradient(circle at 75% 30%,rgba(255,255,255,.06) 0%,transparent 55%),
+    linear-gradient(180deg,rgba(10,10,10,.55) 0%,rgba(10,10,10,.85) 60%,#0a0a0a 100%);
+}
+.hero::after{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.2;
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc0IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wMjUiIC8+PC9zdmc+');
+}
+.hero-content{max-width:960px;position:relative;z-index:2}
 
-    .btn-primary {
-      background: var(--accent);
-      color: #0a0a0a;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-    }
+.eyebrow{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-size:.8rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:#c4c4c4;border:1px solid #2f2f2f;background:rgba(255,255,255,.03);
+  padding:.5rem 1.1rem;border-radius:60px;margin-bottom:1.6rem;
+}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff;animation:pulseDot 2s infinite}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.35}}
 
-    .btn-primary:hover {
-      background: #dddddd;
-      color: #000;
-      box-shadow: 0 0 35px rgba(255,255,255,0.6), 0 0 60px rgba(255,255,255,0.3);
-      transform: scale(1.02);
-    }
+.hero-sub{font-size:1.22rem;color:#b8b8b8;max-width:660px;margin:1.5rem 0 2.5rem}
+.hero-btns{display:flex;gap:1.2rem;flex-wrap:wrap}
 
-    .btn-outline {
-      border: 1.5px solid var(--accent);
-      color: var(--accent);
-      background: transparent;
-      box-shadow: 0 0 15px rgba(255,255,255,0.15);
-    }
+/* ================= STATS ================= */
+.stats-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;
+  background:linear-gradient(180deg,#141414,#0f0f0f);
+  border-radius:50px;padding:2.8rem 2rem;margin:-3rem auto 3rem;
+  border:1px solid #2a2a2a;box-shadow:0 30px 40px -20px #000;
+  position:relative;z-index:5;
+}
+.stat-item{text-align:center}
+.stat-highlight{font-size:3.4rem;font-weight:800;color:#fff;line-height:1.2;text-shadow:0 0 30px rgba(255,255,255,.5)}
+.stat-label{color:#a0a0a0;font-weight:500;letter-spacing:.5px;font-size:.95rem}
 
-    .btn-outline:hover {
-      background: var(--accent);
-      color: #0a0a0a;
-      box-shadow: 0 0 30px rgba(255,255,255,0.5);
-      transform: scale(1.02);
-    }
+/* ================= PARTNERS MARQUEE ================= */
+.partners{padding:3rem 0 4rem}
+.partners-title{
+  text-align:center;color:#8a8a8a;font-size:.82rem;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;margin-bottom:2.4rem;
+}
+.marquee{
+  position:relative;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+}
+.marquee + .marquee{margin-top:1.1rem}
+.marquee-track{display:flex;gap:1.2rem;width:max-content;animation:marqueeScroll 40s linear infinite}
+.marquee-track.reverse{animation-direction:reverse;animation-duration:52s}
+.marquee:hover .marquee-track{animation-play-state:paused}
+@keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-    /* navigation */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(10, 10, 10, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid #2a2a2a;
-      padding: 1rem 2rem;
-    }
+.logo-chip{
+  display:flex;align-items:center;gap:.85rem;
+  padding:1rem 1.8rem;border-radius:18px;white-space:nowrap;
+  background:#121212;border:1px solid #262626;color:#8f8f8f;
+  font-weight:700;font-size:1rem;transition:var(--transition);
+}
+.logo-chip i{font-size:1.3rem;color:#6f6f6f;transition:var(--transition)}
+.logo-chip img{height:26px;width:auto;filter:grayscale(1);opacity:.7;transition:var(--transition)}
+.logo-chip:hover{color:#fff;border-color:#4a4a4a;background:#181818;box-shadow:0 0 30px rgba(255,255,255,.08);transform:translateY(-3px)}
+.logo-chip:hover i,.logo-chip:hover img{color:#fff;filter:grayscale(0);opacity:1}
 
-    .nav-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+/* ================= VIDEO DEMOS ================= */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.8rem;margin-top:1rem}
+.video-card{
+  background:#141414;border:1px solid #282828;border-radius:26px;
+  overflow:hidden;cursor:pointer;transition:var(--transition);
+  display:flex;flex-direction:column;
+}
+.video-card:hover{transform:translateY(-8px);border-color:#fff;box-shadow:0 30px 45px -20px rgba(255,255,255,.22)}
+.video-thumb{
+  position:relative;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;background:linear-gradient(135deg,#1e1e1e,#0e0e0e);
+}
+.video-thumb::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.1),transparent 62%);
+}
+.video-thumb .watermark{font-size:3.2rem;color:rgba(255,255,255,.1);position:relative;z-index:1}
+.play-btn{
+  position:absolute;z-index:2;width:64px;height:64px;border-radius:50%;
+  background:rgba(255,255,255,.95);color:#0a0a0a;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+  box-shadow:0 0 32px rgba(255,255,255,.4);
+  transition:var(--transition);padding-left:4px;
+}
+.play-btn::after{
+  content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.45);animation:ring 2.4s infinite;
+}
+@keyframes ring{0%{transform:scale(.92);opacity:.9}100%{transform:scale(1.5);opacity:0}}
+.video-card:hover .play-btn{transform:scale(1.12);box-shadow:0 0 50px rgba(255,255,255,.75)}
+.duration{
+  position:absolute;bottom:.85rem;right:.85rem;z-index:2;
+  background:rgba(0,0,0,.72);border:1px solid #333;color:#ddd;
+  font-size:.76rem;font-weight:600;padding:.25rem .65rem;border-radius:8px;letter-spacing:.04em;
+}
+.video-info{padding:1.3rem 1.5rem 1.6rem;display:flex;flex-direction:column;gap:.55rem;flex:1}
+.video-info h3{font-size:1.2rem;color:#f2f2f2}
+.video-info p{color:#9d9d9d;font-size:.93rem;line-height:1.5;flex:1}
+.tag{
+  align-self:flex-start;margin-top:.5rem;font-size:.72rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:#cfcfcf;
+  border:1px solid #333;background:#1b1b1b;padding:.3rem .8rem;border-radius:40px;
+}
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 2rem;
-      font-weight: 800;
-      color: white;
-    }
-    .logo span {
-      color: white;
-    }
-    .logo-icon {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      background: #2a2a2a;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: #ccc;
-      box-shadow: 0 0 0 1px #444;
-    }
+/* ================= VIDEO MODAL ================= */
+.video-modal{
+  position:fixed;inset:0;z-index:500;display:none;
+  align-items:center;justify-content:center;padding:1.5rem;
+}
+.video-modal.open{display:flex}
+.video-modal-backdrop{
+  position:absolute;inset:0;background:rgba(0,0,0,.88);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.video-modal-inner{
+  position:relative;z-index:2;width:100%;max-width:1000px;
+  background:#0e0e0e;border:1px solid #2c2c2c;border-radius:24px;
+  overflow:hidden;box-shadow:0 40px 90px -20px #000;
+}
+.video-modal-inner video{width:100%;display:block;background:#000;aspect-ratio:16/9}
+.modal-caption{padding:1.3rem 1.6rem 1.6rem}
+.modal-caption h3{font-size:1.25rem;color:#fff;margin-bottom:.35rem}
+.modal-caption p{color:#9d9d9d;font-size:.95rem}
+.modal-close{
+  position:absolute;top:.9rem;right:.9rem;z-index:3;
+  width:44px;height:44px;border-radius:50%;border:1px solid #444;
+  background:rgba(15,15,15,.85);color:#fff;font-size:1.05rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:var(--transition);
+}
+.modal-close:hover{background:#fff;color:#0a0a0a;border-color:#fff;transform:rotate(90deg)}
 
-    .nav-links {
-      display: flex;
-      gap: 2.8rem;
-      align-items: center;
-    }
+/* ================= ABOUT ================= */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.vision-card{
+  background:linear-gradient(160deg,#161616,#101010);
+  padding:2.6rem;border-radius:40px;border-left:6px solid #fff;
+  box-shadow:0 20px 30px -10px rgba(0,0,0,.5);
+}
+.vision-card h3{color:#fff;margin-bottom:1rem;font-size:1.5rem}
+.vision-card p{font-size:1.15rem;color:#c8c8c8}
 
-    .nav-links a {
-      text-decoration: none;
-      color: #dddddd;
-      font-weight: 500;
-      transition: var(--transition);
-      font-size: 1.05rem;
-      cursor: pointer;
-    }
+/* ================= FOCUS ================= */
+.focus-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:2rem;margin-top:1rem}
+.focus-card{
+  background:#151515;border-radius:30px;overflow:hidden;
+  transition:var(--transition);border:1px solid #2d2d2d;
+  display:flex;flex-direction:column;width:280px;flex:0 0 auto;
+}
+.focus-card:hover{transform:translateY(-8px);box-shadow:0 30px 30px -10px rgba(255,255,255,.1),0 0 0 1px #fff}
+.card-img{
+  height:160px;background:#1f1f1f;display:flex;align-items:center;justify-content:center;
+  font-size:3rem;color:#bbb;
+}
+.focus-card h3{padding:1.4rem 1.4rem .4rem;font-size:1.3rem;color:#f0f0f0}
+.focus-card p{padding:0 1.4rem 1.6rem;color:#a0a0a0;font-size:.93rem;line-height:1.45}
 
-    .nav-links a:hover {
-      color: white;
-      text-shadow: 0 0 12px rgba(255,255,255,0.5);
-    }
+/* ================= PROJECTS ================= */
+.coming-soon-block{
+  text-align:center;background:#121212;border-radius:60px;
+  padding:4.5rem 2rem;border:2px dashed #555;
+}
+.coming-soon-block h3{font-size:clamp(2.6rem,7vw,4.6rem);color:#fff;text-shadow:0 0 30px rgba(255,255,255,.4)}
 
-    .nav-cta {
-      background: transparent;
-      border: 2px solid white;
-      color: white;
-      padding: 0.6rem 2rem;
-      border-radius: 50px;
-      font-weight: 700;
-      box-shadow: 0 0 12px rgba(255,255,255,0.2);
-      cursor: pointer;
-    }
+/* ================= CAREERS ================= */
+.careers-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:2rem;margin-top:1rem}
+.career-card{
+  background:#151515;border-radius:30px;padding:2rem;width:320px;
+  transition:var(--transition);border:1px solid #2d2d2d;text-align:center;
+  display:flex;flex-direction:column;
+}
+.career-card:hover{transform:translateY(-8px);box-shadow:0 30px 30px -10px rgba(255,255,255,.1),0 0 0 1px #fff}
+.career-card i.role{font-size:2.8rem;color:#fff;margin-bottom:1.4rem}
+.career-card h3{font-size:1.5rem;margin-bottom:.7rem}
+.career-card .location{font-size:.88rem;color:#888;margin-bottom:.9rem}
+.career-card .description{font-size:.9rem;color:#aaa;margin-bottom:1.5rem;line-height:1.45;flex:1}
+.career-card .btn-sm{
+  display:inline-block;padding:.6rem 1.5rem;border-radius:40px;font-weight:600;
+  text-decoration:none;background:transparent;border:1px solid #fff;
+  color:#fff;transition:var(--transition);
+}
+.career-card .btn-sm:hover{background:#fff;color:#0a0a0a}
 
-    .nav-cta:hover {
-      background: white;
-      color: #0a0a0a;
-      box-shadow: 0 0 25px white;
-    }
+/* ================= CONTACT ================= */
+.contact-section{display:flex;flex-direction:column;align-items:center}
+.contact-card{
+  background:#141414;border-radius:48px;padding:3rem;max-width:680px;width:100%;
+  border:1px solid #444;box-shadow:0 30px 40px -20px #000;
+}
+.contact-item{display:flex;align-items:center;gap:1.4rem;font-size:1.2rem;margin:1.8rem 0}
+.contact-item i{color:#fff;width:2.2rem;font-size:1.9rem;text-align:center}
+.contact-item a{color:inherit;text-decoration:none;transition:var(--transition)}
+.contact-item a:hover{color:#fff;text-shadow:0 0 8px rgba(255,255,255,.5)}
 
-    .menu-toggle {
-      display: none;
-      font-size: 2rem;
-      color: white;
-      cursor: pointer;
-    }
+/* ================= FOOTER ================= */
+.footer{background:#080808;padding:4rem 2rem 3rem;border-top:1px solid #2a2a2a}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1.5fr;gap:3rem;max-width:1280px;margin:0 auto}
+.footer-logo{font-size:2rem;font-weight:800;color:#fff}
+.footer-logo span{color:#8f8f8f}
+.footer-links{display:flex;flex-direction:column;gap:.9rem}
+.footer-links a{color:#aaa;text-decoration:none;transition:var(--transition);font-size:.98rem}
+.footer-links a:hover{color:#fff}
+.footer-contact p{margin:.75rem 0;color:#aaa;font-size:.98rem}
+.footer-contact a{color:#aaa;text-decoration:none}
+.footer-contact a:hover{color:#fff}
+.footer-bottom{
+  max-width:1280px;margin:3rem auto 0;padding-top:1.6rem;border-top:1px solid #1e1e1e;
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;color:#666;font-size:.88rem;
+}
 
-    /* hero */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      background: #0a0a0a;
-      position: relative;
-      isolation: isolate;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.03) 0%, transparent 50%),
-                  radial-gradient(circle at 20% 80%, rgba(255,255,255,0.02) 0%, transparent 50%);
-      z-index: 1;
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc0IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wMjUiIC8+PC9zdmc+');
-      opacity: 0.2;
-      z-index: 1;
-      pointer-events: none;
-    }
-    .hero-content {
-      max-width: 900px;
-      position: relative;
-      z-index: 2;
-    }
-    .hero-sub {
-      font-size: 1.3rem;
-      color: #b0b0b0;
-      max-width: 650px;
-      margin: 1.5rem 0 2.5rem;
-    }
-    .hero-btns {
-      display: flex;
-      gap: 1.8rem;
-      flex-wrap: wrap;
-    }
+/* ================= FADE ANIM ================= */
+.fade-section{opacity:0;transform:translateY(35px);transition:opacity .9s cubic-bezier(.2,.9,.3,1),transform .9s ease}
+.fade-section.visible{opacity:1;transform:translateY(0)}
 
-    /* stats row */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      background: #111111;
-      border-radius: 50px;
-      padding: 2.8rem 2rem;
-      margin: -3rem auto 3rem;
-      border: 1px solid #2a2a2a;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 30px 40px -20px black;
-      position: relative;
-      z-index: 5;
-    }
-    .stat-item {
-      text-align: center;
-    }
-    .stat-highlight {
-      font-size: 3.5rem;
-      font-weight: 800;
-      color: white;
-      line-height: 1.2;
-      text-shadow: 0 0 30px rgba(255,255,255,0.5);
-    }
-    .stat-label {
-      color: #a0a0a0;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-    }
-
-    /* about */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-    }
-    .vision-card {
-      background: #131313;
-      padding: 2.8rem;
-      border-radius: 40px;
-      border-left: 6px solid white;
-      box-shadow: 0 20px 30px -10px #00000080;
-    }
-
-    /* focus areas */
-    .focus-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .focus-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      margin-top: 1rem;
-    }
-    .focus-card {
-      background: #151515;
-      border-radius: 30px;
-      overflow: hidden;
-      transition: var(--transition);
-      border: 1px solid #2d2d2d;
-      display: flex;
-      flex-direction: column;
-      width: 280px;
-      flex: 0 0 auto;
-    }
-    .focus-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 30px 30px -10px rgba(255,255,255,0.1), 0 0 0 1px white;
-    }
-    .card-img {
-      height: 160px;
-      background: #1f1f1f;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      color: #bbb;
-    }
-    .focus-card h3 {
-      padding: 1.4rem 1.4rem 0.4rem;
-      font-size: 1.4rem;
-      color: #f0f0f0;
-    }
-    .focus-card p {
-      padding: 0 1.4rem 1.6rem;
-      color: #a0a0a0;
-      font-size: 0.95rem;
-      line-height: 1.4;
-    }
-
-    /* careers section */
-    .careers-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-    .career-card {
-      background: #151515;
-      border-radius: 30px;
-      padding: 2rem;
-      width: 320px;
-      transition: var(--transition);
-      border: 1px solid #2d2d2d;
-      text-align: center;
-    }
-    .career-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 30px 30px -10px rgba(255,255,255,0.1), 0 0 0 1px white;
-    }
-    .career-card i {
-      font-size: 3rem;
-      color: white;
-      margin-bottom: 1.5rem;
-    }
-    .career-card h3 {
-      font-size: 1.6rem;
-      margin-bottom: 1rem;
-    }
-    .career-card p {
-      color: #aaa;
-      margin-bottom: 0.5rem;
-    }
-    .career-card .location {
-      font-size: 0.9rem;
-      color: #888;
-      margin-bottom: 1rem;
-    }
-    .career-card .description {
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.4;
-    }
-    .career-card .btn-sm {
-      display: inline-block;
-      padding: 0.6rem 1.5rem;
-      border-radius: 40px;
-      font-weight: 600;
-      text-decoration: none;
-      background: transparent;
-      border: 1px solid white;
-      color: white;
-      transition: var(--transition);
-    }
-    .career-card .btn-sm:hover {
-      background: white;
-      color: #0a0a0a;
-    }
-
-    /* projects */
-    .coming-soon-block {
-      text-align: center;
-      background: #121212;
-      border-radius: 70px;
-      padding: 5rem 2rem;
-      border: 2px dashed #555;
-    }
-    .coming-soon-block h3 {
-      font-size: 5rem;
-      color: white;
-      text-shadow: 0 0 30px rgba(255,255,255,0.4);
-    }
-
-    /* contact */
-    .contact-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .contact-card {
-      background: #141414;
-      border-radius: 48px;
-      padding: 3.5rem;
-      max-width: 680px;
-      width: 100%;
-      border: 1px solid #444;
-      box-shadow: 0 30px 40px -20px black;
-    }
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      font-size: 1.3rem;
-      margin: 2rem 0;
-    }
-    .contact-item i {
-      color: white;
-      width: 2.2rem;
-      font-size: 2rem;
-    }
-    .contact-item a {
-      color: inherit;
-      text-decoration: none;
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    .contact-item a:hover {
-      color: white;
-      text-shadow: 0 0 8px rgba(255,255,255,0.5);
-    }
-
-    /* footer */
-    .footer {
-      background: #080808;
-      padding: 4rem 2rem;
-      border-top: 1px solid #2a2a2a;
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1.5fr;
-      gap: 3rem;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-    .footer-logo {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: white;
-    }
-    .footer-logo span {
-      color: white;
-    }
-    .footer-links {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .footer-links a {
-      color: #aaa;
-      text-decoration: none;
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    .footer-links a:hover {
-      color: white;
-    }
-    .footer-contact p {
-      margin: 0.8rem 0;
-      color: #aaa;
-    }
-    .footer-contact a {
-      color: #aaa;
-      text-decoration: none;
-    }
-    .footer-contact a:hover {
-      color: white;
-    }
-
-    /* fade animation */
-    .fade-section {
-      opacity: 0;
-      transform: translateY(35px);
-      transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.3, 1), transform 0.9s ease;
-    }
-    .fade-section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* responsive */
-    @media (max-width: 900px) {
-      .nav-links {
-        position: fixed;
-        top: 80px;
-        left: 0;
-        width: 100%;
-        background: rgba(10, 10, 10, 0.98);
-        backdrop-filter: blur(20px);
-        flex-direction: column;
-        padding: 3rem 2rem;
-        gap: 2rem;
-        border-bottom: 3px solid white;
-        transform: translateY(-150%);
-        opacity: 0;
-        transition: 0.4s;
-        z-index: 99;
-        box-shadow: 0 40px 50px black;
-      }
-      .nav-links.active {
-        transform: translateY(0);
-        opacity: 1;
-      }
-      .menu-toggle {
-        display: block;
-      }
-      .stats-row {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-      .about-grid {
-        grid-template-columns: 1fr;
-      }
-      .footer-grid {
-        grid-template-columns: 1fr;
-      }
-      .focus-card {
-        width: 260px;
-      }
-      .career-card {
-        width: 280px;
-      }
-    }
-    @media (max-width: 600px) {
-      .hero-btns {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .container {
-        padding: 0 1.2rem;
-      }
-      .focus-card,
-      .career-card {
-        width: 100%;
-        max-width: 360px;
-      }
-      .contact-card {
-        padding: 2rem;
-      }
-    }
-  </style>
+/* ================= RESPONSIVE ================= */
+@media (max-width:900px){
+  .nav-links{
+    position:fixed;top:74px;left:0;width:100%;
+    background:rgba(10,10,10,.98);backdrop-filter:blur(20px);
+    flex-direction:column;padding:3rem 2rem;gap:2rem;
+    border-bottom:3px solid #fff;
+    transform:translateY(-150%);opacity:0;transition:.4s;z-index:99;
+    box-shadow:0 40px 50px #000;
+  }
+  .nav-links.active{transform:translateY(0);opacity:1}
+  .menu-toggle{display:block}
+  .stats-row{grid-template-columns:1fr;gap:1.8rem;border-radius:36px}
+  .about-grid{grid-template-columns:1fr;gap:2.2rem}
+  .footer-grid{grid-template-columns:1fr;gap:2.2rem}
+}
+@media (max-width:600px){
+  .container{padding:0 1.2rem}
+  .hero-btns{flex-direction:column;align-items:stretch}
+  .hero-btns .btn{width:100%}
+  .focus-card,.career-card{width:100%;max-width:380px}
+  .contact-card{padding:2rem}
+  .stat-highlight{font-size:2.6rem}
+  .navbar{padding:.85rem 1.2rem}
+  .logo{font-size:1.4rem}
+  .logo img{height:32px}
+  .video-modal{padding:.8rem}
+}
+</style>
 </head>
 <body>
 
+<!-- SCROLL PROGRESS -->
 <div class="scroll-progress" id="scrollProgress"></div>
 
+<!-- ============ NAVBAR ============ -->
 <nav class="navbar">
   <div class="nav-container">
     <div class="logo">
-      <img src="thazham-logo.png" alt="Thazham VR logo" onerror="this.style.display='none'">
+      <img src="thazham-logo.png" alt="Thazham VR" onerror="this.style.display='none'">
       THAZHAM <span>VR</span>
     </div>
     <button class="menu-toggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
@@ -587,7 +360,7 @@
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- ============ HERO ============ -->
 <section class="hero" id="home">
   <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="metadata"></video>
   <div class="hero-scrim"></div>
@@ -603,106 +376,168 @@
   </div>
 </section>
 
-<!-- STATS -->
+<!-- ============ STATS ============ -->
 <div class="container">
-  <div class="stats-row fade-section" id="statsRow"></div>
+  <div class="stats-row fade-section" id="statsRow">
+    <!-- Fallback content — replaced by content.json if available -->
+    <div class="stat-item"><div class="stat-highlight">3+</div><div class="stat-label">Active Projects</div></div>
+    <div class="stat-item"><div class="stat-highlight">VR / AR</div><div class="stat-label">Technology Focus</div></div>
+    <div class="stat-item"><div class="stat-highlight">Immersive</div><div class="stat-label">Experience Design</div></div>
+  </div>
 </div>
 
-<!-- PARTNERS -->
+<!-- ============ PARTNERS ============ -->
 <section class="partners fade-section" aria-label="Collaborating partners">
   <div class="container"><p class="partners-title" data-field="partners.title">Collaborating With</p></div>
-  <div class="marquee"><div class="marquee-track" id="marqueeRow1"></div></div>
-  <div class="marquee"><div class="marquee-track reverse" id="marqueeRow2"></div></div>
+  <div class="marquee">
+    <div class="marquee-track" id="marqueeRow1">
+      <div class="logo-chip"><i class="fas fa-university"></i> Anna University</div>
+      <div class="logo-chip"><i class="fas fa-landmark"></i> Heritage Trust</div>
+      <div class="logo-chip"><i class="fas fa-microchip"></i> TechNova Labs</div>
+      <div class="logo-chip"><i class="fas fa-cube"></i> MetaForge Studios</div>
+    </div>
+  </div>
+  <div class="marquee">
+    <div class="marquee-track reverse" id="marqueeRow2">
+      <div class="logo-chip"><i class="fas fa-vr-cardboard"></i> ImmerseX</div>
+      <div class="logo-chip"><i class="fas fa-flask"></i> IIT Research Park</div>
+      <div class="logo-chip"><i class="fas fa-brain"></i> CogniLearn</div>
+      <div class="logo-chip"><i class="fas fa-film"></i> FrameNine Media</div>
+    </div>
+  </div>
 </section>
 
-<!-- DEMOS -->
+<!-- ============ DEMOS ============ -->
 <section id="demos" class="fade-section">
   <div class="container">
     <div class="section-head">
       <h2>Video <span class="accent">Demos</span></h2>
       <p>Step inside our immersive builds. Click any card to play a walkthrough of the experience.</p>
     </div>
-    <div class="video-grid" id="demosGrid"></div>
+    <div class="video-grid" id="demosGrid">
+      <!-- Fallback demos — replaced by content.json if available -->
+      <article class="video-card"
+               data-video="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+               data-title="Heritage Museum Walkthrough"
+               data-desc="A fully explorable VR reconstruction of a historic temple complex with interactive artefacts.">
+        <div class="video-thumb">
+          <i class="fas fa-landmark watermark"></i>
+          <div class="play-btn"><i class="fas fa-play"></i></div>
+          <span class="duration">02:14</span>
+        </div>
+        <div class="video-info">
+          <h3>Heritage Museum Walkthrough</h3>
+          <p>A fully explorable VR reconstruction of a historic temple complex with interactive artefacts.</p>
+          <span class="tag">Heritage</span>
+        </div>
+      </article>
+      <article class="video-card"
+               data-video="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+               data-title="VR Chemistry Lab"
+               data-desc="Students run experiments safely inside a fully simulated immersive laboratory.">
+        <div class="video-thumb">
+          <i class="fas fa-flask watermark"></i>
+          <div class="play-btn"><i class="fas fa-play"></i></div>
+          <span class="duration">01:48</span>
+        </div>
+        <div class="video-info">
+          <h3>VR Chemistry Lab</h3>
+          <p>Students run experiments safely inside a fully simulated immersive laboratory.</p>
+          <span class="tag">Education</span>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 
-<!-- ABOUT -->
+<!-- ============ ABOUT ============ -->
 <section id="about" class="fade-section">
   <div class="container">
     <h2><span data-field="about.heading">About Thazham VR</span></h2>
     <div class="about-grid">
       <div>
-        <p style="font-size:1.32rem;color:#ddd;margin-bottom:1.8rem;" data-field="about.lead"></p>
-        <p style="color:#a5a5a5;font-size:1.02rem;" data-field="about.body"></p>
+        <p style="font-size:1.32rem;color:#ddd;margin-bottom:1.8rem;" data-field="about.lead">Thazham VR is an immersive technology company dedicated to preserving knowledge systems and redefining how people learn, explore, and experience culture.</p>
+        <p style="color:#a5a5a5;font-size:1.02rem;" data-field="about.body">We believe technology should enhance heritage rather than replace it. Through Virtual Reality, 3D production, and immersive design, we create digital ecosystems that connect the past, present, and future.</p>
       </div>
       <div class="vision-card">
         <h3 data-field="about.visionTitle">Our Vision</h3>
-        <p data-field="about.visionText"></p>
+        <p data-field="about.visionText">To become a global leader in immersive cultural and educational technology by making knowledge systems accessible through experiential digital platforms.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOCUS -->
+<!-- ============ FOCUS ============ -->
 <section id="focus" class="fade-section">
   <div class="container">
     <div class="section-head">
       <h2><span data-field="focus.title">Focus Areas</span></h2>
       <p data-field="focus.subtitle">Five pillars that shape everything we build.</p>
     </div>
-    <div class="focus-grid" id="focusGrid"></div>
+    <div class="focus-grid" id="focusGrid">
+      <div class="focus-card"><div class="card-img"><i class="fas fa-landmark"></i></div><h3>Immersive Heritage Museums</h3><p>Interactive VR environments allowing users to explore historical spaces.</p></div>
+      <div class="focus-card"><div class="card-img"><i class="fas fa-archive"></i></div><h3>Digital Cultural Archive</h3><p>3D documentation and immersive preservation of artifacts and traditional knowledge.</p></div>
+      <div class="focus-card"><div class="card-img"><i class="fas fa-graduation-cap"></i></div><h3>VR Education Modules</h3><p>Experience-based learning simulations designed for immersive classrooms.</p></div>
+      <div class="focus-card"><div class="card-img"><i class="fas fa-vr-cardboard"></i></div><h3>Custom VR Hardware</h3><p>VR systems designed for educational and training environments.</p></div>
+      <div class="focus-card"><div class="card-img"><i class="fas fa-cubes"></i></div><h3>VR &amp; 3D Production</h3><p>VR application development, 3D environments, and immersive studios.</p></div>
+    </div>
   </div>
 </section>
 
-<!-- PROJECTS -->
+<!-- ============ PROJECTS ============ -->
 <section id="projects" class="fade-section">
   <div class="container">
     <div class="section-head"><h2><span class="accent">Projects</span></h2></div>
     <div class="coming-soon-block">
       <h3 data-field="projects.title">Coming Soon</h3>
-      <p style="font-size:1.28rem;color:#a5a5a5;max-width:620px;margin:1.6rem auto 0;" data-field="projects.text"></p>
+      <p style="font-size:1.28rem;color:#a5a5a5;max-width:620px;margin:1.6rem auto 0;" data-field="projects.text">We are currently developing immersive experiences that will be showcased here soon.</p>
     </div>
   </div>
 </section>
 
-<!-- CAREERS -->
+<!-- ============ CAREERS ============ -->
 <section id="careers" class="fade-section">
   <div class="container">
     <div class="section-head">
       <h2><span data-field="careers.heading">Join the Team</span></h2>
-      <p data-field="careers.intro"></p>
+      <p data-field="careers.intro">Be part of a forward-thinking team shaping the future of immersive technology. We're looking for passionate individuals to help us build extraordinary experiences.</p>
     </div>
-    <div class="careers-grid" id="careersGrid"></div>
+    <div class="careers-grid" id="careersGrid">
+      <div class="career-card"><i class="fas fa-vr-cardboard role"></i><h3>XR Developer</h3><p class="location">Full-time · Chennai, India</p><p class="description">Build immersive VR/AR experiences with Unity/Unreal. Strong C#/C++ skills required.</p><a href="mailto:careers@thazhamvr.com?subject=Application%20for%20XR%20Developer%20Role" class="btn-sm">Apply Now</a></div>
+      <div class="career-card"><i class="fas fa-paintbrush role"></i><h3>3D Artist</h3><p class="location">Full-time · Chennai, India</p><p class="description">Create high-quality 3D assets, environments, and animations for VR projects.</p><a href="mailto:careers@thazhamvr.com?subject=Application%20for%203D%20Artist%20Role" class="btn-sm">Apply Now</a></div>
+      <div class="career-card"><i class="fas fa-code role"></i><h3>Frontend Engineer</h3><p class="location">Full-time · Remote</p><p class="description">Develop web-based interfaces for our VR platforms. React/Three.js experience a plus.</p><a href="mailto:careers@thazhamvr.com?subject=Application%20for%20Frontend%20Engineer%20Role" class="btn-sm">Apply Now</a></div>
+      <div class="career-card"><i class="fas fa-microchip role"></i><h3>Hardware Engineer</h3><p class="location">Full-time · Chennai, India</p><p class="description">Design and test VR hardware prototypes, PCB design, and embedded systems.</p><a href="mailto:careers@thazhamvr.com?subject=Application%20for%20Hardware%20Engineer%20Role" class="btn-sm">Apply Now</a></div>
+    </div>
     <p style="text-align:center;margin-top:3rem;color:#8a8a8a;">
-      <span data-field="careers.outro"></span>
+      <span data-field="careers.outro">Don't see a role that fits?</span>
       <a href="mailto:careers@thazhamvr.com?subject=General%20Application" style="color:#fff;">Send us your resume</a>
     </p>
   </div>
 </section>
 
-<!-- CONTACT -->
+<!-- ============ CONTACT ============ -->
 <section id="contact" class="fade-section contact-section">
   <div class="container" style="display:flex;flex-direction:column;align-items:center;">
     <h2 style="text-align:center;width:100%;">Contact <span class="accent">Us</span></h2>
     <div class="contact-card">
-      <div style="font-size:2rem;font-weight:800;margin-bottom:.4rem;" data-field="contact.company"></div>
-      <div style="color:#c4c4c4;font-size:1.18rem;margin-bottom:1.8rem;" data-field="contact.location"></div>
-      <div class="contact-item"><i class="fas fa-phone-alt"></i> <span id="contactPhones"></span></div>
-      <div class="contact-item"><i class="fas fa-envelope"></i> <a id="contactEmail" href="#"></a></div>
+      <div style="font-size:2rem;font-weight:800;margin-bottom:.4rem;" data-field="contact.company">Thazham VR</div>
+      <div style="color:#c4c4c4;font-size:1.18rem;margin-bottom:1.8rem;" data-field="contact.location">Chennai, Tamil Nadu, India</div>
+      <div class="contact-item"><i class="fas fa-phone-alt"></i> <span id="contactPhones">9894866586 | 8838715160</span></div>
+      <div class="contact-item"><i class="fas fa-envelope"></i> <a id="contactEmail" href="mailto:info@thazhamvr.com">info@thazhamvr.com</a></div>
       <div style="margin-top:2.2rem;border-top:1px solid #2e2e2e;padding-top:1.6rem;color:#a5a5a5;">
-        <i class="fas fa-map-marker-alt" style="color:#fff;margin-right:.7rem;"></i><span data-field="contact.address"></span>
+        <i class="fas fa-map-marker-alt" style="color:#fff;margin-right:.7rem;"></i><span data-field="contact.address">Chennai, Tamil Nadu, India</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ============ FOOTER ============ -->
 <footer class="footer">
   <div class="footer-grid">
     <div>
       <div class="footer-logo">THAZHAM <span>VR</span></div>
-      <p style="margin:1.1rem 0 1.8rem;color:#9a9a9a;max-width:300px;" data-field="footer.tagline"></p>
-      <p style="color:#5f5f5f;" data-field="footer.copyright"></p>
+      <p style="margin:1.1rem 0 1.8rem;color:#9a9a9a;max-width:300px;" data-field="footer.tagline">Immersive Culture. Experiential Education. Future Innovation.</p>
+      <p style="color:#5f5f5f;" data-field="footer.copyright">© 2025 Thazham VR</p>
     </div>
     <div>
       <h4 style="color:#fff;margin-bottom:1.4rem;">Explore</h4>
@@ -713,8 +548,8 @@
     </div>
     <div class="footer-contact">
       <h4 style="color:#fff;margin-bottom:1.4rem;">Connect</h4>
-      <p><i class="fas fa-phone" style="width:1.6rem;color:#fff;"></i> <span id="footerPhones"></span></p>
-      <p><i class="fas fa-envelope" style="color:#fff;width:1.6rem;"></i> <a id="footerEmail" href="#"></a></p>
+      <p><i class="fas fa-phone" style="width:1.6rem;color:#fff;"></i> <span id="footerPhones">9894866586 | 8838715160</span></p>
+      <p><i class="fas fa-envelope" style="color:#fff;width:1.6rem;"></i> <a id="footerEmail" href="mailto:info@thazhamvr.com">info@thazhamvr.com</a></p>
     </div>
   </div>
   <div class="footer-bottom">
@@ -723,7 +558,7 @@
   </div>
 </footer>
 
-<!-- VIDEO MODAL -->
+<!-- ============ VIDEO MODAL ============ -->
 <div class="video-modal" id="videoModal" aria-hidden="true">
   <div class="video-modal-backdrop" data-close></div>
   <div class="video-modal-inner" role="dialog" aria-modal="true">
@@ -739,25 +574,24 @@
 <script>
 (function(){
   'use strict';
-  const $ = (s,el=document)=>el.querySelector(s);
+  const $  = (s,el=document)=>el.querySelector(s);
   const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
 
-  /* ============================================================
-     CONTENT — fetch content.json, fall back to static HTML
-     ============================================================ */
+  /* ============ CONTENT LOADER ============ */
   async function loadContent(){
     try {
       const r = await fetch('content.json?t=' + Date.now(), { cache:'no-store' });
       if (!r.ok) throw new Error('no content.json');
       return await r.json();
     } catch(e){
-      console.info('[Thazham VR] content.json not loaded — using static defaults.');
+      console.info('[Thazham VR] content.json not found — using static defaults.');
       return null;
     }
   }
 
   function applyContent(c){
     if (!c) return;
+
     // Simple text fields
     $$('[data-field]').forEach(el => {
       const path = el.dataset.field.split('.');
@@ -767,15 +601,15 @@
     });
 
     // Hero video
-    if (c.hero?.heroVideo){
+    if (c.hero && c.hero.heroVideo){
       const v = $('#heroVideo');
       v.src = c.hero.heroVideo;
       v.load();
       v.play().catch(()=>{});
     }
 
-    // Showreel button
-    if (c.hero?.showreel?.url){
+    // Showreel
+    if (c.hero && c.hero.showreel && c.hero.showreel.url){
       const b = $('#showreelBtn');
       b.dataset.video = c.hero.showreel.url;
       b.dataset.title = c.hero.showreel.title || '';
@@ -783,7 +617,7 @@
     }
 
     // Stats
-    if (Array.isArray(c.stats)){
+    if (Array.isArray(c.stats) && c.stats.length){
       $('#statsRow').innerHTML = c.stats.map(s => `
         <div class="stat-item">
           <div class="stat-highlight">${esc(s.value)}</div>
@@ -799,7 +633,7 @@
     }
 
     // Demos
-    if (Array.isArray(c.demos)){
+    if (Array.isArray(c.demos) && c.demos.length){
       $('#demosGrid').innerHTML = c.demos.map(d => `
         <article class="video-card"
                  data-video="${esc(d.videoUrl)}"
@@ -820,7 +654,7 @@
     }
 
     // Focus
-    if (c.focus?.items){
+    if (c.focus && Array.isArray(c.focus.items) && c.focus.items.length){
       $('#focusGrid').innerHTML = c.focus.items.map(f => `
         <div class="focus-card">
           <div class="card-img"><i class="${esc(f.icon)}"></i></div>
@@ -830,7 +664,7 @@
     }
 
     // Careers
-    if (c.careers?.items){
+    if (c.careers && Array.isArray(c.careers.items) && c.careers.items.length){
       $('#careersGrid').innerHTML = c.careers.items.map(j => `
         <div class="career-card">
           <i class="${esc(j.icon)} role"></i>
@@ -844,12 +678,15 @@
     // Contact
     if (c.contact){
       const phones = (c.contact.phones||[]).join('  |  ');
-      $('#contactPhones').textContent = phones;
-      $('#footerPhones').textContent = phones;
-      $('#contactEmail').textContent = c.contact.email;
-      $('#contactEmail').href = 'mailto:' + c.contact.email;
-      $('#footerEmail').textContent = c.contact.email;
-      $('#footerEmail').href = 'mailto:' + c.contact.email;
+      const elPhones = $('#contactPhones');
+      const footPhones = $('#footerPhones');
+      if (elPhones) elPhones.textContent = phones;
+      if (footPhones) footPhones.textContent = phones;
+      if (c.contact.email){
+        const ce = $('#contactEmail'), fe = $('#footerEmail');
+        if (ce){ ce.textContent = c.contact.email; ce.href = 'mailto:' + c.contact.email; }
+        if (fe){ fe.textContent = c.contact.email; fe.href = 'mailto:' + c.contact.email; }
+      }
     }
   }
 
@@ -869,25 +706,31 @@
     });
   }
 
-  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function esc(s){
+    return String(s==null?'':s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
 
-  /* ============================================================
-     INTERACTIONS
-     ============================================================ */
+  /* ============ INTERACTIONS ============ */
   // Mobile menu
   const toggle = document.querySelector('.menu-toggle');
   const navMenu = document.querySelector('.nav-links');
-  const icon = toggle?.querySelector('i');
-  toggle?.addEventListener('click', e => {
-    e.stopPropagation();
-    navMenu.classList.toggle('active');
-    const open = navMenu.classList.contains('active');
-    icon.classList.toggle('fa-bars', !open);
-    icon.classList.toggle('fa-times', open);
-  });
+  const icon = toggle ? toggle.querySelector('i') : null;
+  if (toggle){
+    toggle.addEventListener('click', e => {
+      e.stopPropagation();
+      navMenu.classList.toggle('active');
+      const open = navMenu.classList.contains('active');
+      if (icon){
+        icon.classList.toggle('fa-bars', !open);
+        icon.classList.toggle('fa-times', open);
+      }
+    });
+  }
   $$('.nav-links a').forEach(a => a.addEventListener('click', () => {
     navMenu.classList.remove('active');
-    icon?.classList.add('fa-bars'); icon?.classList.remove('fa-times');
+    if (icon){ icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
   }));
 
   // Scroll progress
@@ -896,14 +739,20 @@
     const h = document.documentElement.scrollHeight - window.innerHeight;
     bar.style.width = (h > 0 ? (window.scrollY/h)*100 : 0) + '%';
   };
-  window.addEventListener('scroll', upBar, { passive:true }); upBar();
+  window.addEventListener('scroll', upBar, { passive:true });
+  upBar();
 
   // Fade-in
-  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('visible')),
-    { threshold:.12, rootMargin:'0px 0px -40px 0px' });
-  $$('.fade-section').forEach(el => io.observe(el));
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    }), { threshold:.12, rootMargin:'0px 0px -40px 0px' });
+    $$('.fade-section').forEach(el => io.observe(el));
+  } else {
+    $$('.fade-section').forEach(el => el.classList.add('visible'));
+  }
 
-  // Smooth scroll
+  // Smooth scroll with navbar offset
   const navbar = document.querySelector('.navbar');
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]');
@@ -927,8 +776,9 @@
     if (!src) return;
     modalVideo.src = src;
     modalTitle.textContent = title || '';
-    modalDesc.textContent = desc || '';
+    modalDesc.textContent  = desc  || '';
     modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
     document.body.style.overflow = 'hidden';
     modalVideo.play().catch(()=>{});
   }
@@ -937,30 +787,37 @@
     modalVideo.removeAttribute('src');
     modalVideo.load();
     modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
     document.body.style.overflow = '';
   }
   function wireVideoCards(){
     $$('[data-video]').forEach(el => {
-      el.addEventListener('click', () => openVideo(el.dataset.video, el.dataset.title, el.dataset.desc));
+      if (el.dataset.wired) return;
+      el.dataset.wired = '1';
+      el.addEventListener('click', () => {
+        openVideo(el.dataset.video, el.dataset.title, el.dataset.desc);
+      });
     });
   }
   modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeVideo));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeVideo(); });
-
-  // Initial wire (in case content.json fails, static cards still work)
-  wireVideoCards();
-
-  // Pause hero video on hidden tab
-  const heroVideo = $('#heroVideo');
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) heroVideo.pause();
-    else heroVideo.play().catch(()=>{});
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) closeVideo();
   });
 
-  /* ============================================================
-     GO
-     ============================================================ */
-  loadContent().then(applyContent);
+  // Wire fallback cards immediately
+  wireVideoCards();
+
+  // Pause hero video when tab hidden
+  const heroVideo = $('#heroVideo');
+  if (heroVideo){
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) heroVideo.pause();
+      else heroVideo.play().catch(()=>{});
+    });
+  }
+
+  /* ============ GO ============ */
+  loadContent().then(applyContent).catch(err => console.warn('[Thazham VR]', err));
 })();
 </script>
 </body>
