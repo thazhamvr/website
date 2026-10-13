@@ -65,88 +65,37 @@
     "title": "Collaborating With",
     "row1": [
       {
-        "icon": "fas fa-university",
-        "label": "Anna University",
-        "image": ""
-      },
-      {
-        "icon": "fas fa-landmark",
-        "label": "Heritage Trust",
-        "image": ""
-      },
-      {
-        "icon": "fas fa-microchip",
-        "label": "TechNova Labs",
-        "image": ""
-      },
-      {
-        "icon": "fas fa-cube",
-        "label": "MetaForge Studios",
-        "image": ""
-      },
-      {
-        "icon": "fas fa-museum",
-        "label": "Museum Collective",
-        "image": ""
-      },
-      {
-        "icon": "fas fa-school",
-        "label": "Vidya EduGroup",
-        "image": ""
-      },
-      {
         "icon": "fas fa-globe",
-        "label": "CultureWave",
-        "image": ""
-      },
-      {
-        "icon": "fas fa-award",
-        "label": "StartupTN",
-        "image": ""
-      }
-    ],
-    "row2": [
-      {
-        "icon": "fas fa-drafting-compass",
-        "label": "Axiom Design",
+        "label": "Space Kids India",
         "image": ""
       },
       {
         "icon": "fas fa-vr-cardboard",
-        "label": "ImmerseX",
-        "image": ""
-      },
-      {
-        "icon": "fas fa-flask",
-        "label": "IIT Research Park",
-        "image": ""
-      },
-      {
-        "icon": "fas fa-book-open",
-        "label": "Tamil Heritage Assn.",
-        "image": ""
-      },
-      {
-        "icon": "fas fa-brain",
-        "label": "CogniLearn",
+        "label": "Dark Phase Studios - UK",
         "image": ""
       },
       {
         "icon": "fas fa-film",
-        "label": "FrameNine Media",
+        "label": "Weduo Private Limited",
+        "image": ""
+      },
+      {
+        "icon": "fas fa-microchip",
+        "label": "Yavilo Robotics",
         "image": ""
       },
       {
         "icon": "fas fa-industry",
-        "label": "Bharat XR",
+        "label": "Korol EV",
         "image": ""
       },
       {
-        "icon": "fas fa-seedling",
-        "label": "Innovate India",
+        "icon": "fas fa-school",
+        "label": "Nexus Learn ",
         "image": ""
       }
-    ]
+    ],
+    "row2": []
   },
   "demos": {
     "eyebrow": "See it in action",
@@ -154,36 +103,36 @@
     "subtitle": "Step inside our immersive builds. Click any card to play a walkthrough of the experience.",
     "items": [
       {
-        "title": "Heritage Museum Walkthrough",
-        "desc": "A fully explorable VR reconstruction of a historic temple complex with interactive artefacts.",
-        "tag": "Heritage",
+        "title": "EV Battery Pack Assembly",
+        "desc": "A fully explorable and immersive content for Battery Pack assembly for EV vehicles.",
+        "tag": "Technology",
         "duration": "02:14",
         "videoUrl": "",
-        "icon": "fas fa-landmark"
+        "icon": "fas fa-industry"
       },
       {
-        "title": "VR Chemistry Lab",
-        "desc": "Students run experiments safely inside a fully simulated immersive laboratory.",
+        "title": "VR Space Exploration",
+        "desc": "Students visualise Space and Solar System in this VR DEMO",
         "tag": "Education",
         "duration": "01:48",
         "videoUrl": "",
-        "icon": "fas fa-flask"
+        "icon": "fas fa-school"
       },
       {
-        "title": "Digital Cultural Archive",
-        "desc": "3D-scanned artefacts catalogued into an immersive, searchable digital archive.",
-        "tag": "Archive",
+        "title": "Motor Assembly",
+        "desc": "Immersive experience of Motor assembly in VR",
+        "tag": "Technology",
         "duration": "03:02",
         "videoUrl": "",
-        "icon": "fas fa-archive"
+        "icon": "fas fa-microchip"
       },
       {
-        "title": "Custom VR Hardware Prototype",
-        "desc": "Our in-house headset and controller prototypes, built for classroom durability.",
-        "tag": "Hardware",
+        "title": "CubeSat Assembly and Launch Demo",
+        "desc": "CubeSat Assembly and Launch - Immersive Experience in VR",
+        "tag": "Space",
         "duration": "01:12",
         "videoUrl": "",
-        "icon": "fas fa-microchip"
+        "icon": "fas fa-globe"
       }
     ]
   },
