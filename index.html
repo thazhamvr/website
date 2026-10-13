@@ -5,13 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thazham VR — Immersive Culture, Education & Heritage</title>
 <meta name="description" content="Thazham VR is an immersive technology company preserving knowledge, transforming education and building heritage experiences through Virtual Reality.">
-  <!-- Favicons -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-  
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -181,6 +179,7 @@ h2 .accent{color:var(--accent)}
   background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.1),transparent 62%);
 }
 .video-thumb .watermark{font-size:3.2rem;color:rgba(255,255,255,.1);position:relative;z-index:1}
+.video-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.75;z-index:1}
 .play-btn{
   position:absolute;z-index:2;width:64px;height:64px;border-radius:50%;
   background:rgba(255,255,255,.95);color:#0a0a0a;
@@ -195,7 +194,7 @@ h2 .accent{color:var(--accent)}
 @keyframes ring{0%{transform:scale(.92);opacity:.9}100%{transform:scale(1.5);opacity:0}}
 .video-card:hover .play-btn{transform:scale(1.12);box-shadow:0 0 50px rgba(255,255,255,.75)}
 .duration{
-  position:absolute;bottom:.85rem;right:.85rem;z-index:2;
+  position:absolute;bottom:.85rem;right:.85rem;z-index:3;
   background:rgba(0,0,0,.72);border:1px solid #333;color:#ddd;
   font-size:.76rem;font-weight:600;padding:.25rem .65rem;border-radius:8px;letter-spacing:.04em;
 }
@@ -222,7 +221,9 @@ h2 .accent{color:var(--accent)}
   background:#0e0e0e;border:1px solid #2c2c2c;border-radius:24px;
   overflow:hidden;box-shadow:0 40px 90px -20px #000;
 }
-.video-modal-inner video{width:100%;display:block;background:#000;aspect-ratio:16/9}
+.modal-player{width:100%;aspect-ratio:16/9;background:#000;position:relative}
+.modal-player video,
+.modal-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#000}
 .modal-caption{padding:1.3rem 1.6rem 1.6rem}
 .modal-caption h3{font-size:1.25rem;color:#fff;margin-bottom:.35rem}
 .modal-caption p{color:#9d9d9d;font-size:.95rem}
@@ -315,6 +316,7 @@ h2 .accent{color:var(--accent)}
 .cs-center .cs-body{max-width:680px;margin:0 auto}
 
 .cs-image-boxed img,.cs-image-boxed video{width:100%;border-radius:20px;display:block}
+.cs-image-boxed iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:20px;display:block;background:#000}
 .cs-image-full{padding:0}
 .cs-image-full img,.cs-image-full video{width:100%;display:block}
 .cs-caption{text-align:center;color:#8f8f8f;font-size:.88rem;margin-top:1rem}
@@ -323,6 +325,7 @@ h2 .accent{color:var(--accent)}
 .cs-split.cs-reverse .cs-split__media{order:2}
 .cs-split.cs-reverse .cs-split__copy{order:1}
 .cs-split__media img,.cs-split__media video{width:100%;border-radius:20px;display:block;background:#000}
+.cs-split__media iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:20px;display:block;background:#000}
 .cs-split__bullets{list-style:none;padding:0;margin:1.5rem 0 0}
 .cs-split__bullets li{position:relative;padding-left:1.8rem;margin-bottom:.75rem;color:#b8b8b8}
 .cs-split__bullets li::before{
@@ -563,7 +566,7 @@ h2 .accent{color:var(--accent)}
   <div class="video-modal-backdrop" data-close></div>
   <div class="video-modal-inner" role="dialog" aria-modal="true">
     <button class="modal-close" data-close aria-label="Close"><i class="fas fa-times"></i></button>
-    <video id="modalVideo" controls playsinline preload="metadata"></video>
+    <div id="modalPlayer" class="modal-player"></div>
     <div class="modal-caption">
       <h3 id="modalTitle"></h3>
       <p id="modalDesc"></p>
@@ -585,6 +588,60 @@ h2 .accent{color:var(--accent)}
   }
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  /* ============================================================
+     VIDEO TYPE HELPERS
+     ============================================================ */
+  function detectVideoType(url){
+    if (!url) return 'none';
+    const u = String(url).toLowerCase();
+    if (u.includes('youtube.com') || u.includes('youtu.be')) return 'youtube';
+    if (u.includes('drive.google.com')) return 'gdrive';
+    return 'mp4';
+  }
+
+  function toYoutubeEmbed(url, autoplay){
+    let id = '';
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes('youtu.be')) id = u.pathname.slice(1);
+      else if (u.pathname.startsWith('/shorts/')) id = u.pathname.split('/')[2];
+      else if (u.pathname.startsWith('/embed/')) id = u.pathname.split('/')[2];
+      else id = u.searchParams.get('v') || '';
+    } catch(e){}
+    if (!id) return url;
+    const params = ['rel=0','modestbranding=1'];
+    if (autoplay) params.push('autoplay=1');
+    return `https://www.youtube.com/embed/${id}?${params.join('&')}`;
+  }
+
+  function toDriveEmbed(url){
+    const m = url.match(/\/file\/d\/([^/?#]+)/) || url.match(/[?&]id=([^&#]+)/);
+    return m ? `https://drive.google.com/file/d/${m[1]}/preview` : url;
+  }
+
+  function youtubeThumb(url){
+    let id = '';
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes('youtu.be')) id = u.pathname.slice(1);
+      else if (u.pathname.startsWith('/shorts/')) id = u.pathname.split('/')[2];
+      else id = u.searchParams.get('v') || '';
+    } catch(e){}
+    return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
+  }
+
+  function renderInlineVideo(url, opts){
+    opts = opts || {};
+    const t = detectVideoType(url);
+    const cls = opts.class || '';
+    const style = opts.style || '';
+    if (t === 'youtube' || t === 'gdrive'){
+      const embed = t === 'youtube' ? toYoutubeEmbed(url) : toDriveEmbed(url);
+      return `<iframe class="${cls}" src="${esc(embed)}" style="${style};border:0;background:#000;aspect-ratio:16/9" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`;
+    }
+    return `<video class="${cls}" src="${esc(url)}" ${opts.controls !== false ? 'controls' : ''} playsinline preload="metadata" poster="${esc(opts.poster||'')}" style="${style};background:#000"></video>`;
+  }
 
   /* ============================================================
      CONTENT LOADER
@@ -662,7 +719,7 @@ h2 .accent{color:var(--accent)}
     applyDesignTokens(c);
     applyBrand(c);
 
-    /* ---- Top-level section visibility (hide whole sections) ---- */
+    /* ---- Top-level section visibility ---- */
     const aboutSec = document.getElementById('about');
     const projectsSec = document.getElementById('projects');
     const contactSec = document.getElementById('contact');
@@ -680,13 +737,16 @@ h2 .accent{color:var(--accent)}
       if (v != null && typeof v === 'string') el.textContent = v;
     });
 
-    /* ---- Hero background video ---- */
+    /* ---- Hero background video (MP4 only) ---- */
     if (c.hero && c.hero.heroVideo){
-      const v = document.getElementById('heroVideo');
-      v.src = c.hero.heroVideo;
-      v.classList.add('active');
-      v.load();
-      v.play().catch(()=>{});
+      const type = detectVideoType(c.hero.heroVideo);
+      if (type === 'mp4'){
+        const v = document.getElementById('heroVideo');
+        v.src = c.hero.heroVideo;
+        v.classList.add('active');
+        v.load();
+        v.play().catch(()=>{});
+      }
     }
 
     /* ---- Hero buttons (from array) ---- */
@@ -701,7 +761,6 @@ h2 .accent{color:var(--accent)}
         return `<a href="${esc(href)}" class="${cls}">${esc(b.label||'')}</a>`;
       }).join('');
 
-      // Wire showreel buttons
       container.querySelectorAll('[data-hero-action="showreel"]').forEach(btn => {
         btn.addEventListener('click', () => {
           const s = (c.hero && c.hero.showreel) || {};
@@ -738,22 +797,24 @@ h2 .accent{color:var(--accent)}
       ? c.demos.items
       : (Array.isArray(c.demos) ? c.demos : []);
     if (isVisible('demos') && demoItems.length){
-      document.getElementById('demosGrid').innerHTML = demoItems.map(d => `
-        <article class="video-card"
-                 data-video="${esc(d.videoUrl)}"
-                 data-title="${esc(d.title)}"
-                 data-desc="${esc(d.desc)}">
-          <div class="video-thumb">
-            <i class="${esc(d.icon||'fas fa-play')} watermark"></i>
-            <div class="play-btn"><i class="fas fa-play"></i></div>
-            ${d.duration ? `<span class="duration">${esc(d.duration)}</span>` : ''}
-          </div>
-          <div class="video-info">
-            <h3>${esc(d.title)}</h3>
-            <p>${esc(d.desc)}</p>
-            ${d.tag ? `<span class="tag">${esc(d.tag)}</span>` : ''}
-          </div>
-        </article>`).join('');
+      document.getElementById('demosGrid').innerHTML = demoItems.map(d => {
+        const yt = d.videoUrl && detectVideoType(d.videoUrl) === 'youtube' ? youtubeThumb(d.videoUrl) : '';
+        const thumbInner = yt
+          ? `<img src="${esc(yt)}" alt="" loading="lazy"><div class="play-btn"><i class="fas fa-play"></i></div>${d.duration ? `<span class="duration">${esc(d.duration)}</span>` : ''}`
+          : `<i class="${esc(d.icon||'fas fa-play')} watermark"></i><div class="play-btn"><i class="fas fa-play"></i></div>${d.duration ? `<span class="duration">${esc(d.duration)}</span>` : ''}`;
+        return `
+          <article class="video-card"
+                   data-video="${esc(d.videoUrl)}"
+                   data-title="${esc(d.title)}"
+                   data-desc="${esc(d.desc)}">
+            <div class="video-thumb">${thumbInner}</div>
+            <div class="video-info">
+              <h3>${esc(d.title)}</h3>
+              <p>${esc(d.desc)}</p>
+              ${d.tag ? `<span class="tag">${esc(d.tag)}</span>` : ''}
+            </div>
+          </article>`;
+      }).join('');
       wireVideoCards();
     } else if (!isVisible('demos')){
       const ds = document.getElementById('demos');
@@ -879,7 +940,7 @@ h2 .accent{color:var(--accent)}
     return `<section class="cs-section"><div class="cs-inner">
       <div class="cs-image-boxed">
         ${s.videoUrl
-          ? `<video src="${esc(s.videoUrl)}" controls playsinline preload="metadata" poster="${esc(s.posterUrl||'')}" style="width:100%;border-radius:20px;display:block;background:#000"></video>`
+          ? renderInlineVideo(s.videoUrl, { style:'width:100%;border-radius:20px', poster: s.posterUrl })
           : '<div style="color:#5a5a5a;text-align:center;padding:4rem 2rem;border:1px dashed #333;border-radius:20px">Video not set</div>'}
       </div>
       ${s.caption ? `<div class="cs-caption">${esc(s.caption)}</div>` : ''}
@@ -891,7 +952,7 @@ h2 .accent{color:var(--accent)}
     const mediaKind = s.mediaType === 'video' ? 'video' : 'image';
     const media = s.mediaUrl
       ? (mediaKind === 'video'
-          ? `<video src="${esc(s.mediaUrl)}" controls playsinline preload="metadata" style="width:100%;border-radius:20px;display:block;background:#000"></video>`
+          ? renderInlineVideo(s.mediaUrl, { style:'width:100%;border-radius:20px' })
           : `<img src="${esc(s.mediaUrl)}" alt="" loading="lazy">`)
       : `<div style="color:#5a5a5a;text-align:center;padding:4rem 2rem;border:1px dashed #333;border-radius:20px">Media not set</div>`;
     return `<section class="cs-section"><div class="cs-inner">
@@ -938,7 +999,7 @@ h2 .accent{color:var(--accent)}
     </div></section>`;
   }
   function csHero(s){
-    const bg = s.bgVideo
+    const bg = s.bgVideo && detectVideoType(s.bgVideo) === 'mp4'
       ? `<video src="${esc(s.bgVideo)}" autoplay muted loop playsinline preload="metadata"></video>`
       : (s.bgImage ? `<img src="${esc(s.bgImage)}" alt="" loading="eager">` : '');
     const p = s.primaryLabel ? `<a href="#${esc(s.primaryAction||'demos')}" class="btn btn-primary">${esc(s.primaryLabel)}</a>` : '';
@@ -1001,27 +1062,55 @@ h2 .accent{color:var(--accent)}
     window.scrollTo({ top, behavior:'smooth' });
   });
 
+  /* ============================================================
+     VIDEO MODAL — handles MP4, YouTube, Drive
+     ============================================================ */
   const modal = document.getElementById('videoModal');
-  const modalVideo = document.getElementById('modalVideo');
+  const modalPlayer = document.getElementById('modalPlayer');
   const modalTitle = document.getElementById('modalTitle');
   const modalDesc  = document.getElementById('modalDesc');
 
+  function clearPlayer(){
+    const v = modalPlayer.querySelector('video');
+    if (v){ try { v.pause(); } catch(e){} }
+    modalPlayer.innerHTML = '';
+  }
+
   function openVideo(src, title, desc){
     if (!src) return;
-    modalVideo.src = src;
+    clearPlayer();
+    const t = detectVideoType(src);
+
+    if (t === 'youtube' || t === 'gdrive'){
+      const embed = t === 'youtube' ? toYoutubeEmbed(src, true) : toDriveEmbed(src);
+      const iframe = document.createElement('iframe');
+      iframe.src = embed;
+      iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('frameborder', '0');
+      modalPlayer.appendChild(iframe);
+    } else {
+      const v = document.createElement('video');
+      v.src = src;
+      v.controls = true;
+      v.playsInline = true;
+      v.preload = 'metadata';
+      modalPlayer.appendChild(v);
+      v.play().catch(()=>{});
+    }
+
     modalTitle.textContent = title || '';
     modalDesc.textContent  = desc  || '';
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
-    modalVideo.play().catch(()=>{});
   }
+
   function closeVideo(){
-    modalVideo.pause();
-    modalVideo.removeAttribute('src');
-    modalVideo.load();
+    clearPlayer();
     modal.classList.remove('open');
     document.body.style.overflow = '';
   }
+
   function wireVideoCards(){
     $$('[data-video]').forEach(el => {
       if (el.dataset.wired) return;
@@ -1036,7 +1125,7 @@ h2 .accent{color:var(--accent)}
     if (e.key === 'Escape' && modal.classList.contains('open')) closeVideo();
   });
 
-  // Fallback showreel handler (if content.hero.buttons doesn't exist)
+  // Fallback showreel handler
   const showreelBtn = document.getElementById('showreelBtn');
   if (showreelBtn){
     showreelBtn.addEventListener('click', () => {
