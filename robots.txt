@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Keep admin & content internals out of search results
+Disallow: /admin.html
+Disallow: /content.json
+Disallow: /assets/
+
+Sitemap: https://thazhamvr.com/sitemap.xml
