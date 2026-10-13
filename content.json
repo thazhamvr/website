@@ -106,7 +106,7 @@
         "title": "EV Battery Pack Assembly",
         "desc": "A fully explorable and immersive content for Battery Pack assembly for EV vehicles.",
         "tag": "Technology",
-        "duration": "02:14",
+        "duration": "04:00",
         "videoUrl": "https://github.com/thazhamvr/website/blob/main/BatteryAssembly_VR%20(1).mp4",
         "icon": "fas fa-industry"
       },
@@ -114,7 +114,7 @@
         "title": "VR Space Exploration",
         "desc": "Students visualise Space and Solar System in this VR DEMO",
         "tag": "Education",
-        "duration": "01:48",
+        "duration": "01:45",
         "videoUrl": "https://github.com/thazhamvr/website/blob/main/Space_Demo_2.mp4",
         "icon": "fas fa-school"
       },
@@ -122,7 +122,7 @@
         "title": "Motor Assembly",
         "desc": "Immersive experience of Motor assembly in VR",
         "tag": "Technology",
-        "duration": "03:02",
+        "duration": "01:45",
         "videoUrl": "https://github.com/thazhamvr/website/blob/main/Motor_Demo_02.mp4",
         "icon": "fas fa-microchip"
       },
@@ -130,7 +130,7 @@
         "title": "CubeSat Assembly and Launch Demo",
         "desc": "CubeSat Assembly and Launch - Immersive Experience in VR",
         "tag": "Space",
-        "duration": "01:12",
+        "duration": "02:30",
         "videoUrl": "https://github.com/thazhamvr/website/blob/main/SpaceKidz_Demo.mp4",
         "icon": "fas fa-globe"
       }
