@@ -4,986 +4,1290 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Thazham VR · Admin Console</title>
+<title>THAZHAM VR — Admin Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0a0a0a;--panel:#121212;--panel2:#181818;--line:#262626;--line2:#333;
-  --txt:#eaeaea;--dim:#9a9a9a;--dim2:#6a6a6a;--white:#fff;
-  --ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--accent:#fff;
-}
-body{background:var(--bg);color:var(--txt);font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.5;overflow-x:hidden}
-button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
-button{cursor:pointer;border:none;background:none}
-
-/* ---------- LOGIN ---------- */
-#login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 20%,#161616,#0a0a0a 70%);z-index:1000;padding:2rem}
-#login.hidden{display:none}
-.login-card{background:#111;border:1px solid var(--line2);border-radius:24px;padding:3rem;max-width:480px;width:100%;box-shadow:0 40px 80px -30px #000}
-.login-card h1{font-size:1.8rem;font-weight:800;margin-bottom:.4rem}
-.login-card .sub{color:var(--dim);margin-bottom:2rem;font-size:.95rem}
-.login-card label{display:block;font-size:.8rem;font-weight:600;color:#cfcfcf;margin:1.1rem 0 .4rem;letter-spacing:.04em;text-transform:uppercase}
-.login-card input{width:100%;background:#0d0d0d;border:1px solid var(--line2);border-radius:10px;padding:.85rem 1rem;color:#fff;transition:.2s}
-.login-card input:focus{outline:none;border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.08)}
-.login-card .btn-full{margin-top:2rem;width:100%;background:#fff;color:#0a0a0a;font-weight:700;padding:1rem;border-radius:12px;transition:.2s}
-.login-card .btn-full:hover{background:#e2e2e2;box-shadow:0 0 30px rgba(255,255,255,.4)}
-.login-card .hint{margin-top:1.2rem;font-size:.8rem;color:var(--dim2);line-height:1.6}
-.login-card .hint a{color:#ccc}
-.login-err{color:var(--err);font-size:.9rem;margin-top:1rem;display:none}
-.login-err.show{display:block}
-
-/* ---------- APP SHELL ---------- */
-#app{display:none;min-height:100vh}
-#app.ready{display:grid;grid-template-columns:260px 1fr}
-
-/* sidebar */
-aside{background:#0d0d0d;border-right:1px solid var(--line);padding:1.5rem 0;position:sticky;top:0;height:100vh;overflow-y:auto}
-.side-brand{display:flex;align-items:center;gap:.7rem;padding:0 1.5rem 1.5rem;border-bottom:1px solid var(--line);margin-bottom:1rem}
-.side-brand .logo-icon{width:38px;height:38px;background:#1c1c1c;border:1px solid var(--line2);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem}
-.side-brand .name{font-weight:800;font-size:1.05rem;letter-spacing:-.01em}
-.side-brand .name small{display:block;font-weight:500;font-size:.72rem;color:var(--dim2);letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
-.nav-item{display:flex;align-items:center;gap:.85rem;padding:.7rem 1.5rem;color:#b5b5b5;font-size:.92rem;font-weight:500;transition:.15s;cursor:pointer;border-left:2px solid transparent}
-.nav-item i{width:18px;text-align:center;font-size:.95rem;color:#7a7a7a}
-.nav-item:hover{background:#141414;color:#fff}
-.nav-item:hover i{color:#fff}
-.nav-item.active{background:#151515;color:#fff;border-left-color:#fff}
-.nav-item.active i{color:#fff}
-.nav-sep{font-size:.68rem;font-weight:700;color:var(--dim2);letter-spacing:.14em;text-transform:uppercase;padding:1.2rem 1.5rem .5rem}
-.side-foot{padding:1.5rem;border-top:1px solid var(--line);margin-top:1rem;font-size:.78rem;color:var(--dim2)}
-.side-foot a{color:#bbb;text-decoration:none}
-.side-foot a:hover{color:#fff}
-
-/* main */
-main{display:flex;flex-direction:column;min-height:100vh}
-.topbar{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:1rem 2rem;display:flex;align-items:center;gap:1.5rem}
-.topbar h2{font-size:1.15rem;font-weight:700;flex:1}
-.repo-pill{font-size:.78rem;color:var(--dim);background:#141414;border:1px solid var(--line2);padding:.4rem .85rem;border-radius:40px;display:flex;align-items:center;gap:.5rem}
-.repo-pill i{color:#fff}
-.dirty-dot{width:8px;height:8px;border-radius:50%;background:var(--warn);box-shadow:0 0 8px var(--warn);display:none}
-.dirty-dot.on{display:inline-block}
-.topbar .btn{padding:.6rem 1.3rem;border-radius:10px;font-size:.88rem;font-weight:600;transition:.2s;display:inline-flex;align-items:center;gap:.5rem}
-.btn-ghost{background:transparent;border:1px solid var(--line2);color:#ddd}
-.btn-ghost:hover{background:#1a1a1a;color:#fff;border-color:#555}
-.btn-save{background:#fff;color:#0a0a0a}
-.btn-save:hover{background:#e2e2e2;box-shadow:0 0 24px rgba(255,255,255,.35)}
-.btn-save:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
-.btn-save.saving{background:var(--warn);color:#000}
-
-/* panel */
-.panel{padding:2rem;max-width:920px;width:100%}
-.panel-head{margin-bottom:2rem}
-.panel-head h3{font-size:1.6rem;font-weight:800;margin-bottom:.3rem}
-.panel-head p{color:var(--dim);font-size:.95rem}
-.field{margin-bottom:1.4rem}
-.field label{display:block;font-size:.78rem;font-weight:600;color:#c5c5c5;margin-bottom:.4rem;letter-spacing:.04em;text-transform:uppercase}
-.field input,.field textarea,.field select{width:100%;background:#0e0e0e;border:1px solid var(--line2);border-radius:10px;padding:.85rem 1rem;color:#fff;transition:.18s;font-size:.95rem}
-.field textarea{resize:vertical;min-height:90px;line-height:1.55}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.07);background:#0a0a0a}
-.field .hint{font-size:.78rem;color:var(--dim2);margin-top:.4rem}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem}
-
-/* list editor */
-.list{display:flex;flex-direction:column;gap:1rem;margin-top:.5rem}
-.list-item{background:#111;border:1px solid var(--line);border-radius:16px;padding:1.2rem;transition:.2s}
-.list-item:hover{border-color:var(--line2)}
-.list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
-.list-head .num{font-size:.72rem;font-weight:700;color:var(--dim2);letter-spacing:.12em;text-transform:uppercase}
-.list-actions{display:flex;gap:.4rem}
-.list-actions button{width:32px;height:32px;border-radius:8px;background:#1a1a1a;border:1px solid var(--line2);color:#b5b5b5;font-size:.8rem;display:flex;align-items:center;justify-content:center;transition:.15s}
-.list-actions button:hover{background:#252525;color:#fff;border-color:#555}
-.list-actions button.del:hover{background:#2a1010;color:#ff8080;border-color:#5a2020}
-.list-actions button:disabled{opacity:.25;cursor:not-allowed}
-.btn-add{background:transparent;border:1.5px dashed var(--line2);color:#ccc;padding:.9rem;border-radius:14px;font-weight:600;font-size:.9rem;transition:.2s;display:flex;align-items:center;justify-content:center;gap:.6rem}
-.btn-add:hover{border-color:#fff;color:#fff;background:#141414}
-
-/* icon/image field */
-.icon-preview{display:flex;align-items:center;gap:.8rem;margin-top:.5rem}
-.icon-preview .fa-box{width:42px;height:42px;border-radius:10px;background:#1a1a1a;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem}
-.icon-preview code{font-size:.82rem;color:var(--dim);font-family:'SF Mono',Consolas,monospace}
-.img-thumb{max-height:60px;border-radius:8px;border:1px solid var(--line2);background:#0d0d0d}
-
-/* raw json */
-.raw-editor textarea{font-family:'SF Mono',Consolas,monospace;font-size:.82rem;min-height:520px;line-height:1.6;background:#0b0b0b}
-.raw-err{color:var(--err);font-size:.85rem;margin-top:.8rem;display:none}
-.raw-err.show{display:block}
-
-/* dashboard */
-.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
-.dash-card{background:#111;border:1px solid var(--line);border-radius:16px;padding:1.4rem}
-.dash-card .lbl{font-size:.75rem;color:var(--dim2);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:.5rem}
-.dash-card .val{font-size:1.8rem;font-weight:800}
-.dash-card .val.sm{font-size:1.1rem;font-weight:600;color:#ddd}
-.dash-actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1rem}
-
-/* toast */
-#toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;display:flex;flex-direction:column;gap:.7rem}
-.toast{background:#181818;border:1px solid var(--line2);border-left:3px solid #fff;border-radius:12px;padding:1rem 1.2rem;min-width:280px;max-width:400px;box-shadow:0 20px 40px -10px #000;animation:slideIn .3s cubic-bezier(.2,.9,.3,1);display:flex;align-items:flex-start;gap:.8rem}
-@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:none;opacity:1}}
-.toast.ok{border-left-color:var(--ok)}
-.toast.err{border-left-color:var(--err)}
-.toast i{font-size:1.05rem;margin-top:2px}
-.toast.ok i{color:var(--ok)} .toast.err i{color:var(--err)} .toast.info i{color:#fff}
-.toast .body{flex:1}
-.toast .body strong{display:block;font-weight:600;font-size:.9rem;margin-bottom:.15rem}
-.toast .body span{font-size:.82rem;color:var(--dim)}
-
-/* spinner */
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+:root{--bg:#0a0a0a;--bg-1:#0f0f0f;--bg-2:#141414;--bg-3:#1a1a1a;--line:rgba(255,255,255,.07);--line-2:rgba(255,255,255,.13);--lime:#c8f542;--lime-2:#d9ff5e;--lime-dim:rgba(200,245,66,.1);--lime-line:rgba(200,245,66,.28);--cyan:#5eead4;--txt:#f2f2f2;--txt-2:#8f8f8f;--txt-3:#5a5a5a;--red:#ff5f57;--green:#28c840;--amber:#febc2e;--display:'Outfit',sans-serif;--body:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;--ease:cubic-bezier(.22,.61,.36,1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--body);background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+input,textarea,select{outline:none}
+.app{display:grid;grid-template-columns:280px 1fr;height:100vh;overflow:hidden}
+.sidebar{background:var(--bg-1);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.sidebar__head{padding:22px 22px 18px;border-bottom:1px solid var(--line)}
+.sidebar__logo{font-family:var(--display);font-size:1rem;font-weight:800;letter-spacing:.18em;color:var(--txt)}
+.sidebar__logo b{background:linear-gradient(120deg,var(--lime),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:800}
+.sidebar__sub{font-size:.68rem;color:var(--txt-3);margin-top:4px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.sidebar__nav{flex:1;overflow-y:auto;padding:16px 12px}
+.sidebar__group{margin-bottom:22px}
+.sidebar__group-label{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#3a3a3a;padding:0 10px;margin-bottom:8px}
+.sidebar__item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:.85rem;color:var(--txt-2);cursor:pointer;transition:.15s var(--ease);width:100%;text-align:left;font-weight:500}
+.sidebar__item:hover{background:var(--bg-2);color:var(--txt)}
+.sidebar__item.is-active{background:var(--lime-dim);color:var(--lime);font-weight:700}
+.sidebar__item svg{width:15px;height:15px;flex-shrink:0;stroke-width:1.8}
+.sidebar__foot{padding:14px 18px;border-top:1px solid var(--line);font-size:.72rem;color:var(--txt-2);display:flex;align-items:center;gap:8px}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px currentColor}
+.status-dot.warn{background:var(--amber)}
+.status-dot.err{background:var(--red)}
+.main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.topbar{height:66px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:var(--bg-1);flex-shrink:0;gap:20px}
+.topbar__title{font-family:var(--display);font-size:1.02rem;font-weight:700;letter-spacing:-.01em}
+.topbar__title small{color:var(--txt-3);font-weight:400;font-size:.78rem;font-family:var(--body);margin-left:10px}
+.topbar__actions{display:flex;gap:8px;align-items:center}
+.content{flex:1;overflow-y:auto;padding:32px 40px 80px;max-width:1100px;width:100%}
+.btn{display:inline-flex;align-items:center;gap:7px;font-size:.8rem;font-weight:700;padding:9px 16px;border-radius:999px;transition:.2s var(--ease);white-space:nowrap;border:1px solid transparent}
+.btn svg{width:14px;height:14px;stroke-width:2}
+.btn--primary{background:var(--lime);color:#0a0a0a}
+.btn--primary:hover{background:var(--lime-2);box-shadow:0 0 20px rgba(200,245,66,.28);transform:translateY(-1px)}
+.btn--ghost{border-color:var(--line-2);color:var(--txt);background:transparent}
+.btn--ghost:hover{border-color:var(--lime-line);color:var(--lime);background:var(--lime-dim)}
+.btn--danger{border-color:rgba(255,95,87,.3);color:var(--red)}
+.btn--danger:hover{background:rgba(255,95,87,.1)}
+.btn--sm{padding:6px 12px;font-size:.73rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.section-card{background:var(--bg-1);border:1px solid var(--line);border-radius:14px;padding:26px 28px;margin-bottom:18px}
+.section-card__head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.section-card__title{font-family:var(--display);font-size:.95rem;font-weight:700;letter-spacing:-.01em}
+.section-card__desc{font-size:.78rem;color:var(--txt-2);margin-top:3px;line-height:1.55}
+.section-card__desc code{font-family:var(--mono);font-size:.72rem;background:var(--bg-3);padding:2px 6px;border-radius:4px;color:var(--lime)}
+.field{margin-bottom:18px}
+.field:last-child{margin-bottom:0}
+.field__label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-2);margin-bottom:7px}
+.field__hint{font-size:.72rem;color:var(--txt-3);margin-top:5px;line-height:1.5}
+.field__input,.field__textarea,.field__select{width:100%;padding:10px 13px;border-radius:9px;background:var(--bg-2);border:1px solid var(--line-2);color:var(--txt);font-size:.85rem;transition:.15s var(--ease);font-family:var(--body)}
+.field__textarea{resize:vertical;min-height:80px;line-height:1.6}
+.field__input:focus,.field__textarea:focus,.field__select:focus{border-color:var(--lime-line);box-shadow:0 0 0 3px var(--lime-dim);background:var(--bg-3)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.media-preview{margin-top:10px;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--bg-2);position:relative;min-height:60px;display:grid;place-items:center}
+.media-preview img,.media-preview video{width:100%;max-height:240px;object-fit:cover;display:block}
+.media-preview__empty{padding:20px;text-align:center;color:var(--txt-3);font-size:.75rem}
+.media-preview__badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.75);color:var(--lime);font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:5px}
+.icon-preview{display:flex;align-items:center;gap:10px;margin-top:8px}
+.icon-preview__box{width:38px;height:38px;border-radius:9px;background:var(--bg-2);border:1px solid var(--line-2);display:grid;place-items:center;color:var(--lime);font-size:1.05rem}
+.icon-preview__code{font-family:var(--mono);font-size:.72rem;color:var(--txt-2);background:var(--bg-3);padding:2px 6px;border-radius:4px}
+.icon-picker{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.icon-picker button{width:30px;height:30px;border-radius:7px;background:var(--bg-2);border:1px solid var(--line);color:var(--txt-2);font-size:.85rem;display:grid;place-items:center;transition:.15s var(--ease)}
+.icon-picker button:hover{border-color:var(--lime-line);color:var(--lime);background:var(--lime-dim)}
+.list-item{border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:12px;background:var(--bg-2);transition:.2s var(--ease)}
+.list-item:hover{border-color:var(--line-2);background:var(--bg-3)}
+.list-item__head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.list-item__title{font-size:.76rem;font-weight:700;color:var(--lime);letter-spacing:.1em;text-transform:uppercase}
+.list-item__controls{display:flex;gap:4px}
+.list-item__btn{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;color:var(--txt-2);transition:.15s var(--ease);border:1px solid transparent}
+.list-item__btn:hover{background:var(--bg-3);color:var(--txt);border-color:var(--line-2)}
+.list-item__btn--danger:hover{color:var(--red);background:rgba(255,95,87,.1);border-color:rgba(255,95,87,.3)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:250;display:none;place-items:center;padding:24px}
+.modal.is-open{display:grid}
+.modal__dialog{background:var(--bg-1);border:1px solid var(--line-2);border-radius:18px;padding:30px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto}
+.modal__title{font-family:var(--display);font-size:1.15rem;font-weight:800;margin-bottom:10px}
+.modal__text{font-size:.85rem;color:var(--txt-2);line-height:1.65;margin-bottom:22px}
+.modal__text code{font-family:var(--mono);font-size:.78rem;background:var(--bg-3);padding:2px 6px;border-radius:4px;color:var(--lime)}
+.modal__actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+.toast-stack{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{background:var(--bg-3);color:var(--txt);border-radius:10px;padding:14px 20px;font-size:.83rem;box-shadow:0 10px 40px rgba(0,0,0,.6);display:flex;align-items:center;gap:10px;pointer-events:auto;min-width:280px;max-width:420px;animation:toastIn .3s var(--ease);border-left:3px solid var(--lime);border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.toast--success{border-left-color:var(--green)}
+.toast--error{border-left-color:var(--red)}
+.toast--info{border-left-color:var(--cyan)}
+.toast__icon{width:18px;height:18px;flex-shrink:0}
+.toast--success .toast__icon{color:var(--green)}
+.toast--error .toast__icon{color:var(--red)}
+.toast--info .toast__icon{color:var(--cyan)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* mobile */
-.mobile-menu-btn{display:none;background:#1a1a1a;border:1px solid var(--line2);width:38px;height:38px;border-radius:10px;color:#fff;font-size:1rem}
+.boot{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:9999;text-align:center;padding:40px}
+.boot__logo{font-family:var(--display);font-size:1.3rem;font-weight:800;letter-spacing:.22em;margin-bottom:24px;color:var(--txt)}
+.boot__logo b{background:linear-gradient(120deg,var(--lime),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.boot__spinner{width:34px;height:34px;border:3px solid var(--line-2);border-top-color:var(--lime);border-radius:50%;margin:0 auto 20px;animation:spin 1s linear infinite}
+.boot__msg{font-size:.9rem;color:var(--txt-2)}
+.boot__error{background:var(--bg-2);border:1px solid rgba(255,95,87,.3);border-radius:12px;padding:22px;margin-top:20px;text-align:left}
+.boot__error pre{font-family:var(--mono);font-size:.78rem;color:var(--red);white-space:pre-wrap;word-break:break-word;line-height:1.6}
+.boot--hidden{display:none}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg-3);border-radius:5px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--line-2)}
 @media (max-width:900px){
-  #app.ready{grid-template-columns:1fr}
-  aside{position:fixed;left:0;top:0;width:260px;z-index:200;transform:translateX(-100%);transition:.3s}
-  aside.open{transform:none}
-  .mobile-menu-btn{display:flex;align-items:center;justify-content:center}
-  .panel{padding:1.5rem}
-  .topbar{padding:1rem 1.2rem;gap:.8rem}
-  .topbar h2{font-size:1rem}
-  .repo-pill{display:none}
-  .grid-2,.grid-3{grid-template-columns:1fr}
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;inset:0 25% 0 0;z-index:100;transform:translateX(-100%);transition:.3s var(--ease)}
+  .sidebar.is-open{transform:none}
+  .content{padding:24px 20px 80px}
+  .field-row{grid-template-columns:1fr}
+  .topbar__title small{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- ============= LOGIN ============= -->
-<div id="login">
-  <div class="login-card">
-    <h1>Thazham VR Console</h1>
-    <p class="sub">Sign in with a GitHub Personal Access Token to manage site content.</p>
-
-    <label for="lOwner">GitHub username / org</label>
-    <input id="lOwner" placeholder="e.g. thazhamvr" autocomplete="off">
-
-    <label for="lRepo">Repository name</label>
-    <input id="lRepo" placeholder="e.g. thazhamvr.github.io" autocomplete="off">
-
-    <label for="lBranch">Branch</label>
-    <input id="lBranch" placeholder="main" value="main" autocomplete="off">
-
-    <label for="lToken">Personal Access Token</label>
-    <input id="lToken" type="password" placeholder="ghp_…" autocomplete="off">
-
-    <button class="btn-full" id="loginBtn">Connect to Repository</button>
-    <div class="login-err" id="loginErr"></div>
-
-    <p class="hint">
-      Create a fine-grained token with <strong>Contents: Read &amp; Write</strong> permission on this repo.
-      <br>Token is stored only in your browser (localStorage) — never sent anywhere except api.github.com.
-    </p>
+<div class="boot" id="boot">
+  <div>
+    <div class="boot__logo">THAZHAM <b>VR</b></div>
+    <div class="boot__spinner"></div>
+    <div class="boot__msg" id="bootMsg">Loading admin console...</div>
+    <div id="bootError" style="display:none"></div>
   </div>
 </div>
 
-<!-- ============= APP ============= -->
-<div id="app">
-  <aside id="sidebar">
-    <div class="side-brand">
-      <div class="logo-icon"><i class="fas fa-vr-cardboard"></i></div>
-      <div class="name">Thazham VR<small>Admin Console</small></div>
+<div class="app" id="app" style="display:none">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__head">
+      <div class="sidebar__logo">THAZHAM <b>VR</b></div>
+      <div class="sidebar__sub">Admin Console</div>
     </div>
-
-    <div class="nav-sep">Overview</div>
-    <div class="nav-item active" data-view="dashboard"><i class="fas fa-gauge-high"></i> Dashboard</div>
-
-    <div class="nav-sep">Content</div>
-    <div class="nav-item" data-view="hero"><i class="fas fa-star"></i> Hero</div>
-    <div class="nav-item" data-view="stats"><i class="fas fa-chart-simple"></i> Stats</div>
-    <div class="nav-item" data-view="partners"><i class="fas fa-handshake"></i> Partners</div>
-    <div class="nav-item" data-view="demos"><i class="fas fa-play"></i> Video Demos</div>
-    <div class="nav-item" data-view="about"><i class="fas fa-circle-info"></i> About</div>
-    <div class="nav-item" data-view="focus"><i class="fas fa-bullseye"></i> Focus Areas</div>
-    <div class="nav-item" data-view="projects"><i class="fas fa-cubes"></i> Projects</div>
-    <div class="nav-item" data-view="careers"><i class="fas fa-briefcase"></i> Careers</div>
-    <div class="nav-item" data-view="contact"><i class="fas fa-envelope"></i> Contact</div>
-    <div class="nav-item" data-view="footer"><i class="fas fa-shoe-prints"></i> Footer</div>
-
-    <div class="nav-sep">Advanced</div>
-    <div class="nav-item" data-view="raw"><i class="fas fa-code"></i> Raw JSON</div>
-    <div class="nav-item" data-view="settings"><i class="fas fa-gear"></i> Settings</div>
-
-    <div class="side-foot">
-      <a href="/" target="_blank"><i class="fas fa-arrow-up-right-from-square"></i> View live site</a>
+    <nav class="sidebar__nav" id="sidebarNav"></nav>
+    <div class="sidebar__foot">
+      <span class="status-dot" id="saveStatus"></span>
+      <span id="saveStatusText">Ready</span>
     </div>
   </aside>
-
-  <main>
-    <div class="topbar">
-      <button class="mobile-menu-btn" id="mobileMenu"><i class="fas fa-bars"></i></button>
-      <h2 id="viewTitle">Dashboard</h2>
-      <div class="repo-pill"><i class="fas fa-code-branch"></i> <span id="repoPill">—</span></div>
-      <span class="dirty-dot" id="dirtyDot" title="Unsaved changes"></span>
-      <button class="btn btn-ghost" id="discardBtn" disabled><i class="fas fa-rotate-left"></i> Discard</button>
-      <button class="btn btn-save" id="saveBtn" disabled><i class="fas fa-cloud-arrow-up"></i> <span>Publish</span></button>
-    </div>
-
-    <div class="panel" id="panel"></div>
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__title" id="pageTitle">Home <small>Edit content without touching code</small></div>
+      <div class="topbar__actions">
+        <button class="btn btn--ghost btn--sm" id="btnPreview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Preview
+        </button>
+        <button class="btn btn--ghost btn--sm" id="btnReset">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+          Reset
+        </button>
+        <button class="btn btn--ghost btn--sm" id="btnDownload">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export JSON
+        </button>
+        <button class="btn btn--primary btn--sm" id="btnPublish">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><polyline points="5 12 12 5 19 12"/></svg>
+          Publish to GitHub
+        </button>
+      </div>
+    </header>
+    <div class="content" id="contentArea"></div>
   </main>
 </div>
 
-<div id="toasts"></div>
+<div class="modal" id="confirmModal">
+  <div class="modal__dialog">
+    <h2 class="modal__title" id="confirmTitle">Are you sure?</h2>
+    <p class="modal__text" id="confirmText"></p>
+    <div class="modal__actions">
+      <button class="btn btn--ghost" id="confirmCancel">Cancel</button>
+      <button class="btn btn--danger" id="confirmOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="publishModal">
+  <div class="modal__dialog">
+    <h2 class="modal__title">Publish to GitHub</h2>
+    <p class="modal__text">Commits <code>content.json</code> directly to your repository. GitHub Pages rebuilds automatically.</p>
+    <div class="field">
+      <label class="field__label">Repository (owner/name)</label>
+      <input class="field__input" id="ghRepo" placeholder="thazhamvr/thazhamvr.github.io">
+    </div>
+    <div class="field-row">
+      <div class="field"><label class="field__label">Branch</label><input class="field__input" id="ghBranch" value="main"></div>
+      <div class="field"><label class="field__label">File Path</label><input class="field__input" id="ghPath" value="content.json"></div>
+    </div>
+    <div class="field">
+      <label class="field__label">Personal Access Token</label>
+      <input class="field__input" id="ghToken" type="password" placeholder="ghp_...">
+      <div class="field__hint">Generate at github.com/settings/tokens with <strong>repo</strong> scope. Stored only in this browser.</div>
+    </div>
+    <div class="field">
+      <label class="field__label">Commit Message</label>
+      <input class="field__input" id="ghMessage" value="Update site content">
+    </div>
+    <div class="modal__actions">
+      <button class="btn btn--ghost" id="publishCancel">Cancel</button>
+      <button class="btn btn--primary" id="publishConfirm">Publish Now</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
 
 <script>
 (function(){
   'use strict';
+  const boot = document.getElementById('boot');
+  const bootMsg = document.getElementById('bootMsg');
+  const bootError = document.getElementById('bootError');
+  const LS_KEY = 'thazham-content-v1';
+  const LS_GH  = 'thazham-github-config';
 
-  /* =========================================================
-     CONFIG & STATE
-     ========================================================= */
-  const STORAGE_KEY = 'thazham_admin_cfg';
-  const CONTENT_PATH = 'content.json';
-
-  const cfg = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-  const state = {
-    content: null,       // current working copy
-    original: null,      // last saved copy (for discard)
-    sha: null,           // GitHub file sha
-    dirty: false,
-    view: 'dashboard',
-    saving: false
-  };
-
-  const $  = (s, el=document) => el.querySelector(s);
-  const $$ = (s, el=document) => [...el.querySelectorAll(s)];
-
-  /* =========================================================
-     BASE64 (UTF-8 safe)
-     ========================================================= */
-  function b64encode(str){
-    const bytes = new TextEncoder().encode(str);
-    let bin = '';
-    bytes.forEach(b => bin += String.fromCharCode(b));
-    return btoa(bin);
-  }
-  function b64decode(b64){
-    const bin = atob(b64.replace(/\s/g,''));
-    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
-    return new TextDecoder().decode(bytes);
+  window.addEventListener('error', e => showBootError('Unexpected error: ' + e.message));
+  function showBootError(msg) {
+    bootMsg.textContent = 'Failed to start.';
+    bootError.style.display = 'block';
+    bootError.innerHTML = '<div class="boot__error"><pre>' + String(msg).replace(/</g,'&lt;') + '</pre></div>';
   }
 
-  /* =========================================================
-     GITHUB API
-     ========================================================= */
-  const GH = 'https://api.github.com';
-
-  function ghHeaders(){
-    return {
-      'Authorization': 'Bearer ' + cfg.token,
-      'Accept': 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28'
-    };
-  }
-
-  async function ghGet(path){
-    const url = `${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}?ref=${encodeURIComponent(cfg.branch)}&t=${Date.now()}`;
-    const r = await fetch(url, { headers: ghHeaders(), cache: 'no-store' });
-    if (r.status === 404) return null;
-    if (!r.ok) throw new Error(`GitHub GET ${r.status}: ${await r.text()}`);
-    return r.json();
-  }
-
-  async function ghPut(path, contentStr, message, sha){
-    const body = {
-      message: message || `Update ${path} via admin console`,
-      content: b64encode(contentStr),
-      branch: cfg.branch
-    };
-    if (sha) body.sha = sha;
-    const r = await fetch(`${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
-      method: 'PUT',
-      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if (!r.ok) throw new Error(`GitHub PUT ${r.status}: ${await r.text()}`);
-    return r.json();
-  }
-
-  async function ghUploadImage(file){
-    const safeName = file.name.replace(/[^\w.\-]+/g,'_');
-    const path = `assets/${Date.now()}_${safeName}`;
-    const buf = await file.arrayBuffer();
-    let bin = '';
-    new Uint8Array(buf).forEach(b => bin += String.fromCharCode(b));
-    const content = btoa(bin);
-    const r = await fetch(`${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
-      method: 'PUT',
-      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: `Upload ${path} via admin console`,
-        content,
-        branch: cfg.branch
-      })
-    });
-    if (!r.ok) throw new Error(`Upload failed: ${r.status}`);
-    const data = await r.json();
-    return data.content.download_url;
-  }
-
-  /* =========================================================
-     PATH HELPERS
-     ========================================================= */
-  function getPath(obj, path){
-    return path.split('.').reduce((a,k) => (a == null ? a : a[k]), obj);
-  }
-  function setPath(obj, path, val){
-    const keys = path.split('.');
-    let cur = obj;
-    for (let i=0; i<keys.length-1; i++){
-      const k = keys[i];
-      if (cur[k] == null) cur[k] = /^\d+$/.test(keys[i+1]) ? [] : {};
-      cur = cur[k];
-    }
-    cur[keys[keys.length-1]] = val;
-  }
-
-  function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
-
-  /* =========================================================
-     TOASTS
-     ========================================================= */
-  function toast(kind, title, msg){
-    const el = document.createElement('div');
-    el.className = 'toast ' + kind;
-    const icon = kind === 'ok' ? 'fa-circle-check' : kind === 'err' ? 'fa-circle-exclamation' : 'fa-circle-info';
-    el.innerHTML = `<i class="fas ${icon}"></i><div class="body"><strong>${title}</strong><span>${msg||''}</span></div>`;
-    $('#toasts').appendChild(el);
-    setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(120%)'; el.style.transition = '.3s'; setTimeout(()=>el.remove(),300); }, 3800);
-  }
-
-  /* =========================================================
-     LOGIN
-     ========================================================= */
-  const login = $('#login');
-  const lOwner = $('#lOwner'), lRepo = $('#lRepo'), lBranch = $('#lBranch'), lToken = $('#lToken');
-  const loginErr = $('#loginErr');
-
-  if (cfg.owner) lOwner.value = cfg.owner;
-  if (cfg.repo)  lRepo.value  = cfg.repo;
-  if (cfg.branch) lBranch.value = cfg.branch;
-  if (cfg.token) lToken.value = cfg.token;
-
-  $('#loginBtn').addEventListener('click', doLogin);
-  [lOwner,lRepo,lBranch,lToken].forEach(el => el.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); }));
-
-  async function doLogin(){
-    const owner = lOwner.value.trim();
-    const repo  = lRepo.value.trim();
-    const branch = (lBranch.value.trim() || 'main');
-    const token = lToken.value.trim();
-    loginErr.classList.remove('show');
-
-    if (!owner || !repo || !token){ showErr('All fields are required.'); return; }
-
-    const btn = $('#loginBtn');
-    btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Connecting…';
-
-    Object.assign(cfg, { owner, repo, branch, token });
-
-    try {
-      // verify access
-      const r = await fetch(`${GH}/repos/${owner}/${repo}`, { headers: ghHeaders() });
-      if (!r.ok) throw new Error(`Repo not accessible (${r.status}). Check token & repo name.`);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
-      await boot();
-    } catch (e){
-      btn.disabled = false; btn.textContent = 'Connect to Repository';
-      showErr(e.message);
-    }
-  }
-
-  function showErr(msg){ loginErr.textContent = msg; loginErr.classList.add('show'); }
-
-  /* =========================================================
-     BOOT — load content.json
-     ========================================================= */
-  async function boot(){
-    try {
-      const file = await ghGet(CONTENT_PATH);
-      if (!file){
-        state.content = deepClone(DEFAULTS);
-        state.sha = null;
-        toast('info','No content.json found','Using defaults. Publish to create the file.');
-      } else {
-        const text = b64decode(file.content);
-        state.content = JSON.parse(text);
-        state.sha = file.sha;
-        state.content = deepMerge(deepClone(DEFAULTS), state.content);
-      }
-      state.original = deepClone(state.content);
-      state.dirty = false;
-
-      login.classList.add('hidden');
-      $('#app').classList.add('ready');
-      $('#repoPill').textContent = `${cfg.owner}/${cfg.repo} · ${cfg.branch}`;
-      render();
-    } catch(e){
-      showErr(e.message);
-      $('#loginBtn').disabled = false;
-      $('#loginBtn').textContent = 'Connect to Repository';
-    }
-  }
-
-  function deepMerge(base, over){
-    if (Array.isArray(over)) return over;
-    if (over && typeof over === 'object'){
-      const out = Array.isArray(base) ? [] : { ...base };
-      Object.keys(over).forEach(k => { out[k] = deepMerge(base && base[k], over[k]); });
-      return out;
-    }
-    return over === undefined ? base : over;
-  }
-
-  /* =========================================================
-     DEFAULT CONTENT (fallback if no content.json yet)
-     ========================================================= */
-  const DEFAULTS = {
-    meta: { updatedAt: new Date().toISOString(), version: 1 },
+  /* ============================================================
+     DEFAULT CONTENT — mirrors content.json structure
+     ============================================================ */
+  const DEFAULT_CONTENT = {
+    site: {
+      brandName: "THAZHAM",
+      brandSuffix: "VR",
+      tagline: "Immersive Culture. Experiential Education. Future Innovation.",
+      logoUrl: ""
+    },
     hero: {
       eyebrow: "Immersive Technology Studio · Chennai, India",
       title: "Reimagining Culture, Education & Heritage Through Virtual Reality",
       subtitle: "Thazham VR is an immersive technology company focused on preserving knowledge, transforming education, and creating innovative experiences through Virtual Reality.",
-      heroVideo: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      heroVideo: "",
+      button1Label: "Watch Showreel",
+      button2Label: "Explore Demos",
+      button3Label: "Partner With Us",
       showreel: {
-        url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+        url: "",
         title: "Thazham VR — Studio Showreel",
         desc: "A quick look at the immersive worlds, heritage reconstructions and VR learning modules we build."
       }
     },
     stats: [
-      { value:"3+", label:"Active Projects" },
-      { value:"VR / AR", label:"Technology Focus" },
-      { value:"Immersive", label:"Experience Design" }
+      { value: "3+",        label: "Active Projects" },
+      { value: "VR / AR",   label: "Technology Focus" },
+      { value: "Immersive", label: "Experience Design" }
     ],
     partners: {
       title: "Collaborating With",
       row1: [
-        { icon:"fas fa-university", label:"Anna University", image:"" },
-        { icon:"fas fa-landmark", label:"Heritage Trust", image:"" },
-        { icon:"fas fa-microchip", label:"TechNova Labs", image:"" },
-        { icon:"fas fa-cube", label:"MetaForge Studios", image:"" }
+        { icon:"fas fa-university",  label:"Anna University",    image:"" },
+        { icon:"fas fa-landmark",    label:"Heritage Trust",     image:"" },
+        { icon:"fas fa-microchip",   label:"TechNova Labs",      image:"" },
+        { icon:"fas fa-cube",        label:"MetaForge Studios",  image:"" },
+        { icon:"fas fa-museum",      label:"Museum Collective",  image:"" },
+        { icon:"fas fa-school",      label:"Vidya EduGroup",     image:"" },
+        { icon:"fas fa-globe",       label:"CultureWave",        image:"" },
+        { icon:"fas fa-award",       label:"StartupTN",          image:"" }
       ],
       row2: [
-        { icon:"fas fa-vr-cardboard", label:"ImmerseX", image:"" },
-        { icon:"fas fa-flask", label:"IIT Research Park", image:"" },
-        { icon:"fas fa-brain", label:"CogniLearn", image:"" },
-        { icon:"fas fa-film", label:"FrameNine Media", image:"" }
+        { icon:"fas fa-drafting-compass", label:"Axiom Design",         image:"" },
+        { icon:"fas fa-vr-cardboard",     label:"ImmerseX",             image:"" },
+        { icon:"fas fa-flask",            label:"IIT Research Park",    image:"" },
+        { icon:"fas fa-book-open",        label:"Tamil Heritage Assn.", image:"" },
+        { icon:"fas fa-brain",            label:"CogniLearn",           image:"" },
+        { icon:"fas fa-film",             label:"FrameNine Media",      image:"" },
+        { icon:"fas fa-industry",         label:"Bharat XR",            image:"" },
+        { icon:"fas fa-seedling",         label:"Innovate India",       image:"" }
       ]
     },
-    demos: [
-      { title:"Heritage Museum Walkthrough", desc:"A fully explorable VR reconstruction of a historic temple complex with interactive artefacts.", tag:"Heritage", duration:"02:14", videoUrl:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", icon:"fas fa-landmark" }
-    ],
+    demos: {
+      eyebrow: "See it in action",
+      title: "Video Demos",
+      subtitle: "Step inside our immersive builds. Click any card to play a walkthrough of the experience.",
+      items: [
+        { title:"Heritage Museum Walkthrough", desc:"A fully explorable VR reconstruction of a historic temple complex with interactive artefacts.", tag:"Heritage", duration:"02:14", videoUrl:"", icon:"fas fa-landmark" },
+        { title:"VR Chemistry Lab",            desc:"Students run experiments safely inside a fully simulated immersive laboratory.",              tag:"Education", duration:"01:48", videoUrl:"", icon:"fas fa-flask" },
+        { title:"Digital Cultural Archive",    desc:"3D-scanned artefacts catalogued into an immersive, searchable digital archive.",               tag:"Archive",   duration:"03:02", videoUrl:"", icon:"fas fa-archive" },
+        { title:"Custom VR Hardware Prototype",desc:"Our in-house headset and controller prototypes, built for classroom durability.",            tag:"Hardware",  duration:"01:12", videoUrl:"", icon:"fas fa-microchip" }
+      ]
+    },
     about: {
-      heading:"About Thazham VR",
-      lead:"Thazham VR is an immersive technology company dedicated to preserving knowledge systems and redefining how people learn, explore, and experience culture.",
-      body:"We believe technology should enhance heritage rather than replace it. Through Virtual Reality, 3D production, and immersive design, we create digital ecosystems that connect the past, present, and future.",
-      visionTitle:"Our Vision",
-      visionText:"To become a global leader in immersive cultural and educational technology by making knowledge systems accessible through experiential digital platforms."
+      heading: "About Thazham VR",
+      lead: "Thazham VR is an immersive technology company dedicated to preserving knowledge systems and redefining how people learn, explore, and experience culture.",
+      body: "We believe technology should enhance heritage rather than replace it. Through Virtual Reality, 3D production, and immersive design, we create digital ecosystems that connect the past, present, and future.",
+      visionTitle: "Our Vision",
+      visionText: "To become a global leader in immersive cultural and educational technology by making knowledge systems accessible through experiential digital platforms."
     },
     focus: {
-      title:"Focus Areas",
-      subtitle:"Five pillars that shape everything we build.",
+      title: "Focus Areas",
+      subtitle: "Five pillars that shape everything we build.",
       items: [
-        { icon:"fas fa-landmark", title:"Immersive Heritage Museums", desc:"Interactive VR environments allowing users to explore historical spaces." }
+        { icon:"fas fa-landmark",       title:"Immersive Heritage Museums", desc:"Interactive VR environments allowing users to explore historical spaces." },
+        { icon:"fas fa-archive",        title:"Digital Cultural Archive",    desc:"3D documentation and immersive preservation of artifacts and traditional knowledge." },
+        { icon:"fas fa-graduation-cap", title:"VR Education Modules",        desc:"Experience-based learning simulations designed for immersive classrooms." },
+        { icon:"fas fa-vr-cardboard",   title:"Custom VR Hardware",          desc:"VR systems designed for educational and training environments." },
+        { icon:"fas fa-cubes",          title:"VR & 3D Production",          desc:"VR application development, 3D environments, and immersive studios." }
       ]
     },
-    projects: { title:"Coming Soon", text:"We are currently developing immersive experiences that will be showcased here soon." },
+    projects: {
+      title: "Coming Soon",
+      text: "We are currently developing immersive experiences that will be showcased here soon."
+    },
     careers: {
-      heading:"Join the Team",
-      intro:"Be part of a forward-thinking team shaping the future of immersive technology.",
+      heading: "Join the Team",
+      intro: "Be part of a forward-thinking team shaping the future of immersive technology. We're looking for passionate individuals to help us build extraordinary experiences.",
       items: [
-        { icon:"fas fa-vr-cardboard", title:"XR Developer", location:"Full-time · Chennai, India", desc:"Build immersive VR/AR experiences with Unity/Unreal.", email:"careers@thazhamvr.com" }
+        { icon:"fas fa-vr-cardboard", title:"XR Developer",      location:"Full-time · Chennai, India", desc:"Build immersive VR/AR experiences with Unity/Unreal. Strong C#/C++ skills required.", email:"careers@thazhamvr.com" },
+        { icon:"fas fa-paintbrush",   title:"3D Artist",         location:"Full-time · Chennai, India", desc:"Create high-quality 3D assets, environments, and animations for VR projects.",      email:"careers@thazhamvr.com" },
+        { icon:"fas fa-code",         title:"Frontend Engineer", location:"Full-time · Remote",         desc:"Develop web-based interfaces for our VR platforms. React/Three.js experience a plus.", email:"careers@thazhamvr.com" },
+        { icon:"fas fa-microchip",    title:"Hardware Engineer", location:"Full-time · Chennai, India", desc:"Design and test VR hardware prototypes, PCB design, and embedded systems.",       email:"careers@thazhamvr.com" }
       ],
-      outro:"Don't see a role that fits? Send us your resume and we'll keep you in mind."
+      outro: "Don't see a role that fits?"
     },
     contact: {
-      company:"Thazham VR",
-      location:"Chennai, Tamil Nadu, India",
-      phones:["9894866586","8838715160"],
-      email:"info@thazhamvr.com",
-      address:"Chennai, Tamil Nadu, India"
+      company: "Thazham VR",
+      location: "Chennai, Tamil Nadu, India",
+      phones: ["9894866586", "8838715160"],
+      email: "info@thazhamvr.com",
+      address: "Chennai, Tamil Nadu, India"
     },
-    footer: { tagline:"Immersive Culture. Experiential Education. Future Innovation.", copyright:"© 2025 Thazham VR" }
+    footer: {
+      tagline: "Immersive Culture. Experiential Education. Future Innovation.",
+      copyright: "© 2025 Thazham VR"
+    },
+    typography: { baseSize: 16, headingScale: 1, headingWeight: 800, headingTracking: "-0.02em" },
+    spacing:    { sectionPadding: 80, containerPadding: 4, cardPadding: 26, gridGap: 18, density: "default" },
+    customSections: []
   };
 
-  /* =========================================================
-     FIELD TEMPLATES
-     ========================================================= */
-  function field(path, label, opts={}){
-    const val = getPath(state.content, path);
-    const type = opts.type || 'text';
-    const hint = opts.hint ? `<div class="hint">${opts.hint}</div>` : '';
-    const attrs = `data-path="${path}" ${opts.placeholder?`placeholder="${esc(opts.placeholder)}"`:''}`;
+  let content = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+  let currentSection = 'hero';
+  let saveTimeout = null;
 
-    if (type === 'textarea'){
-      return `<div class="field"><label>${label}</label><textarea ${attrs} rows="${opts.rows||4}">${esc(val||'')}</textarea>${hint}</div>`;
+  const sections = [
+    { id:'site',       label:'Site & Brand',    icon:'<circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.2 4.2l4.3 4.3M15.5 15.5l4.3 4.3M1 12h6M17 12h6M4.2 19.8l4.3-4.3M15.5 8.5l4.3-4.3"/>' },
+    { id:'typography', label:'Typography',       icon:'<path d="M4 7V4h16v3"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>' },
+    { id:'spacing',    label:'Spacing & Layout', icon:'<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/>' },
+    { id:'hero',       label:'Hero',             icon:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>' },
+    { id:'stats',      label:'Stats Bar',        icon:'<line x1="4" y1="20" x2="4" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="20" y1="20" x2="20" y2="14"/>' },
+    { id:'partners',   label:'Partners',         icon:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>' },
+    { id:'demos',      label:'Video Demos',      icon:'<polygon points="5 3 19 12 5 21 5 3"/>' },
+    { id:'about',      label:'About',            icon:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>' },
+    { id:'focus',      label:'Focus Areas',      icon:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>' },
+    { id:'projects',   label:'Projects',         icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>' },
+    { id:'careers',    label:'Careers',          icon:'<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>' },
+    { id:'contact',    label:'Contact',          icon:'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>' },
+    { id:'footer',     label:'Footer',           icon:'<line x1="3" y1="21" x2="21" y2="21"/><line x1="3" y1="17" x2="21" y2="17"/><line x1="3" y1="13" x2="21" y2="13"/>' },
+    { id:'builder',    label:'Page Builder',     icon:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' }
+  ];
+
+  /* ============================================================
+     BOOT
+     ============================================================ */
+  function init() {
+    try {
+      bootMsg.textContent = 'Rendering sidebar...';
+      renderSidebar();
+      bootMsg.textContent = 'Loading content...';
+      loadContent();
+      bootMsg.textContent = 'Rendering section...';
+      renderSection(currentSection);
+      bindTopbar();
+      bindPublishModal();
+      loadGitHubConfig();
+      boot.classList.add('boot--hidden');
+      document.getElementById('app').style.display = 'grid';
+      setStatus('ok', 'Ready');
+    } catch (err) {
+      console.error(err);
+      showBootError(err.message + '\n\n' + (err.stack || ''));
     }
-    if (type === 'icon'){
-      return `<div class="field"><label>${label}</label><input ${attrs} value="${esc(val||'')}">
-        <div class="icon-preview"><div class="fa-box"><i class="${esc(val||'fas fa-star')}"></i></div><code>${esc(val||'')}</code></div>${hint}</div>`;
-    }
-    if (type === 'image'){
-      return `<div class="field"><label>${label}</label>
-        <div style="display:flex;gap:.6rem;align-items:center">
-          <input ${attrs} value="${esc(val||'')}" placeholder="https://… or upload">
-          <button class="btn btn-ghost" data-upload="${path}" style="white-space:nowrap"><i class="fas fa-upload"></i> Upload</button>
-        </div>
-        ${val ? `<div class="icon-preview"><img src="${esc(val)}" class="img-thumb" alt=""></div>` : ''}
-        ${hint}</div>`;
-    }
-    return `<div class="field"><label>${label}</label><input ${attrs} value="${esc(val==null?'':val)}" ${opts.type?`type="${opts.type}"`:''}>${hint}</div>`;
   }
 
-  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function loadContent() {
+    try {
+      const saved = localStorage.getItem(LS_KEY);
+      if (saved) content = deepMerge(JSON.parse(JSON.stringify(DEFAULT_CONTENT)), JSON.parse(saved));
+    } catch (e) {
+      console.warn('localStorage load failed:', e);
+      localStorage.removeItem(LS_KEY);
+    }
+  }
 
-  function listEditor(path, title, fields, opts={}){
-    const items = getPath(state.content, path) || [];
-    const min = opts.min || 0;
-    const max = opts.max || 999;
+  function deepMerge(target, source) {
+    if (!source || typeof source !== 'object') return target;
+    for (const key of Object.keys(source)) {
+      const sv = source[key], tv = target[key];
+      if (Array.isArray(sv)) target[key] = sv;
+      else if (sv && typeof sv === 'object' && tv && typeof tv === 'object' && !Array.isArray(tv)) deepMerge(tv, sv);
+      else target[key] = sv;
+    }
+    return target;
+  }
+
+  /* ============================================================
+     SIDEBAR
+     ============================================================ */
+  function renderSidebar() {
+    const nav = document.getElementById('sidebarNav');
+    const groups = [
+      { label:'Configuration', items:['site','typography','spacing'] },
+      { label:'Sections',      items:['hero','stats','partners','demos'] },
+      { label:'Content',       items:['about','focus','projects','careers'] },
+      { label:'Global',        items:['contact','footer'] },
+      { label:'Tools',         items:['builder'] }
+    ];
+    nav.innerHTML = groups.map(g => `
+      <div class="sidebar__group">
+        <div class="sidebar__group-label">${g.label}</div>
+        ${g.items.map(id => {
+          const s = sections.find(x => x.id === id);
+          const active = id === currentSection ? 'is-active' : '';
+          return `<button class="sidebar__item ${active}" data-section="${id}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${s.icon}</svg>
+            ${s.label}
+          </button>`;
+        }).join('')}
+      </div>`).join('');
+    nav.querySelectorAll('[data-section]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentSection = btn.dataset.section;
+        nav.querySelectorAll('.sidebar__item').forEach(b => b.classList.toggle('is-active', b.dataset.section === currentSection));
+        renderSection(currentSection);
+        document.getElementById('sidebar').classList.remove('is-open');
+      });
+    });
+  }
+
+  /* ============================================================
+     SECTION ROUTER
+     ============================================================ */
+  function renderSection(id) {
+    const titles = {
+      site:'Site & Brand', typography:'Typography', spacing:'Spacing & Layout',
+      hero:'Hero', stats:'Stats Bar', partners:'Partners', demos:'Video Demos',
+      about:'About', focus:'Focus Areas', projects:'Projects', careers:'Careers',
+      contact:'Contact', footer:'Footer', builder:'Page Builder'
+    };
+    document.getElementById('pageTitle').innerHTML = (titles[id] || id) + ' <small>Edit content without touching code</small>';
+    const area = document.getElementById('contentArea');
+    let html = '';
+    try {
+      switch (id) {
+        case 'site':       html = renderSite();       break;
+        case 'typography': html = renderTypography(); break;
+        case 'spacing':    html = renderSpacing();    break;
+        case 'hero':       html = renderHero();       break;
+        case 'stats':      html = renderStats();      break;
+        case 'partners':   html = renderPartners();   break;
+        case 'demos':      html = renderDemos();      break;
+        case 'about':      html = renderAbout();      break;
+        case 'focus':      html = renderFocus();      break;
+        case 'projects':   html = renderProjects();   break;
+        case 'careers':    html = renderCareers();    break;
+        case 'contact':    html = renderContact();    break;
+        case 'footer':     html = renderFooter();     break;
+        case 'builder':    html = renderBuilder();    break;
+        default: html = '<div class="section-card"><p>Unknown section.</p></div>';
+      }
+    } catch (err) {
+      console.error(err);
+      html = `<div class="section-card" style="border-color:rgba(255,95,87,.3)"><div class="section-card__title" style="color:var(--red)">Render error</div><div class="section-card__desc" style="color:var(--txt-2);margin-top:8px;font-family:var(--mono);font-size:.78rem">${esc(err.message)}</div></div>`;
+    }
+    area.innerHTML = html;
+    bindSectionEvents();
+  }
+
+  /* ============================================================
+     SECTION RENDERERS
+     ============================================================ */
+  function renderSite() {
+    const s = content.site;
     return `
-      <div style="margin-top:1.5rem">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem">
-          <h4 style="font-size:1rem;font-weight:700;color:#ddd">${title} <span style="color:var(--dim2);font-weight:500">(${items.length})</span></h4>
-        </div>
-        <div class="list">
-          ${items.map((it,i) => `
-            <div class="list-item">
-              <div class="list-head">
-                <span class="num">Item ${i+1}</span>
-                <div class="list-actions">
-                  <button data-move="${path}" data-idx="${i}" data-dir="-1" ${i===0?'disabled':''} title="Move up"><i class="fas fa-arrow-up"></i></button>
-                  <button data-move="${path}" data-idx="${i}" data-dir="1" ${i===items.length-1?'disabled':''} title="Move down"><i class="fas fa-arrow-down"></i></button>
-                  <button class="del" data-remove="${path}" data-idx="${i}" ${items.length<=min?'disabled':''} title="Remove"><i class="fas fa-trash"></i></button>
-                </div>
-              </div>
-              ${fields.map(f => field(`${path}.${i}.${f.key}`, f.label, f)).join('')}
-            </div>
-          `).join('')}
-          ${items.length < max ? `<button class="btn-add" data-add="${path}"><i class="fas fa-plus"></i> Add ${opts.singular||'item'}</button>` : ''}
+      ${card('Brand', 'Brand name, suffix and tagline used across the site.', [
+        fieldRow(
+          field('Brand Name', 'text', 'site.brandName', s.brandName),
+          field('Brand Suffix (accent)', 'text', 'site.brandSuffix', s.brandSuffix)
+        ),
+        field('Tagline', 'textarea', 'site.tagline', s.tagline),
+        field('Logo Image (optional — replaces text)', 'media', 'site.logoUrl', s.logoUrl, 'image')
+      ])}`;
+  }
+
+  function renderTypography() {
+    const t = content.typography || {};
+    return `
+      ${card('Font Size & Scale', 'Adjust base font size and heading proportions.', [
+        numberField('Base Font Size (px)', 'typography.baseSize', t.baseSize || 16, 1, 12, 22, 'Controls body text. Default 16.'),
+        numberField('Heading Scale', 'typography.headingScale', t.headingScale || 1, 0.05, 0.5, 2, 'Multiplier for headings. Default 1.'),
+        field('Heading Weight', 'select', 'typography.headingWeight', String(t.headingWeight || 800), null, [
+          { value:'600', label:'600 — Semibold' },
+          { value:'700', label:'700 — Bold' },
+          { value:'800', label:'800 — Extra Bold (default)' },
+          { value:'900', label:'900 — Black' }
+        ]),
+        field('Heading Letter Spacing', 'select', 'typography.headingTracking', t.headingTracking || '-0.02em', null, [
+          { value:'-0.06em', label:'Very Tight (-0.06em)' },
+          { value:'-0.04em', label:'Tight (-0.04em)' },
+          { value:'-0.02em', label:'Slight (-0.02em) — default' },
+          { value:'0',       label:'Normal (0)' }
+        ])
+      ])}
+      <div class="section-card">
+        <div class="section-card__head"><div><div class="section-card__title">Quick Presets</div><div class="section-card__desc">One-click typography settings.</div></div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px">
+          <button class="btn btn--ghost" data-typo-preset="compact" style="flex-direction:column;padding:16px 12px;gap:4px;height:auto"><span style="font-size:.85rem;font-weight:700">Compact</span><span style="font-size:.65rem;color:var(--txt-3);font-weight:400;text-transform:none">14px</span></button>
+          <button class="btn btn--ghost" data-typo-preset="default" style="flex-direction:column;padding:16px 12px;gap:4px;height:auto"><span style="font-size:.85rem;font-weight:700">Default</span><span style="font-size:.65rem;color:var(--txt-3);font-weight:400;text-transform:none">16px</span></button>
+          <button class="btn btn--ghost" data-typo-preset="comfortable" style="flex-direction:column;padding:16px 12px;gap:4px;height:auto"><span style="font-size:.85rem;font-weight:700">Comfortable</span><span style="font-size:.65rem;color:var(--txt-3);font-weight:400;text-transform:none">17px</span></button>
+          <button class="btn btn--ghost" data-typo-preset="large" style="flex-direction:column;padding:16px 12px;gap:4px;height:auto"><span style="font-size:.85rem;font-weight:700">Large</span><span style="font-size:.65rem;color:var(--txt-3);font-weight:400;text-transform:none">18px</span></button>
         </div>
       </div>`;
   }
 
-  /* =========================================================
-     VIEWS
-     ========================================================= */
-  const VIEWS = {
-    dashboard(){
-      const c = state.content;
-      const counts = {
-        stats: c.stats?.length || 0,
-        partners: (c.partners?.row1?.length||0) + (c.partners?.row2?.length||0),
-        demos: c.demos?.length || 0,
-        careers: c.careers?.items?.length || 0,
-        focus: c.focus?.items?.length || 0
-      };
-      return `
-        <div class="panel-head">
-          <h3>Welcome back 👋</h3>
-          <p>Manage all public content of thazhamvr.com from here. Changes publish to your GitHub repo.</p>
+  function renderSpacing() {
+    const s = content.spacing || {};
+    return `
+      ${card('Section Spacing', 'Controls vertical and horizontal rhythm.', [
+        numberField('Section Vertical Padding (px)', 'spacing.sectionPadding', s.sectionPadding || 80, 4, 20, 250, 'Space above/below each section. Default 80.'),
+        numberField('Container Side Padding (%)',    'spacing.containerPadding', s.containerPadding || 4, 1, 2, 15, 'Left/right padding. Default 4.'),
+        numberField('Card Padding (px)',             'spacing.cardPadding', s.cardPadding || 26, 2, 12, 80, 'Inner padding of every card. Default 26.'),
+        numberField('Grid Gap (px)',                 'spacing.gridGap', s.gridGap || 18, 2, 8, 60, 'Gap between grid items. Default 18.')
+      ])}
+      <div class="section-card">
+        <div class="section-card__head"><div><div class="section-card__title">Density Presets</div><div class="section-card__desc">One-click spacing adjustments.</div></div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px">
+          <button class="btn btn--ghost" data-spacing-preset="tight" style="flex-direction:column;padding:16px 12px;gap:4px;height:auto"><span style="font-size:.85rem;font-weight:700">Tight</span></button>
+          <button class="btn btn--ghost" data-spacing-preset="compact" style="flex-direction:column;padding:16px 12px;gap:4px;height:auto"><span style="font-size:.85rem;font-weight:700">Compact</span></button>
+          <button class="btn btn--ghost" data-spacing-preset="default" style="flex-direction:column;padding:16px 12px;gap:4px;height:auto"><span style="font-size:.85rem;font-weight:700">Default</span></button>
+          <button class="btn btn--ghost" data-spacing-preset="relaxed" style="flex-direction:column;padding:16px 12px;gap:4px;height:auto"><span style="font-size:.85rem;font-weight:700">Relaxed</span></button>
+          <button class="btn btn--ghost" data-spacing-preset="spacious" style="flex-direction:column;padding:16px 12px;gap:4px;height:auto"><span style="font-size:.85rem;font-weight:700">Spacious</span></button>
         </div>
+      </div>`;
+  }
 
-        <div class="dash-grid">
-          <div class="dash-card"><div class="lbl">Video Demos</div><div class="val">${counts.demos}</div></div>
-          <div class="dash-card"><div class="lbl">Partner Logos</div><div class="val">${counts.partners}</div></div>
-          <div class="dash-card"><div class="lbl">Open Roles</div><div class="val">${counts.careers}</div></div>
-          <div class="dash-card"><div class="lbl">Focus Areas</div><div class="val">${counts.focus}</div></div>
+  function renderHero() {
+    const h = content.hero;
+    return `
+      ${card('Hero Copy', 'Headline copy that fronts the homepage.', [
+        field('Eyebrow / Badge', 'text', 'hero.eyebrow', h.eyebrow),
+        field('Main Heading', 'textarea', 'hero.title', h.title),
+        field('Sub-heading', 'textarea', 'hero.subtitle', h.subtitle)
+      ])}
+      ${card('Hero Buttons', 'Three calls-to-action under the hero.', [
+        field('Button 1 (Primary)', 'text', 'hero.button1Label', h.button1Label),
+        field('Button 2 (Outline)', 'text', 'hero.button2Label', h.button2Label),
+        field('Button 3 (Outline)', 'text', 'hero.button3Label', h.button3Label)
+      ])}
+      ${card('Hero Background Video', 'Muted looping video behind the hero copy.', [
+        mediaFieldHTML({ label:'Background Video', kind:'video', path:'hero.heroVideo', value: h.heroVideo })
+      ])}
+      ${card('Showreel Modal', 'Video that opens when "Watch Showreel" is clicked.', [
+        mediaFieldHTML({ label:'Showreel Video', kind:'video', path:'hero.showreel.url', value: h.showreel.url }),
+        field('Modal Title', 'text', 'hero.showreel.title', h.showreel.title),
+        field('Modal Description', 'textarea', 'hero.showreel.desc', h.showreel.desc)
+      ])}`;
+  }
+
+  function renderStats() {
+    return listCard('Stats Row', 'Three highlight numbers shown under the hero.', 'stats', content.stats, [
+      { key:'value', label:'Value', type:'text' },
+      { key:'label', label:'Label', type:'text' }
+    ]);
+  }
+
+  function renderPartners() {
+    return `
+      ${card('Section Title', 'Small heading above the logo marquee.', [
+        field('Section Title', 'text', 'partners.title', content.partners.title)
+      ])}
+      ${listCard('Row 1 — scrolls left',  'Logos in this row scroll to the left.',   'partners.row1', content.partners.row1, [
+        { key:'label', label:'Partner Name',  type:'text' },
+        { key:'icon',  label:'Icon (Font Awesome)', type:'icon' },
+        { key:'image', label:'Logo Image (overrides icon)', type:'media', mediaType:'image' }
+      ])}
+      ${listCard('Row 2 — scrolls right', 'Logos in this row scroll to the right.', 'partners.row2', content.partners.row2, [
+        { key:'label', label:'Partner Name',  type:'text' },
+        { key:'icon',  label:'Icon (Font Awesome)', type:'icon' },
+        { key:'image', label:'Logo Image (overrides icon)', type:'media', mediaType:'image' }
+      ])}`;
+  }
+
+  function renderDemos() {
+    const d = content.demos;
+    return `
+      ${card('Section Header', 'Section title block above the demo grid.', [
+        field('Eyebrow', 'text', 'demos.eyebrow', d.eyebrow),
+        field('Title', 'textarea', 'demos.title', d.title),
+        field('Subtitle', 'textarea', 'demos.subtitle', d.subtitle)
+      ])}
+      ${listCard('Demo Videos', 'Cards that open a full-screen video player.', 'demos.items', d.items, [
+        { key:'title',    label:'Title',        type:'text' },
+        { key:'tag',      label:'Tag / category', type:'text' },
+        { key:'duration', label:'Duration',     type:'text' },
+        { key:'icon',     label:'Preview Icon', type:'icon' },
+        { key:'desc',     label:'Description',  type:'textarea' },
+        { key:'videoUrl', label:'Video (MP4 — max 100 MB)', type:'media', mediaType:'video' }
+      ])}`;
+  }
+
+  function renderAbout() {
+    const a = content.about;
+    return `
+      ${card('About Copy', 'Company story and vision.', [
+        field('Heading', 'text', 'about.heading', a.heading),
+        field('Lead Paragraph', 'textarea', 'about.lead', a.lead),
+        field('Supporting Paragraph', 'textarea', 'about.body', a.body)
+      ])}
+      ${card('Vision Card', 'Highlighted card to the right of the copy.', [
+        field('Vision Title', 'text', 'about.visionTitle', a.visionTitle),
+        field('Vision Text', 'textarea', 'about.visionText', a.visionText)
+      ])}`;
+  }
+
+  function renderFocus() {
+    const f = content.focus;
+    return `
+      ${card('Section Header', '', [
+        field('Title', 'text', 'focus.title', f.title),
+        field('Subtitle', 'text', 'focus.subtitle', f.subtitle)
+      ])}
+      ${listCard('Focus Cards', 'Each card highlights one pillar of work.', 'focus.items', f.items, [
+        { key:'icon',  label:'Icon', type:'icon' },
+        { key:'title', label:'Title', type:'text' },
+        { key:'desc',  label:'Description', type:'textarea' }
+      ])}`;
+  }
+
+  function renderProjects() {
+    return card('Projects Section', 'Currently a "Coming Soon" block.', [
+      field('Big Heading', 'text', 'projects.title', content.projects.title),
+      field('Supporting Text', 'textarea', 'projects.text', content.projects.text)
+    ]);
+  }
+
+  function renderCareers() {
+    const c = content.careers;
+    return `
+      ${card('Section Header', '', [
+        field('Heading', 'text', 'careers.heading', c.heading),
+        field('Intro Paragraph', 'textarea', 'careers.intro', c.intro)
+      ])}
+      ${listCard('Open Roles', 'Email is used for the "Apply Now" mailto link.', 'careers.items', c.items, [
+        { key:'title',    label:'Role Title', type:'text' },
+        { key:'location', label:'Location / Type', type:'text' },
+        { key:'icon',     label:'Icon', type:'icon' },
+        { key:'desc',     label:'Description', type:'textarea' },
+        { key:'email',    label:'Application Email', type:'text' }
+      ])}
+      ${card('Footer Note', 'Small line under the cards.', [
+        field('Outro Text', 'text', 'careers.outro', c.outro)
+      ])}`;
+  }
+
+  function renderContact() {
+    const c = content.contact;
+    return `
+      ${card('Contact Card', 'Shown in the contact section and footer.', [
+        field('Company Name', 'text', 'contact.company', c.company),
+        field('Location Line', 'text', 'contact.location', c.location),
+        field('Email Address', 'text', 'contact.email', c.email),
+        field('Address (footer)', 'text', 'contact.address', c.address)
+      ])}
+      ${listCard('Phone Numbers', 'Shown separated by a pipe "|" on the site.', 'contact.phones', (c.phones||[]).map(v => ({ value:v })), [
+        { key:'value', label:'Phone Number', type:'text' }
+      ])}`;
+  }
+
+  function renderFooter() {
+    const f = content.footer;
+    return `
+      ${card('Footer Text', 'Tagline and copyright line at the bottom.', [
+        field('Tagline', 'textarea', 'footer.tagline', f.tagline),
+        field('Copyright', 'text', 'footer.copyright', f.copyright)
+      ])}`;
+  }
+
+  function renderBuilder() {
+    const items = content.customSections || [];
+    return `
+      <div class="section-card">
+        <div class="section-card__head"><div><div class="section-card__title">Add New Section</div><div class="section-card__desc">Pick a type. It gets appended to the homepage after the built-in sections.</div></div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px">
+          ${['text','image','video','split','marquee','cards','cta','hero'].map(t => `
+            <button class="btn btn--ghost" data-add-custom="${t}" style="flex-direction:column;padding:18px 12px;gap:6px;height:auto"><span style="font-size:.85rem;font-weight:700;text-transform:capitalize">${t}</span></button>
+          `).join('')}
         </div>
+      </div>
+      ${items.length === 0
+        ? `<div class="section-card"><div style="padding:30px 0;text-align:center;color:var(--txt-3);font-size:.85rem">No custom sections yet.</div></div>`
+        : items.map((sec, i) => renderCustomEditor(sec, i)).join('')}`;
+  }
 
-        <div class="dash-card" style="margin-bottom:1.5rem">
-          <div class="lbl">Repository</div>
-          <div class="val sm" style="margin-top:.4rem">${esc(cfg.owner)}/${esc(cfg.repo)} · ${esc(cfg.branch)}</div>
-        </div>
-
-        <div class="dash-card">
-          <div class="lbl">Quick Actions</div>
-          <div class="dash-actions">
-            <button class="btn btn-ghost" data-goto="demos"><i class="fas fa-play"></i> Manage Demos</button>
-            <button class="btn btn-ghost" data-goto="partners"><i class="fas fa-handshake"></i> Manage Partners</button>
-            <button class="btn btn-ghost" data-goto="careers"><i class="fas fa-briefcase"></i> Manage Careers</button>
-            <a class="btn btn-ghost" href="/" target="_blank"><i class="fas fa-arrow-up-right-from-square"></i> View Site</a>
+  function renderCustomEditor(sec, i) {
+    const path = 'customSections.' + i;
+    let body = '';
+    switch (sec.type) {
+      case 'text':
+        body = field('Eyebrow', 'text', path+'.eyebrow', sec.eyebrow)
+             + field('Title', 'text', path+'.title', sec.title)
+             + field('Body', 'textarea', path+'.body', sec.body)
+             + field('Alignment', 'select', path+'.align', sec.align || 'center', null, [
+                 { value:'center', label:'Center' }, { value:'left', label:'Left' }
+               ]);
+        break;
+      case 'image':
+        body = mediaFieldHTML({ label:'Image', kind:'image', path: path+'.imageUrl', value: sec.imageUrl })
+             + field('Caption', 'text', path+'.caption', sec.caption)
+             + field('Width', 'select', path+'.width', sec.width || 'boxed', null, [
+                 { value:'boxed', label:'Boxed' }, { value:'full', label:'Full width' }
+               ]);
+        break;
+      case 'video':
+        body = mediaFieldHTML({ label:'Video', kind:'video', path: path+'.videoUrl', value: sec.videoUrl })
+             + mediaFieldHTML({ label:'Poster (optional)', kind:'image', path: path+'.posterUrl', value: sec.posterUrl })
+             + field('Caption', 'text', path+'.caption', sec.caption);
+        break;
+      case 'split':
+        body = field('Eyebrow', 'text', path+'.eyebrow', sec.eyebrow)
+             + field('Title', 'text', path+'.title', sec.title)
+             + field('Text', 'textarea', path+'.text', sec.text)
+             + listCard('Bullets', '', path+'.bullets', sec.bullets || [], [{ key:'value', label:'Bullet text', type:'text' }])
+             + field('Media Type', 'select', path+'.mediaType', sec.mediaType || 'image', null, [
+                 { value:'image', label:'Image' }, { value:'video', label:'Video' }
+               ])
+             + mediaFieldHTML({ label:'Media', kind: sec.mediaType || 'image', path: path+'.mediaUrl', value: sec.mediaUrl })
+             + field('Layout', 'select', path+'.reverse', String(sec.reverse || false), null, [
+                 { value:'false', label:'Media on right' }, { value:'true', label:'Media on left' }
+               ]);
+        break;
+      case 'marquee':
+        body = listCard('Items', 'Scrolls horizontally.', path+'.items', (sec.items || []).map(v => ({ value:v })), [
+          { key:'value', label:'Text', type:'text' }
+        ]);
+        break;
+      case 'cards':
+        body = field('Eyebrow', 'text', path+'.eyebrow', sec.eyebrow)
+             + field('Title', 'text', path+'.title', sec.title)
+             + listCard('Cards', '', path+'.items', sec.items || [], [
+                 { key:'title', label:'Title', type:'text' },
+                 { key:'text',  label:'Description', type:'textarea' },
+                 { key:'imageUrl', label:'Image', type:'media', mediaType:'image' }
+               ]);
+        break;
+      case 'cta':
+        body = field('Title', 'text', path+'.title', sec.title)
+             + field('Description', 'textarea', path+'.text', sec.text)
+             + field('Primary Button Label', 'text', path+'.primaryLabel', sec.primaryLabel)
+             + field('Primary Button Action', 'select', path+'.primaryAction', sec.primaryAction || 'contact', null, [
+                 { value:'contact', label:'Contact' }, { value:'demos', label:'Demos' },
+                 { value:'careers', label:'Careers' }, { value:'about', label:'About' }
+               ])
+             + field('Secondary Button Label', 'text', path+'.secondaryLabel', sec.secondaryLabel)
+             + mediaFieldHTML({ label:'Background Image', kind:'image', path: path+'.bgImage', value: sec.bgImage });
+        break;
+      case 'hero':
+        body = field('Title', 'text', path+'.title', sec.title)
+             + field('Subtitle', 'textarea', path+'.subtitle', sec.subtitle)
+             + mediaFieldHTML({ label:'Background Video (optional)', kind:'video', path: path+'.bgVideo', value: sec.bgVideo })
+             + mediaFieldHTML({ label:'Background Image (fallback)', kind:'image', path: path+'.bgImage', value: sec.bgImage })
+             + field('Primary Button Label', 'text', path+'.primaryLabel', sec.primaryLabel)
+             + field('Primary Button Action', 'select', path+'.primaryAction', sec.primaryAction || 'demos', null, [
+                 { value:'demos', label:'Demos' }, { value:'contact', label:'Contact' }, { value:'careers', label:'Careers' }
+               ]);
+        break;
+    }
+    return `
+      <div class="section-card">
+        <div class="section-card__head">
+          <div>
+            <div class="section-card__title" style="text-transform:capitalize">${sec.type} Section</div>
+            <div class="section-card__desc">Custom section #${i+1} · ID ${esc(sec.id || '')}</div>
+          </div>
+          <div style="display:flex;gap:4px">
+            <button class="list-item__btn" data-move-custom="up" data-index="${i}" title="Move up"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="list-item__btn" data-move-custom="down" data-index="${i}" title="Move down"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+            <button class="list-item__btn list-item__btn--danger" data-remove-custom="${i}" title="Delete"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
           </div>
         </div>
-      `;
-    },
+        ${body}
+      </div>`;
+  }
 
-    hero(){
-      return `
-        <div class="panel-head"><h3>Hero Section</h3><p>The first thing visitors see — headline, subtitle and background video.</p></div>
-        ${field('hero.eyebrow','Eyebrow / badge','text')}
-        ${field('hero.title','Main heading','textarea',{rows:2})}
-        ${field('hero.subtitle','Sub-heading paragraph','textarea',{rows:3})}
-        ${field('hero.heroVideo','Background video URL','text',{hint:'MP4 direct link. Leave blank for a plain dark background.'})}
+  function addCustomSection(type) {
+    if (!content.customSections) content.customSections = [];
+    const base = { id: 'cs_' + Date.now(), type };
+    if (type === 'text')    Object.assign(base, { eyebrow:'', title:'New Section', body:'', align:'center' });
+    if (type === 'image')   Object.assign(base, { imageUrl:'', caption:'', width:'boxed' });
+    if (type === 'video')   Object.assign(base, { videoUrl:'', posterUrl:'', caption:'' });
+    if (type === 'split')   Object.assign(base, { eyebrow:'', title:'New Section', text:'', bullets:[], mediaType:'image', mediaUrl:'', reverse:false });
+    if (type === 'marquee') Object.assign(base, { items:[{ value:'Immersive' }, { value:'Heritage' }, { value:'Education' }] });
+    if (type === 'cards')   Object.assign(base, { eyebrow:'', title:'New Section', items:[{ title:'Card 1', text:'', imageUrl:'' }] });
+    if (type === 'cta')     Object.assign(base, { title:'Ready to get started?', text:'', primaryLabel:'Partner With Us', primaryAction:'contact', secondaryLabel:'', bgImage:'' });
+    if (type === 'hero')    Object.assign(base, { title:'New Hero', subtitle:'', bgVideo:'', bgImage:'', primaryLabel:'Explore Demos', primaryAction:'demos' });
+    content.customSections.push(base);
+    scheduleSave();
+    renderSection('builder');
+    toast('Section added — scroll down to edit', 'success');
+  }
+  function removeCustomSection(idx) { content.customSections.splice(idx, 1); scheduleSave(); renderSection('builder'); toast('Section removed', 'success'); }
+  function moveCustomSection(idx, dir) {
+    const arr = content.customSections || [];
+    const ni = idx + dir;
+    if (ni < 0 || ni >= arr.length) return;
+    const [item] = arr.splice(idx, 1);
+    arr.splice(ni, 0, item);
+    scheduleSave();
+    renderSection('builder');
+  }
 
-        <h4 style="font-size:1rem;font-weight:700;color:#ddd;margin:2rem 0 1rem">Showreel Button</h4>
-        ${field('hero.showreel.url','Showreel video URL')}
-        ${field('hero.showreel.title','Showreel title')}
-        ${field('hero.showreel.desc','Showreel description','textarea',{rows:2})}
-      `;
-    },
+  /* ============================================================
+     FIELD HELPERS
+     ============================================================ */
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
 
-    stats(){
-      return `
-        <div class="panel-head"><h3>Stats Row</h3><p>Three highlight numbers that sit under the hero.</p></div>
-        ${listEditor('stats','Stats',[
-          { key:'value', label:'Value', placeholder:'3+' },
-          { key:'label', label:'Label', placeholder:'Active Projects' }
-        ], { min:1, max:6, singular:'stat' })}
-      `;
-    },
+  function card(title, desc, fields) {
+    return `<div class="section-card"><div class="section-card__head"><div><div class="section-card__title">${title}</div>${desc ? `<div class="section-card__desc">${desc}</div>` : ''}</div></div>${fields.filter(Boolean).join('')}</div>`;
+  }
+  function fieldRow(a, b){ return `<div class="field-row">${a}${b}</div>`; }
 
-    partners(){
-      return `
-        <div class="panel-head"><h3>Collaborating Partners</h3><p>Logos scroll infinitely in two opposite rows. Add an image URL to replace the icon.</p></div>
-        ${field('partners.title','Section title')}
+  function field(label, type, path, value, mediaType, options) {
+    const v = esc(value);
+    if (type === 'textarea') return `<div class="field"><label class="field__label">${label}</label><textarea class="field__textarea" data-path="${path}">${v}</textarea></div>`;
+    if (type === 'select' && options) return `<div class="field"><label class="field__label">${label}</label><select class="field__select" data-path="${path}">${options.map(o => `<option value="${o.value}" ${String(value) === String(o.value) ? 'selected' : ''}>${o.label}</option>`).join('')}</select></div>`;
+    if (type === 'media') return mediaFieldHTML({ label, kind: mediaType || 'image', path, value });
+    if (type === 'icon')  return iconField(label, path, value);
+    return `<div class="field"><label class="field__label">${label}</label><input class="field__input" type="${type}" data-path="${path}" value="${v}"></div>`;
+  }
 
-        ${listEditor('partners.row1','Row 1 (scrolls left)',[
-          { key:'label', label:'Partner name' },
-          { key:'icon', label:'Icon class (Font Awesome)', type:'icon', hint:'e.g. fas fa-university' },
-          { key:'image', label:'Logo image (optional, overrides icon)', type:'image' }
-        ], { singular:'partner' })}
+  function iconField(label, path, value) {
+    const v = value || 'fas fa-star';
+    const presets = ['fas fa-landmark','fas fa-archive','fas fa-graduation-cap','fas fa-vr-cardboard','fas fa-cubes','fas fa-microchip','fas fa-flask','fas fa-university','fas fa-cube','fas fa-school','fas fa-globe','fas fa-award','fas fa-brain','fas fa-film','fas fa-industry','fas fa-seedling','fas fa-paintbrush','fas fa-code','fas fa-drafting-compass','fas fa-museum','fas fa-book-open','fas fa-star','fas fa-play','fas fa-bolt','fas fa-heart'];
+    return `<div class="field"><label class="field__label">${label}</label>
+      <input class="field__input" type="text" data-path="${path}" value="${esc(v)}" placeholder="fas fa-landmark">
+      <div class="icon-preview"><div class="icon-preview__box"><i class="${esc(v)}"></i></div><span class="icon-preview__code">${esc(v)}</span></div>
+      <div class="icon-picker">${presets.map(p => `<button type="button" data-icon-suggest="${p}" data-icon-target="${path}" title="${p}"><i class="${p}"></i></button>`).join('')}</div>
+    </div>`;
+  }
 
-        ${listEditor('partners.row2','Row 2 (scrolls right)',[
-          { key:'label', label:'Partner name' },
-          { key:'icon', label:'Icon class (Font Awesome)', type:'icon' },
-          { key:'image', label:'Logo image (optional, overrides icon)', type:'image' }
-        ], { singular:'partner' })}
-      `;
-    },
+  function numberField(label, path, value, step, min, max, hint) {
+    return `<div class="field"><label class="field__label">${label}</label><input class="field__input" type="number" step="${step||1}" min="${min||0}" max="${max||100}" data-path="${path}" value="${value}">${hint ? '<div class="field__hint">' + hint + '</div>' : ''}</div>`;
+  }
 
-    demos(){
-      return `
-        <div class="panel-head"><h3>Video Demos</h3><p>Cards that open a full-screen video player. Great for walkthroughs &amp; showreels.</p></div>
-        ${listEditor('demos','Demo Videos',[
-          { key:'title', label:'Title' },
-          { key:'tag', label:'Tag / category', placeholder:'Heritage' },
-          { key:'duration', label:'Duration label', placeholder:'02:14' },
-          { key:'icon', label:'Preview icon', type:'icon' },
-          { key:'desc', label:'Description', type:'textarea', rows:2 },
-          { key:'videoUrl', label:'Video URL (MP4)', hint:'Direct MP4 link — YouTube embed URLs will not work in the player.' }
-        ], { min:1, max:12, singular:'demo' })}
-      `;
-    },
+  function mediaFieldHTML(opts) {
+    const isList = opts.listPath !== undefined && opts.listPath !== '' && opts.listIndex !== null && opts.listIndex !== undefined;
+    const attrs = isList ? `data-list-path="${opts.listPath}" data-list-index="${opts.listIndex}" data-list-key="${opts.listKey}"` : `data-path="${opts.path}"`;
+    const uploadAttrs = isList
+      ? `data-upload-kind="${opts.kind}" data-upload-list-path="${opts.listPath}" data-upload-list-index="${opts.listIndex}" data-upload-list-key="${opts.listKey}"`
+      : `data-upload-kind="${opts.kind}" data-upload-path="${opts.path}"`;
+    const preview = opts.value
+      ? (opts.kind === 'video'
+          ? `<video src="${esc(opts.value)}" muted playsinline preload="metadata"></video><span class="media-preview__badge">Video</span>`
+          : `<img src="${esc(opts.value)}" alt="" loading="lazy"><span class="media-preview__badge">Image</span>`)
+      : `<div class="media-preview__empty">No ${opts.kind === 'video' ? 'video' : 'image'} yet — paste a URL or click Upload</div>`;
+    return `<div class="field"><label class="field__label">${opts.label}</label>
+      <div style="display:flex;gap:8px;align-items:stretch">
+        <input class="field__input" style="flex:1" ${attrs} value="${esc(opts.value || '')}" placeholder="https://... or Upload →">
+        <button type="button" class="btn btn--ghost upload-btn" ${uploadAttrs} style="white-space:nowrap">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload
+        </button>
+      </div>
+      <div class="media-preview">${preview}</div>
+    </div>`;
+  }
 
-    about(){
-      return `
-        <div class="panel-head"><h3>About Section</h3><p>Company story and vision card.</p></div>
-        ${field('about.heading','Section heading')}
-        ${field('about.lead','Lead paragraph (large)','textarea',{rows:3})}
-        ${field('about.body','Supporting paragraph','textarea',{rows:3})}
-        <h4 style="font-size:1rem;font-weight:700;color:#ddd;margin:2rem 0 1rem">Vision Card</h4>
-        ${field('about.visionTitle','Vision title')}
-        ${field('about.visionText','Vision text','textarea',{rows:3})}
-      `;
-    },
-
-    focus(){
-      return `
-        <div class="panel-head"><h3>Focus Areas</h3><p>The five (or more) pillars of your work.</p></div>
-        ${field('focus.title','Section title')}
-        ${field('focus.subtitle','Section subtitle')}
-        ${listEditor('focus.items','Focus Cards',[
-          { key:'icon', label:'Icon', type:'icon' },
-          { key:'title', label:'Title' },
-          { key:'desc', label:'Description', type:'textarea', rows:2 }
-        ], { min:1, max:10, singular:'focus area' })}
-      `;
-    },
-
-    projects(){
-      return `
-        <div class="panel-head"><h3>Projects Section</h3><p>Currently a "Coming Soon" block.</p></div>
-        ${field('projects.title','Big heading')}
-        ${field('projects.text','Supporting text','textarea',{rows:3})}
-      `;
-    },
-
-    careers(){
-      return `
-        <div class="panel-head"><h3>Careers</h3><p>Open roles shown on the site. Email is used for the Apply Now mailto link.</p></div>
-        ${field('careers.heading','Section heading')}
-        ${field('careers.intro','Intro paragraph','textarea',{rows:3})}
-        ${listEditor('careers.items','Open Roles',[
-          { key:'title', label:'Role title' },
-          { key:'location', label:'Location / type', placeholder:'Full-time · Chennai, India' },
-          { key:'icon', label:'Icon', type:'icon' },
-          { key:'desc', label:'Description', type:'textarea', rows:2 },
-          { key:'email', label:'Application email' }
-        ], { max:12, singular:'role' })}
-        ${field('careers.outro','Footer note under cards','textarea',{rows:2})}
-      `;
-    },
-
-    contact(){
-      return `
-        <div class="panel-head"><h3>Contact</h3><p>Shown in the contact card and footer.</p></div>
-        ${field('contact.company','Company name')}
-        ${field('contact.location','Location line')}
-        ${field('contact.email','Email address')}
-        ${field('contact.address','Address (footer)')}
-
-        <h4 style="font-size:1rem;font-weight:700;color:#ddd;margin:2rem 0 1rem">Phone Numbers</h4>
-        ${listEditor('contact.phones','Phone numbers',[
-          { key:'_value', label:'Number' }
-        ], { min:0, max:6, singular:'phone number' }).replace(/contact\.phones\.(\d+)\._value/g,'contact.phones.$1')}
-      `;
-    },
-
-    footer(){
-      return `
-        <div class="panel-head"><h3>Footer</h3><p>Tagline &amp; copyright at the bottom of every page.</p></div>
-        ${field('footer.tagline','Tagline')}
-        ${field('footer.copyright','Copyright line')}
-      `;
-    },
-
-    raw(){
-      return `
-        <div class="panel-head"><h3>Raw JSON Editor</h3><p>Advanced — edit the full content structure directly. Invalid JSON won't save.</p></div>
-        <div class="field raw-editor">
-          <textarea id="rawEditor" spellcheck="false">${esc(JSON.stringify(state.content, null, 2))}</textarea>
-          <div class="raw-err" id="rawErr"></div>
-        </div>
-        <button class="btn btn-ghost" id="applyRaw"><i class="fas fa-check"></i> Apply JSON</button>
-      `;
-    },
-
-    settings(){
-      return `
-        <div class="panel-head"><h3>Settings</h3><p>Repository connection &amp; backups.</p></div>
-        <div class="field"><label>GitHub owner</label><input value="${esc(cfg.owner)}" disabled></div>
-        <div class="field"><label>Repository</label><input value="${esc(cfg.repo)}" disabled></div>
-        <div class="field"><label>Branch</label><input value="${esc(cfg.branch)}" disabled></div>
-
-        <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.5rem">
-          <button class="btn btn-ghost" id="downloadJson"><i class="fas fa-download"></i> Download content.json</button>
-          <button class="btn btn-ghost" id="reloadJson"><i class="fas fa-rotate"></i> Re-fetch from GitHub</button>
-          <button class="btn btn-ghost" id="logoutBtn" style="color:#ff9a9a;border-color:#5a2020"><i class="fas fa-right-from-bracket"></i> Sign out</button>
-        </div>
-
-        <div class="dash-card" style="margin-top:2rem">
-          <div class="lbl">Token scope required</div>
-          <div style="font-size:.9rem;color:#bbb;margin-top:.4rem;line-height:1.7">
-            Fine-grained token → <strong>Contents: Read &amp; Write</strong> on this repo.<br>
-            Or classic token with <code style="color:#fff">repo</code> scope.
+  function listCard(title, desc, path, items, itemFields) {
+    const listItems = (items || []).map((item, i) => {
+      const getVal = (key) => typeof item === 'object' && item !== null ? (item[key] != null ? item[key] : '') : '';
+      return `<div class="list-item">
+        <div class="list-item__head">
+          <div class="list-item__title">Item ${i+1}</div>
+          <div class="list-item__controls">
+            <button class="list-item__btn" data-move="up"   data-list="${path}" data-index="${i}" title="Up"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg></button>
+            <button class="list-item__btn" data-move="down" data-list="${path}" data-index="${i}" title="Down"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+            <button class="list-item__btn list-item__btn--danger" data-remove-list="${path}" data-index="${i}" title="Delete"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
           </div>
         </div>
-      `;
-    }
-  };
-
-  /* =========================================================
-     RENDER
-     ========================================================= */
-  function render(){
-    $('#viewTitle').textContent = ({
-      dashboard:'Dashboard', hero:'Hero Section', stats:'Stats Row', partners:'Partners',
-      demos:'Video Demos', about:'About', focus:'Focus Areas', projects:'Projects',
-      careers:'Careers', contact:'Contact', footer:'Footer', raw:'Raw JSON', settings:'Settings'
-    })[state.view] || state.view;
-
-    const panel = $('#panel');
-    panel.innerHTML = (VIEWS[state.view] || VIEWS.dashboard)();
-    panel.scrollTop = 0;
-    window.scrollTo({top:0, behavior:'smooth'});
-
-    $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === state.view));
-    if (state.view === 'raw') wireRaw();
-    if (state.view === 'settings') wireSettings();
+        ${itemFields.map(f => {
+          const val = getVal(f.key);
+          if (f.type === 'textarea') return `<div class="field"><label class="field__label">${f.label}</label><textarea class="field__textarea" data-list-path="${path}" data-list-index="${i}" data-list-key="${f.key}">${esc(val)}</textarea></div>`;
+          if (f.type === 'media')    return mediaFieldHTML({ label: f.label, kind: f.mediaType || 'image', listPath: path, listIndex: i, listKey: f.key, value: val });
+          if (f.type === 'icon')     return iconFieldInline(f.label, path, i, f.key, val);
+          return `<div class="field"><label class="field__label">${f.label}</label><input class="field__input" data-list-path="${path}" data-list-index="${i}" data-list-key="${f.key}" value="${esc(val)}"></div>`;
+        }).join('')}
+      </div>`;
+    }).join('');
+    return `<div class="section-card">
+      <div class="section-card__head">
+        <div><div class="section-card__title">${title}</div>${desc ? `<div class="section-card__desc">${desc}</div>` : ''}</div>
+        <div><button class="btn btn--ghost btn--sm" data-add="${path}">+ Add</button></div>
+      </div>
+      ${listItems || '<div style="padding:20px 0;color:var(--txt-3);font-size:.85rem;text-align:center">No items yet. Click "+ Add".</div>'}
+    </div>`;
   }
 
-  function setDirty(d){
-    state.dirty = d;
-    $('#dirtyDot').classList.toggle('on', d);
-    $('#saveBtn').disabled = !d;
-    $('#discardBtn').disabled = !d;
+  function iconFieldInline(label, listPath, idx, key, value) {
+    const v = value || 'fas fa-star';
+    const presets = ['fas fa-landmark','fas fa-archive','fas fa-graduation-cap','fas fa-vr-cardboard','fas fa-cubes','fas fa-microchip','fas fa-flask','fas fa-university','fas fa-cube','fas fa-school','fas fa-globe','fas fa-award','fas fa-brain','fas fa-film','fas fa-industry','fas fa-seedling','fas fa-paintbrush','fas fa-code','fas fa-drafting-compass','fas fa-museum','fas fa-book-open','fas fa-star','fas fa-play','fas fa-bolt'];
+    return `<div class="field"><label class="field__label">${label}</label>
+      <input class="field__input" data-list-path="${listPath}" data-list-index="${idx}" data-list-key="${key}" value="${esc(v)}">
+      <div class="icon-preview"><div class="icon-preview__box"><i class="${esc(v)}"></i></div><span class="icon-preview__code">${esc(v)}</span></div>
+      <div class="icon-picker">${presets.map(p => `<button type="button" data-icon-list-path="${listPath}" data-icon-list-index="${idx}" data-icon-list-key="${key}" data-icon-value="${p}" title="${p}"><i class="${p}"></i></button>`).join('')}</div>
+    </div>`;
   }
 
-  /* =========================================================
-     INPUT HANDLING (delegated)
-     ========================================================= */
-  document.addEventListener('input', e => {
-    const el = e.target;
-    if (!el.dataset || !el.dataset.path) return;
-    setPath(state.content, el.dataset.path, el.value);
-    state.content.meta = state.content.meta || {};
-    state.content.meta.updatedAt = new Date().toISOString();
-    setDirty(true);
+  /* ============================================================
+     EVENT BINDING
+     ============================================================ */
+  function bindSectionEvents() {
+    const area = document.getElementById('contentArea');
+    area.querySelectorAll('[data-path]').forEach(el => { el.addEventListener('input', onFieldInput); el.addEventListener('change', onFieldInput); });
+    area.querySelectorAll('[data-list-path]').forEach(el => { el.addEventListener('input', onListFieldInput); el.addEventListener('change', onListFieldInput); });
+    area.querySelectorAll('[data-add]').forEach(btn => btn.addEventListener('click', () => addListItem(btn.dataset.add)));
+    area.querySelectorAll('[data-remove-list]').forEach(btn => btn.addEventListener('click', () => confirmAction('Delete this item?', 'This will remove it from the content.', () => removeListItem(btn.dataset.removeList, parseInt(btn.dataset.index, 10)))));
+    area.querySelectorAll('[data-move]').forEach(btn => btn.addEventListener('click', () => moveListItem(btn.dataset.list, parseInt(btn.dataset.index, 10), btn.dataset.move === 'up' ? -1 : 1)));
+    area.querySelectorAll('.upload-btn').forEach(btn => bindUploadButton(btn));
+    area.querySelectorAll('[data-add-custom]').forEach(btn => btn.addEventListener('click', () => addCustomSection(btn.dataset.addCustom)));
+    area.querySelectorAll('[data-remove-custom]').forEach(btn => btn.addEventListener('click', () => confirmAction('Delete this section?', 'Cannot be undone.', () => removeCustomSection(parseInt(btn.dataset.removeCustom, 10)))));
+    area.querySelectorAll('[data-move-custom]').forEach(btn => btn.addEventListener('click', () => moveCustomSection(parseInt(btn.dataset.index, 10), btn.dataset.moveCustom === 'up' ? -1 : 1)));
+    area.querySelectorAll('[data-typo-preset]').forEach(btn => btn.addEventListener('click', () => applyTypoPreset(btn.dataset.typoPreset)));
+    area.querySelectorAll('[data-spacing-preset]').forEach(btn => btn.addEventListener('click', () => applySpacingPreset(btn.dataset.spacingPreset)));
 
-    // live icon preview
-    if (el.previousElementSibling === null || el.parentElement.querySelector('.icon-preview')){
-      const prev = el.parentElement.querySelector('.icon-preview .fa-box i');
-      if (prev) { prev.className = el.value || 'fas fa-star'; }
-      const code = el.parentElement.querySelector('.icon-preview code');
-      if (code) code.textContent = el.value;
-    }
-  });
-
-  document.addEventListener('click', async e => {
-    const nav = e.target.closest('.nav-item');
-    if (nav){ state.view = nav.dataset.view; render(); $('#sidebar').classList.remove('open'); return; }
-
-    const goto = e.target.closest('[data-goto]');
-    if (goto){ state.view = goto.dataset.goto; render(); return; }
-
-    const add = e.target.closest('[data-add]');
-    if (add){
-      const path = add.dataset.add;
-      const arr = getPath(state.content, path) || [];
-      // create a new item with the same shape as the first
-      const sample = arr[0];
-      const blank = sample ? JSON.parse(JSON.stringify(sample)) : {};
-      Object.keys(blank).forEach(k => {
-        if (typeof blank[k] === 'string') blank[k] = '';
-        else if (Array.isArray(blank[k])) blank[k] = [];
-        else if (typeof blank[k] === 'object') blank[k] = {};
-      });
-      arr.push(blank);
-      setPath(state.content, path, arr);
-      setDirty(true); render();
-      return;
-    }
-
-    const rm = e.target.closest('[data-remove]');
-    if (rm){
-      const path = rm.dataset.remove, idx = +rm.dataset.idx;
-      const arr = getPath(state.content, path) || [];
-      arr.splice(idx,1);
-      setDirty(true); render();
-      return;
-    }
-
-    const mv = e.target.closest('[data-move]');
-    if (mv){
-      const path = mv.dataset.move, idx = +mv.dataset.idx, dir = +mv.dataset.dir;
-      const arr = getPath(state.content, path) || [];
-      const ni = idx + dir;
-      if (ni < 0 || ni >= arr.length) return;
-      [arr[idx], arr[ni]] = [arr[ni], arr[idx]];
-      setDirty(true); render();
-      return;
-    }
-
-    const up = e.target.closest('[data-upload]');
-    if (up){
-      const input = document.createElement('input');
-      input.type = 'file'; input.accept = 'image/*';
-      input.onchange = async () => {
-        if (!input.files[0]) return;
-        const btn = up; const orig = btn.innerHTML;
-        btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
-        try {
-          const url = await ghUploadImage(input.files[0]);
-          setPath(state.content, up.dataset.upload, url);
-          setDirty(true); render();
-          toast('ok','Image uploaded','Set as logo. Publish to make it live.');
-        } catch(err){ toast('err','Upload failed', err.message); }
-        finally { btn.disabled = false; btn.innerHTML = orig; }
-      };
-      input.click();
-      return;
-    }
-
-    if (e.target.closest('#mobileMenu')){ $('#sidebar').classList.toggle('open'); return; }
-  });
-
-  /* =========================================================
-     SAVE / DISCARD
-     ========================================================= */
-  $('#saveBtn').addEventListener('click', publish);
-  $('#discardBtn').addEventListener('click', () => {
-    if (!confirm('Discard all unsaved changes?')) return;
-    state.content = deepClone(state.original);
-    setDirty(false); render();
-    toast('info','Changes discarded');
-  });
-
-  async function publish(){
-    if (state.saving) return;
-    state.saving = true;
-    const btn = $('#saveBtn');
-    btn.classList.add('saving');
-    btn.innerHTML = '<span class="spin"></span> <span>Publishing…</span>';
-
-    try {
-      const text = JSON.stringify(state.content, null, 2) + '\n';
-      const res = await ghPut(CONTENT_PATH, text, `Content update — ${new Date().toLocaleString()}`, state.sha);
-      state.sha = res.content.sha;
-      state.original = deepClone(state.content);
-      setDirty(false);
-      toast('ok','Published successfully','Your site will update in ~30 seconds.');
-    } catch(err){
-      toast('err','Publish failed', err.message);
-    } finally {
-      state.saving = false;
-      btn.classList.remove('saving');
-      btn.innerHTML = '<i class="fas fa-cloud-arrow-up"></i> <span>Publish</span>';
-    }
+    // Icon quick-pickers — plain fields
+    area.querySelectorAll('[data-icon-suggest]').forEach(btn => btn.addEventListener('click', () => {
+      const path = btn.dataset.iconTarget;
+      setByPath(content, path, btn.dataset.iconSuggest);
+      scheduleSave();
+      renderSection(currentSection);
+    }));
+    // Icon quick-pickers — list fields
+    area.querySelectorAll('[data-icon-list-path]').forEach(btn => btn.addEventListener('click', () => {
+      const arr = getByPath(content, btn.dataset.iconListPath);
+      if (!arr) return;
+      const i = parseInt(btn.dataset.iconListIndex, 10);
+      if (arr[i]) arr[i][btn.dataset.iconListKey] = btn.dataset.iconValue;
+      scheduleSave();
+      renderSection(currentSection);
+    }));
   }
 
-  /* =========================================================
-     RAW JSON VIEW
-     ========================================================= */
-  function wireRaw(){
-    const ta = $('#rawEditor'), err = $('#rawErr');
-    $('#applyRaw').addEventListener('click', () => {
-      try {
-        const parsed = JSON.parse(ta.value);
-        state.content = parsed;
-        setDirty(true); render();
-        toast('ok','JSON applied','Publish to save.');
-      } catch(e){
-        err.textContent = 'Invalid JSON: ' + e.message;
-        err.classList.add('show');
+  function onFieldInput(e) {
+    const path = e.target.dataset.path;
+    if (!path) return;
+    let value = e.target.value;
+    if (path.endsWith('.reverse')) value = value === 'true';
+    if (path.startsWith('typography.') && path !== 'typography.headingTracking') { const n = parseFloat(value); if (!isNaN(n)) value = n; }
+    if (path.startsWith('spacing.')) { const n = parseFloat(value); if (!isNaN(n)) value = n; }
+    setByPath(content, path, value);
+    scheduleSave();
+  }
+
+  function onListFieldInput(e) {
+    const path = e.target.dataset.listPath;
+    if (!path) return;
+    const idx = parseInt(e.target.dataset.listIndex, 10);
+    const key = e.target.dataset.listKey;
+    const arr = getByPath(content, path);
+    if (!arr || arr[idx] === undefined) return;
+    if (typeof arr[idx] === 'object' && arr[idx] !== null && !Array.isArray(arr[idx])) arr[idx][key] = e.target.value;
+    else arr[idx] = e.target.value;
+    scheduleSave();
+  }
+
+  function setByPath(obj, path, value) {
+    const keys = path.split('.');
+    let cur = obj;
+    for (let i = 0; i < keys.length - 1; i++) { if (!(keys[i] in cur)) cur[keys[i]] = {}; cur = cur[keys[i]]; }
+    cur[keys[keys.length - 1]] = value;
+  }
+  function getByPath(obj, path) { return path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj); }
+
+  function addListItem(path) {
+    const arr = getByPath(content, path);
+    if (!Array.isArray(arr)) return;
+    let newItem = {};
+    if (arr.length > 0 && typeof arr[0] === 'object' && arr[0] !== null) {
+      for (const k of Object.keys(arr[0])) {
+        const v = arr[0][k];
+        newItem[k] = typeof v === 'string' ? '' : (typeof v === 'number' ? 0 : (Array.isArray(v) ? [] : {}));
       }
-    });
+    } else newItem = { value: '' };
+    arr.push(newItem);
+    scheduleSave();
+    renderSection(currentSection);
+    toast('Item added', 'success');
+  }
+  function removeListItem(path, idx) { const arr = getByPath(content, path); if (!Array.isArray(arr)) return; arr.splice(idx, 1); scheduleSave(); renderSection(currentSection); toast('Item removed', 'success'); }
+  function moveListItem(path, idx, dir) {
+    const arr = getByPath(content, path);
+    if (!Array.isArray(arr)) return;
+    const ni = idx + dir;
+    if (ni < 0 || ni >= arr.length) return;
+    const [item] = arr.splice(idx, 1);
+    arr.splice(ni, 0, item);
+    scheduleSave();
+    renderSection(currentSection);
   }
 
-  /* =========================================================
-     SETTINGS VIEW
-     ========================================================= */
-  function wireSettings(){
-    $('#downloadJson').addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(state.content, null, 2)], {type:'application/json'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'content.json'; a.click();
-      URL.revokeObjectURL(a.href);
-    });
-    $('#reloadJson').addEventListener('click', async () => {
-      if (state.dirty && !confirm('You have unsaved changes. Reload anyway?')) return;
-      await boot();
-      toast('ok','Reloaded from GitHub');
-    });
-    $('#logoutBtn').addEventListener('click', () => {
-      if (!confirm('Sign out? You will need to re-enter your token.')) return;
-      localStorage.removeItem(STORAGE_KEY);
-      location.reload();
-    });
+  function applyTypoPreset(name) {
+    const presets = {
+      compact:     { baseSize:14, headingScale:0.92, headingWeight:800, headingTracking:'-0.03em' },
+      default:     { baseSize:16, headingScale:1,    headingWeight:800, headingTracking:'-0.02em' },
+      comfortable: { baseSize:17, headingScale:1.05, headingWeight:800, headingTracking:'-0.02em' },
+      large:       { baseSize:18, headingScale:1.15, headingWeight:900, headingTracking:'-0.04em' }
+    };
+    const p = presets[name];
+    if (!p) return;
+    content.typography = Object.assign({}, content.typography || {}, p);
+    scheduleSave();
+    renderSection('typography');
+    toast(name.charAt(0).toUpperCase() + name.slice(1) + ' applied', 'success');
   }
 
-  /* =========================================================
-     KEYBOARD SHORTCUTS
-     ========================================================= */
-  document.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 's'){
-      e.preventDefault();
-      if (!state.saving && state.dirty) publish();
+  function applySpacingPreset(name) {
+    const presets = {
+      tight:    { sectionPadding:50,  containerPadding:3, cardPadding:20, gridGap:14 },
+      compact:  { sectionPadding:66,  containerPadding:4, cardPadding:22, gridGap:16 },
+      default:  { sectionPadding:80,  containerPadding:4, cardPadding:26, gridGap:18 },
+      relaxed:  { sectionPadding:110, containerPadding:5, cardPadding:32, gridGap:24 },
+      spacious: { sectionPadding:140, containerPadding:6, cardPadding:38, gridGap:30 }
+    };
+    const p = presets[name];
+    if (!p) return;
+    content.spacing = Object.assign({}, content.spacing || {}, p, { density: name });
+    scheduleSave();
+    renderSection('spacing');
+    toast(name.charAt(0).toUpperCase() + name.slice(1) + ' applied', 'success');
+  }
+
+  /* ============================================================
+     FILE UPLOAD
+     ============================================================ */
+  async function uploadFileToGitHub(file, targetPath) {
+    const repo = document.getElementById('ghRepo').value.trim();
+    const branch = document.getElementById('ghBranch').value.trim() || 'main';
+    const token = document.getElementById('ghToken').value.trim();
+    if (!repo || !token) { toast('Open "Publish to GitHub" first and enter repo + token', 'error'); return null; }
+    const MAX = 100 * 1024 * 1024;
+    if (file.size > MAX) { toast('File too large (' + (file.size/1024/1024).toFixed(1) + ' MB) — GitHub max is 100 MB', 'error'); return null; }
+
+    const base64 = await new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result.split(',')[1]);
+      r.onerror = () => reject(new Error('Could not read file'));
+      r.readAsDataURL(file);
+    });
+
+    let sha = null;
+    try {
+      const g = await fetch(`https://api.github.com/repos/${repo}/contents/${targetPath}?ref=${branch}`, {
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+      });
+      if (g.ok) sha = (await g.json()).sha;
+    } catch(e) {}
+
+    const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${targetPath}`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Upload ' + targetPath, content: base64, branch, ...(sha ? { sha } : {}) })
+    });
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      throw new Error(err.message || 'Upload failed (' + putRes.status + ')');
     }
-  });
-
-  window.addEventListener('beforeunload', e => {
-    if (state.dirty){ e.preventDefault(); e.returnValue = ''; }
-  });
-
-  /* =========================================================
-     AUTO LOGIN
-     ========================================================= */
-  if (cfg.owner && cfg.repo && cfg.token && cfg.branch){
-    boot();
+    // Return the raw URL that will work with <img>/<video> on the site
+    return `https://raw.githubusercontent.com/${repo}/${branch}/${targetPath}`;
   }
+
+  function bindUploadButton(btn) {
+    btn.addEventListener('click', () => {
+      const kind       = btn.dataset.uploadKind;
+      const path       = btn.dataset.uploadPath;
+      const listPath   = btn.dataset.uploadListPath;
+      const listIndex  = btn.dataset.uploadListIndex ? parseInt(btn.dataset.uploadListIndex, 10) : null;
+      const listKey    = btn.dataset.uploadListKey;
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = kind === 'video' ? 'video/mp4,video/webm,video/quicktime' : 'image/*';
+      input.addEventListener('change', async () => {
+        const file = input.files[0];
+        if (!file) return;
+        const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+        const safeName = file.name.toLowerCase().replace(/[^a-z0-9.\-_]/g, '-').replace(/-+/g, '-');
+        const folder = kind === 'video' ? 'assets/videos' : 'assets/images';
+        const targetPath = folder + '/' + Date.now() + '-' + safeName;
+
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-3-6.7"/></svg> ' + sizeMB + ' MB…';
+
+        try {
+          const result = await uploadFileToGitHub(file, targetPath);
+          if (result) {
+            if (listPath !== undefined && listPath !== '' && listIndex !== null && !isNaN(listIndex)) {
+              const arr = getByPath(content, listPath);
+              if (arr && arr[listIndex]) arr[listIndex][listKey] = result;
+            } else if (path) setByPath(content, path, result);
+            scheduleSave();
+            toast('Uploaded — now click "Publish to GitHub"', 'success');
+            renderSection(currentSection);
+          } else {
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+          }
+        } catch(e) {
+          toast('Upload failed: ' + e.message, 'error');
+          btn.disabled = false;
+          btn.innerHTML = originalHTML;
+        }
+      });
+      input.click();
+    });
+  }
+
+  /* ============================================================
+     SAVE / STATUS
+     ============================================================ */
+  function scheduleSave() {
+    setStatus('warn', 'Saving...');
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(content));
+        setStatus('ok', 'Saved locally');
+      } catch (e) {
+        setStatus('err', 'Save failed');
+        toast('Could not save: ' + e.message, 'error');
+      }
+    }, 400);
+  }
+
+  function setStatus(kind, text) {
+    const dot = document.getElementById('saveStatus');
+    if (!dot) return;
+    dot.className = 'status-dot' + (kind === 'warn' ? ' warn' : kind === 'err' ? ' err' : '');
+    const label = document.getElementById('saveStatusText');
+    if (label) label.textContent = text;
+  }
+
+  /* ============================================================
+     TOPBAR / MODAL / TOAST
+     ============================================================ */
+  function bindTopbar() {
+    document.getElementById('btnPreview').addEventListener('click', () => {
+      localStorage.setItem(LS_KEY, JSON.stringify(content));
+      toast('Saved locally. Opening preview...', 'info');
+      window.open('../index.html?preview=1', '_blank');
+    });
+    document.getElementById('btnReset').addEventListener('click', () => {
+      confirmAction('Discard all local changes?', 'This will delete everything you have edited but not yet published.', () => {
+        localStorage.removeItem(LS_KEY);
+        content = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+        renderSection(currentSection);
+        toast('Reset to defaults', 'success');
+      });
+    });
+    document.getElementById('btnDownload').addEventListener('click', downloadJSON);
+    document.getElementById('btnPublish').addEventListener('click', () => {
+      document.getElementById('publishModal').classList.add('is-open');
+    });
+  }
+
+  function downloadJSON() {
+    const blob = new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'content.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('content.json downloaded — commit it to your repo', 'success');
+  }
+
+  function bindPublishModal() {
+    const modal = document.getElementById('publishModal');
+    document.getElementById('publishCancel').addEventListener('click', () => modal.classList.remove('is-open'));
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('is-open'); });
+    document.getElementById('publishConfirm').addEventListener('click', publishToGitHub);
+    ['ghRepo','ghBranch','ghPath','ghToken','ghMessage'].forEach(id => document.getElementById(id).addEventListener('change', saveGitHubConfig));
+  }
+
+  function loadGitHubConfig() {
+    try {
+      const cfg = JSON.parse(localStorage.getItem(LS_GH) || '{}');
+      const map = { repo:'ghRepo', branch:'ghBranch', path:'ghPath', token:'ghToken', message:'ghMessage' };
+      for (const [k, id] of Object.entries(map)) {
+        const el = document.getElementById(id);
+        if (el && cfg[k]) el.value = cfg[k];
+      }
+    } catch (e) {}
+  }
+  function saveGitHubConfig() {
+    localStorage.setItem(LS_GH, JSON.stringify({
+      repo:    document.getElementById('ghRepo').value.trim(),
+      branch:  document.getElementById('ghBranch').value.trim(),
+      path:    document.getElementById('ghPath').value.trim(),
+      token:   document.getElementById('ghToken').value.trim(),
+      message: document.getElementById('ghMessage').value.trim()
+    }));
+  }
+
+  async function publishToGitHub() {
+    const repo = document.getElementById('ghRepo').value.trim();
+    const branch = document.getElementById('ghBranch').value.trim() || 'main';
+    const path = document.getElementById('ghPath').value.trim() || 'content.json';
+    const token = document.getElementById('ghToken').value.trim();
+    const message = document.getElementById('ghMessage').value.trim() || 'Update site content';
+    if (!repo || !token) { toast('Repository and token are required', 'error'); return; }
+    if (!/^[^/]+\/[^/]+$/.test(repo)) { toast('Repository must be owner/repo format', 'error'); return; }
+    const btn = document.getElementById('publishConfirm');
+    btn.disabled = true;
+    btn.textContent = 'Publishing...';
+    try {
+      const getUrl = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+      let sha = null;
+      const getRes = await fetch(getUrl, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } });
+      if (getRes.ok) { const j = await getRes.json(); sha = j.sha; }
+      else if (getRes.status !== 404) throw new Error(`Cannot read current file (${getRes.status})`);
+      const contentStr = JSON.stringify(content, null, 2);
+      const encoded = btoa(unescape(encodeURIComponent(contentStr)));
+      const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, content: encoded, branch, ...(sha ? { sha } : {}) })
+      });
+      if (!putRes.ok) {
+        const err = await putRes.json().catch(() => ({}));
+        throw new Error(err.message || `GitHub returned ${putRes.status}`);
+      }
+      toast('Published! Pages will rebuild in ~1 minute', 'success');
+      document.getElementById('publishModal').classList.remove('is-open');
+    } catch (e) {
+      toast('Publish failed: ' + e.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Publish Now';
+    }
+  }
+
+  /* ============================================================
+     CONFIRM + TOAST
+     ============================================================ */
+  let confirmCallback = null;
+  function confirmAction(title, text, onOk) {
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmText').textContent = text;
+    document.getElementById('confirmModal').classList.add('is-open');
+    confirmCallback = onOk;
+  }
+  document.getElementById('confirmCancel').addEventListener('click', () => { document.getElementById('confirmModal').classList.remove('is-open'); confirmCallback = null; });
+  document.getElementById('confirmOk').addEventListener('click', () => { if (confirmCallback) confirmCallback(); document.getElementById('confirmModal').classList.remove('is-open'); confirmCallback = null; });
+
+  function toast(message, kind) {
+    kind = kind || 'info';
+    const stack = document.getElementById('toastStack');
+    const el = document.createElement('div');
+    el.className = 'toast toast--' + kind;
+    const icons = {
+      success: '<polyline points="20 6 9 17 4 12"/>',
+      error:   '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+      info:    '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+    };
+    el.innerHTML = `<svg class="toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${icons[kind]}</svg><span>${esc(message)}</span>`;
+    stack.appendChild(el);
+    setTimeout(() => {
+      el.style.transition = '.3s cubic-bezier(.22,.61,.36,1)';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(10px)';
+      setTimeout(() => el.remove(), 300);
+    }, 3500);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
 </script>
 </body>
