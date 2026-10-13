@@ -5,19 +5,47 @@
     "tagline": "Immersive Culture. Experiential Education. Future Innovation.",
     "logoUrl": ""
   },
+  "visibility": {
+    "stats": true,
+    "partners": true,
+    "demos": true,
+    "about": true,
+    "focus": true,
+    "projects": true,
+    "careers": true,
+    "contact": true,
+    "footer": true
+  },
   "hero": {
     "eyebrow": "Immersive Technology Studio · Chennai, India",
     "title": "Reimagining Culture, Education & Heritage Through Virtual Reality",
     "subtitle": "Thazham VR is an immersive technology company focused on preserving knowledge, transforming education, and creating innovative experiences through Virtual Reality.",
     "heroVideo": "",
-    "button1Label": "Watch Showreel",
-    "button2Label": "Explore Demos",
-    "button3Label": "Partner With Us",
+    "buttons": [
+      {
+        "label": "About Us",
+        "action": "about",
+        "style": "primary"
+      },
+      {
+        "label": "Explore Demos",
+        "action": "demos",
+        "style": "outline"
+      },
+      {
+        "label": "Partner With Us",
+        "action": "contact",
+        "style": "outline"
+      }
+    ],
     "showreel": {
       "url": "",
       "title": "Thazham VR — Studio Showreel",
       "desc": "A quick look at the immersive worlds, heritage reconstructions and VR learning modules we build."
-    }
+    },
+    "button1Label": "Watch Showreel",
+    "button2Label": "Explore Demos",
+    "button3Label": "Partner With Us"
   },
   "stats": [
     {
