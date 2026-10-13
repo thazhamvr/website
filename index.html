@@ -21,7 +21,6 @@
   --border-light:#2a2a2a;
   --transition:all .25s ease;
 
-  /* Dynamic tokens — overridable from admin */
   --base-font-size:16px;
   --heading-scale:1;
   --heading-weight:800;
@@ -54,7 +53,6 @@ h2 .accent{color:var(--accent)}
 .section-head{text-align:center;max-width:760px;margin:0 auto 3rem}
 .section-head p{color:var(--text-dim);font-size:1.1rem;margin-top:.5rem}
 
-/* Buttons */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
   padding:1rem 2.3rem;border-radius:60px;font-weight:600;font-size:1.05rem;
@@ -66,7 +64,6 @@ h2 .accent{color:var(--accent)}
 .btn-outline{border:1.5px solid var(--accent);color:var(--accent);background:transparent;box-shadow:0 0 15px rgba(255,255,255,.15)}
 .btn-outline:hover{background:var(--accent);color:#0a0a0a;box-shadow:0 0 30px rgba(255,255,255,.5);transform:scale(1.02)}
 
-/* Scroll progress */
 .scroll-progress{
   position:fixed;top:0;left:0;height:3px;width:0;z-index:300;
   background:linear-gradient(90deg,#ffffff,#8a8a8a);
@@ -74,7 +71,6 @@ h2 .accent{color:var(--accent)}
   transition:width .1s linear;
 }
 
-/* Navbar */
 .navbar{
   position:sticky;top:0;z-index:100;
   background:rgba(10,10,10,.88);
@@ -85,7 +81,8 @@ h2 .accent{color:var(--accent)}
 .nav-container{display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto}
 .logo{display:flex;align-items:center;gap:.75rem;font-size:1.7rem;font-weight:800;color:#fff;letter-spacing:-.02em}
 .logo img{height:38px;width:auto;display:block}
-.logo span{color:#8f8f8f}
+.logo .logo-text{display:inline-flex;gap:.35rem}
+.logo .logo-text span{color:#8f8f8f}
 .nav-links{display:flex;gap:2.2rem;align-items:center}
 .nav-links a{text-decoration:none;color:#ddd;font-weight:500;font-size:1rem;transition:var(--transition);cursor:pointer}
 .nav-links a:hover{color:#fff;text-shadow:0 0 12px rgba(255,255,255,.5)}
@@ -93,7 +90,6 @@ h2 .accent{color:var(--accent)}
 .nav-cta:hover{background:#fff;color:#0a0a0a;box-shadow:0 0 25px #fff}
 .menu-toggle{display:none;font-size:1.8rem;color:#fff;cursor:pointer;background:none;border:none}
 
-/* Hero */
 .hero{
   min-height:100vh;display:flex;align-items:center;
   position:relative;isolation:isolate;overflow:hidden;padding:6rem 0 4rem;
@@ -124,7 +120,6 @@ h2 .accent{color:var(--accent)}
 .hero-sub{font-size:1.22rem;color:#b8b8b8;max-width:660px;margin:1.5rem 0 2.5rem}
 .hero-btns{display:flex;gap:1.2rem;flex-wrap:wrap}
 
-/* Stats */
 .stats-row{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:var(--grid-gap);
   background:linear-gradient(180deg,#141414,#0f0f0f);
@@ -136,7 +131,6 @@ h2 .accent{color:var(--accent)}
 .stat-highlight{font-size:3rem;font-weight:800;color:#fff;line-height:1.2;text-shadow:0 0 30px rgba(255,255,255,.5);word-break:break-word}
 .stat-label{color:#a0a0a0;font-weight:500;letter-spacing:.5px;font-size:.95rem}
 
-/* Partner marquee */
 .partners{padding:3rem 0 4rem}
 .partners-title{
   text-align:center;color:#8a8a8a;font-size:.82rem;font-weight:600;
@@ -164,7 +158,6 @@ h2 .accent{color:var(--accent)}
 .logo-chip:hover{color:#fff;border-color:#4a4a4a;background:#181818;box-shadow:0 0 30px rgba(255,255,255,.08);transform:translateY(-3px)}
 .logo-chip:hover i,.logo-chip:hover img{color:#fff;filter:grayscale(0);opacity:1}
 
-/* Video demos */
 .video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--grid-gap);margin-top:1rem}
 .video-card{
   background:#141414;border:1px solid #282828;border-radius:26px;
@@ -208,7 +201,6 @@ h2 .accent{color:var(--accent)}
   border:1px solid #333;background:#1b1b1b;padding:.3rem .8rem;border-radius:40px;
 }
 
-/* Video modal */
 .video-modal{
   position:fixed;inset:0;z-index:500;display:none;
   align-items:center;justify-content:center;padding:1.5rem;
@@ -235,7 +227,6 @@ h2 .accent{color:var(--accent)}
 }
 .modal-close:hover{background:#fff;color:#0a0a0a;border-color:#fff;transform:rotate(90deg)}
 
-/* About */
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
 .vision-card{
   background:linear-gradient(160deg,#161616,#101010);
@@ -245,7 +236,6 @@ h2 .accent{color:var(--accent)}
 .vision-card h3{color:#fff;margin-bottom:1rem;font-size:1.5rem}
 .vision-card p{font-size:1.15rem;color:#c8c8c8}
 
-/* Focus */
 .focus-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--grid-gap);margin-top:1rem}
 .focus-card{
   background:#151515;border-radius:30px;overflow:hidden;
@@ -260,14 +250,12 @@ h2 .accent{color:var(--accent)}
 .focus-card h3{padding:1.4rem 1.4rem .4rem;font-size:1.3rem;color:#f0f0f0}
 .focus-card p{padding:0 1.4rem 1.6rem;color:#a0a0a0;font-size:.93rem;line-height:1.45}
 
-/* Projects */
 .coming-soon-block{
   text-align:center;background:#121212;border-radius:60px;
   padding:4.5rem 2rem;border:2px dashed #555;
 }
 .coming-soon-block h3{font-size:calc(clamp(2.6rem,7vw,4.6rem) * var(--heading-scale));color:#fff;text-shadow:0 0 30px rgba(255,255,255,.4)}
 
-/* Careers */
 .careers-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--grid-gap);margin-top:1rem}
 .career-card{
   background:#151515;border-radius:30px;padding:2rem;width:320px;
@@ -286,7 +274,6 @@ h2 .accent{color:var(--accent)}
 }
 .career-card .btn-sm:hover{background:#fff;color:#0a0a0a}
 
-/* Contact */
 .contact-section{display:flex;flex-direction:column;align-items:center}
 .contact-card{
   background:#141414;border-radius:48px;padding:3rem;max-width:680px;width:100%;
@@ -297,7 +284,6 @@ h2 .accent{color:var(--accent)}
 .contact-item a{color:inherit;text-decoration:none;transition:var(--transition);word-break:break-all}
 .contact-item a:hover{color:#fff;text-shadow:0 0 8px rgba(255,255,255,.5)}
 
-/* Footer */
 .footer{background:#080808;padding:4rem 2rem 3rem;border-top:1px solid #2a2a2a}
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1.5fr;gap:3rem;max-width:1280px;margin:0 auto}
 .footer-logo{font-size:2rem;font-weight:800;color:#fff}
@@ -313,7 +299,6 @@ h2 .accent{color:var(--accent)}
   display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;color:#666;font-size:.88rem;
 }
 
-/* Custom sections */
 .cs-section{padding:var(--section-padding) 0}
 .cs-inner{max-width:1280px;margin:0 auto;padding:0 var(--container-padding);position:relative;z-index:2}
 .cs-eyebrow{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:#b0b0b0;font-weight:600;margin-bottom:1rem}
@@ -377,11 +362,9 @@ h2 .accent{color:var(--accent)}
 .cs-hero p{color:#c8c8c8;font-size:1.12rem;margin-bottom:2rem;max-width:640px;margin-left:auto;margin-right:auto}
 .cs-hero__btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
 
-/* Fade anim */
 .fade-section{opacity:0;transform:translateY(35px);transition:opacity .9s cubic-bezier(.2,.9,.3,1),transform .9s ease}
 .fade-section.visible{opacity:1;transform:translateY(0)}
 
-/* Responsive */
 @media (max-width:980px){
   .nav-links{
     position:fixed;top:74px;left:0;width:100%;
@@ -416,7 +399,6 @@ h2 .accent{color:var(--accent)}
 
 <div class="scroll-progress" id="scrollProgress"></div>
 
-<!-- ============ NAVBAR ============ -->
 <nav class="navbar">
   <div class="nav-container">
     <div class="logo" id="brandLogo">
@@ -426,656 +408,4 @@ h2 .accent{color:var(--accent)}
     <button class="menu-toggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
     <div class="nav-links">
       <a href="#about">About</a>
-      <a href="#demos">Demos</a>
-      <a href="#focus">Focus Areas</a>
-      <a href="#projects">Projects</a>
-      <a href="#careers">Careers</a>
-      <a href="#contact">Contact</a>
-      <a href="#contact" class="nav-cta">Partner With Us</a>
-    </div>
-  </div>
-</nav>
-
-<!-- ============ HERO ============ -->
-<section class="hero" id="home">
-  <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="metadata"></video>
-  <div class="hero-scrim"></div>
-  <div class="hero-content container">
-    <span class="eyebrow"><span class="dot"></span> <span data-field="hero.eyebrow">Immersive Technology Studio · Chennai, India</span></span>
-    <h1 data-field="hero.title">Reimagining Culture, Education &amp; Heritage Through Virtual Reality</h1>
-    <p class="hero-sub" data-field="hero.subtitle">Thazham VR is an immersive technology company focused on preserving knowledge, transforming education, and creating innovative experiences through Virtual Reality.</p>
-    <div class="hero-btns">
-      <button class="btn btn-primary" id="showreelBtn" data-field-btn="hero.button1Label">
-        <i class="fas fa-play"></i> <span>Watch Showreel</span>
-      </button>
-      <a href="#demos" class="btn btn-outline" data-field-btn="hero.button2Label">Explore Demos</a>
-      <a href="#contact" class="btn btn-outline" data-field-btn="hero.button3Label">Partner With Us</a>
-    </div>
-  </div>
-</section>
-
-<!-- ============ STATS ============ -->
-<div class="container">
-  <div class="stats-row fade-section" id="statsRow">
-    <div class="stat-item"><div class="stat-highlight">3+</div><div class="stat-label">Active Projects</div></div>
-    <div class="stat-item"><div class="stat-highlight">VR / AR</div><div class="stat-label">Technology Focus</div></div>
-    <div class="stat-item"><div class="stat-highlight">Immersive</div><div class="stat-label">Experience Design</div></div>
-  </div>
-</div>
-
-<!-- ============ PARTNERS ============ -->
-<section class="partners fade-section" aria-label="Collaborating partners">
-  <div class="container"><p class="partners-title" data-field="partners.title">Collaborating With</p></div>
-  <div class="marquee"><div class="marquee-track" id="marqueeRow1"></div></div>
-  <div class="marquee"><div class="marquee-track reverse" id="marqueeRow2"></div></div>
-</section>
-
-<!-- ============ DEMOS ============ -->
-<section id="demos" class="fade-section">
-  <div class="container">
-    <div class="section-head">
-      <h2><span data-field="demos.title">Video Demos</span></h2>
-      <p data-field="demos.subtitle">Step inside our immersive builds. Click any card to play a walkthrough of the experience.</p>
-    </div>
-    <div class="video-grid" id="demosGrid"></div>
-  </div>
-</section>
-
-<!-- ============ ABOUT ============ -->
-<section id="about" class="fade-section">
-  <div class="container">
-    <h2><span data-field="about.heading">About Thazham VR</span></h2>
-    <div class="about-grid">
-      <div>
-        <p style="font-size:1.3rem;color:#ddd;margin-bottom:1.8rem;" data-field="about.lead">Thazham VR is an immersive technology company dedicated to preserving knowledge systems and redefining how people learn, explore, and experience culture.</p>
-        <p style="color:#a5a5a5;" data-field="about.body">We believe technology should enhance heritage rather than replace it. Through Virtual Reality, 3D production, and immersive design, we create digital ecosystems that connect the past, present, and future.</p>
-      </div>
-      <div class="vision-card">
-        <h3 data-field="about.visionTitle">Our Vision</h3>
-        <p data-field="about.visionText">To become a global leader in immersive cultural and educational technology by making knowledge systems accessible through experiential digital platforms.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ FOCUS ============ -->
-<section id="focus" class="fade-section">
-  <div class="container">
-    <div class="section-head">
-      <h2><span data-field="focus.title">Focus Areas</span></h2>
-      <p data-field="focus.subtitle">Five pillars that shape everything we build.</p>
-    </div>
-    <div class="focus-grid" id="focusGrid"></div>
-  </div>
-</section>
-
-<!-- ============ PROJECTS ============ -->
-<section id="projects" class="fade-section">
-  <div class="container">
-    <div class="section-head"><h2><span class="accent">Projects</span></h2></div>
-    <div class="coming-soon-block">
-      <h3 data-field="projects.title">Coming Soon</h3>
-      <p style="font-size:1.25rem;color:#a5a5a5;max-width:620px;margin:1.6rem auto 0;" data-field="projects.text">We are currently developing immersive experiences that will be showcased here soon.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ CUSTOM SECTIONS (rendered from admin) ============ -->
-<div id="customSectionsRoot"></div>
-
-<!-- ============ CAREERS ============ -->
-<section id="careers" class="fade-section">
-  <div class="container">
-    <div class="section-head">
-      <h2><span data-field="careers.heading">Join the Team</span></h2>
-      <p data-field="careers.intro">Be part of a forward-thinking team shaping the future of immersive technology. We're looking for passionate individuals to help us build extraordinary experiences.</p>
-    </div>
-    <div class="careers-grid" id="careersGrid"></div>
-    <p style="text-align:center;margin-top:3rem;color:#8a8a8a;">
-      <span data-field="careers.outro">Don't see a role that fits?</span>
-      <a href="mailto:careers@thazhamvr.com?subject=General%20Application" style="color:#fff;">Send us your resume</a>
-    </p>
-  </div>
-</section>
-
-<!-- ============ CONTACT ============ -->
-<section id="contact" class="fade-section contact-section">
-  <div class="container" style="display:flex;flex-direction:column;align-items:center;">
-    <h2 style="text-align:center;width:100%;">Contact <span class="accent">Us</span></h2>
-    <div class="contact-card">
-      <div style="font-size:2rem;font-weight:800;margin-bottom:.4rem;" data-field="contact.company">Thazham VR</div>
-      <div style="color:#c4c4c4;font-size:1.18rem;margin-bottom:1.8rem;" data-field="contact.location">Chennai, Tamil Nadu, India</div>
-      <div class="contact-item"><i class="fas fa-phone-alt"></i> <span id="contactPhones">9894866586 | 8838715160</span></div>
-      <div class="contact-item"><i class="fas fa-envelope"></i> <a id="contactEmail" href="mailto:info@thazhamvr.com">info@thazhamvr.com</a></div>
-      <div style="margin-top:2.2rem;border-top:1px solid #2e2e2e;padding-top:1.6rem;color:#a5a5a5;">
-        <i class="fas fa-map-marker-alt" style="color:#fff;margin-right:.7rem;"></i><span data-field="contact.address">Chennai, Tamil Nadu, India</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ FOOTER ============ -->
-<footer class="footer">
-  <div class="footer-grid">
-    <div>
-      <div class="footer-logo" id="footerBrand">THAZHAM <span>VR</span></div>
-      <p style="margin:1.1rem 0 1.8rem;color:#9a9a9a;max-width:300px;" data-field="footer.tagline">Immersive Culture. Experiential Education. Future Innovation.</p>
-      <p style="color:#5f5f5f;" data-field="footer.copyright">© 2025 Thazham VR</p>
-    </div>
-    <div>
-      <h4 style="color:#fff;margin-bottom:1.4rem;">Explore</h4>
-      <div class="footer-links">
-        <a href="#about">About</a><a href="#demos">Demos</a><a href="#focus">Focus Areas</a>
-        <a href="#projects">Projects</a><a href="#careers">Careers</a><a href="#contact">Contact</a>
-      </div>
-    </div>
-    <div class="footer-contact">
-      <h4 style="color:#fff;margin-bottom:1.4rem;">Connect</h4>
-      <p><i class="fas fa-phone" style="width:1.6rem;color:#fff;"></i> <span id="footerPhones">9894866586 | 8838715160</span></p>
-      <p><i class="fas fa-envelope" style="color:#fff;width:1.6rem;"></i> <a id="footerEmail" href="mailto:info@thazhamvr.com">info@thazhamvr.com</a></p>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>Built with immersive intent in Chennai, India.</span>
-    <span>Thazham VR — Immersive Technology Studio</span>
-  </div>
-</footer>
-
-<!-- ============ VIDEO MODAL ============ -->
-<div class="video-modal" id="videoModal" aria-hidden="true">
-  <div class="video-modal-backdrop" data-close></div>
-  <div class="video-modal-inner" role="dialog" aria-modal="true">
-    <button class="modal-close" data-close aria-label="Close"><i class="fas fa-times"></i></button>
-    <video id="modalVideo" controls playsinline preload="metadata"></video>
-    <div class="modal-caption">
-      <h3 id="modalTitle"></h3>
-      <p id="modalDesc"></p>
-    </div>
-  </div>
-</div>
-
-<script>
-(function(){
-  'use strict';
-  const $  = (s,el=document)=>el.querySelector(s);
-  const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
-  const PREVIEW = new URLSearchParams(location.search).has('preview');
-
-  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-  /* ============================================================
-     CONTENT LOADER — content.json OR preview localStorage
-     ============================================================ */
-  async function loadContent(){
-    // Preview mode: read from admin's localStorage
-    if (PREVIEW){
-      try {
-        const saved = localStorage.getItem('thazham-content-v1');
-        if (saved) return JSON.parse(saved);
-      } catch(e){ /* ignore */ }
-    }
-    try {
-      const r = await fetch('content.json?t=' + Date.now(), { cache:'no-store' });
-      if (!r.ok) throw new Error('no content.json');
-      return await r.json();
-    } catch(e){
-      console.info('[Thazham VR] content.json not loaded — using static defaults.');
-      return null;
-    }
-  }
-
-  /* ============================================================
-     DESIGN TOKENS — typography + spacing from admin
-     ============================================================ */
-  function applyDesignTokens(c){
-    if (!c) return;
-    const root = document.documentElement;
-    const t = c.typography || {};
-    const s = c.spacing || {};
-
-    if (t.baseSize)        root.style.setProperty('--base-font-size', t.baseSize + 'px');
-    if (t.headingScale)    root.style.setProperty('--heading-scale', t.headingScale);
-    if (t.headingWeight)   root.style.setProperty('--heading-weight', t.headingWeight);
-    if (t.headingTracking) root.style.setProperty('--heading-tracking', t.headingTracking);
-
-    if (s.sectionPadding)   root.style.setProperty('--section-padding', s.sectionPadding + 'px');
-    if (s.containerPadding) root.style.setProperty('--container-padding', 'clamp(1rem, ' + s.containerPadding + 'vw, 4rem)');
-    if (s.cardPadding)      root.style.setProperty('--card-padding', s.cardPadding + 'px');
-    if (s.gridGap)          root.style.setProperty('--grid-gap', s.gridGap + 'px');
-  }
-
-  /* ============================================================
-     BRAND — logo, name, suffix
-     ============================================================ */
-  function applyBrand(c){
-    if (!c || !c.site) return;
-    const site = c.site;
-    const brandLogo = document.getElementById('brandLogo');
-    const brandText = document.getElementById('brandText');
-
-    if (site.logoUrl){
-      const img = brandLogo.querySelector('img');
-      if (img){
-        img.src = site.logoUrl;
-        img.style.display = 'block';
-      }
-    }
-    if (site.brandName && brandText){
-      const suffix = site.brandSuffix || '';
-      brandText.innerHTML = esc(site.brandName) + (suffix ? ' <span>' + esc(suffix) + '</span>' : '');
-    }
-    // Footer
-    const fb = document.getElementById('footerBrand');
-    if (fb && site.brandName){
-      fb.innerHTML = esc(site.brandName) + (site.brandSuffix ? ' <span>' + esc(site.brandSuffix) + '</span>' : '');
-    }
-    // Title tag
-    if (site.brandName){
-      document.title = site.brandName + (site.brandSuffix ? ' ' + site.brandSuffix : '') + ' — Immersive Culture, Education & Heritage';
-    }
-  }
-
-  /* ============================================================
-     APPLY CONTENT
-     ============================================================ */
-  function applyContent(c){
-    if (!c) return;
-
-    applyDesignTokens(c);
-    applyBrand(c);
-
-    // 1. Text fields (data-field="path.to.value")
-    $$('[data-field]').forEach(el => {
-      const path = el.dataset.field.split('.');
-      let v = c;
-      for (const k of path){ v = v == null ? v : v[k]; }
-      if (v != null && typeof v === 'string') el.textContent = v;
-    });
-
-    // 2. Button labels (keep inner <i> intact — replace last text node)
-    $$('[data-field-btn]').forEach(el => {
-      const path = el.dataset.fieldBtn.split('.');
-      let v = c;
-      for (const k of path){ v = v == null ? v : v[k]; }
-      if (typeof v !== 'string') return;
-      // The last child is a text node — swap it
-      const icon = el.querySelector('i');
-      if (icon) {
-        el.innerHTML = '';
-        el.appendChild(icon);
-        el.appendChild(document.createTextNode(' ' + v));
-      } else {
-        el.textContent = v;
-      }
-    });
-
-    // 3. Hero background video
-    const heroVid = c.hero && c.hero.heroVideo;
-    if (heroVid){
-      const v = document.getElementById('heroVideo');
-      v.src = heroVid;
-      v.classList.add('active');
-      v.load();
-      v.play().catch(()=>{});
-    }
-
-    // 4. Showreel button data
-    if (c.hero && c.hero.showreel && c.hero.showreel.url){
-      const b = document.getElementById('showreelBtn');
-      b.dataset.video = c.hero.showreel.url;
-      b.dataset.title = c.hero.showreel.title || '';
-      b.dataset.desc  = c.hero.showreel.desc  || '';
-    }
-
-    // 5. Stats
-    if (Array.isArray(c.stats) && c.stats.length){
-      const row = document.getElementById('statsRow');
-      row.innerHTML = c.stats.map(s => `
-        <div class="stat-item">
-          <div class="stat-highlight">${esc(s.value)}</div>
-          <div class="stat-label">${esc(s.label)}</div>
-        </div>`).join('');
-      row.style.gridTemplateColumns = 'repeat(' + Math.min(c.stats.length, 4) + ', 1fr)';
-      if (window.innerWidth < 620) row.style.gridTemplateColumns = '1fr';
-    }
-
-    // 6. Partners — two rows
-    if (c.partners){
-      document.getElementById('marqueeRow1').innerHTML = (c.partners.row1||[]).map(chipHTML).join('');
-      document.getElementById('marqueeRow2').innerHTML = (c.partners.row2||[]).map(chipHTML).join('');
-      duplicateMarquee();
-    }
-
-    // 7. Demos — supports both nested {items:[]} and flat array
-    const demoItems = (c.demos && Array.isArray(c.demos.items))
-      ? c.demos.items
-      : (Array.isArray(c.demos) ? c.demos : []);
-    if (demoItems.length){
-      document.getElementById('demosGrid').innerHTML = demoItems.map(d => `
-        <article class="video-card"
-                 data-video="${esc(d.videoUrl)}"
-                 data-title="${esc(d.title)}"
-                 data-desc="${esc(d.desc)}">
-          <div class="video-thumb">
-            <i class="${esc(d.icon||'fas fa-play')} watermark"></i>
-            <div class="play-btn"><i class="fas fa-play"></i></div>
-            ${d.duration ? `<span class="duration">${esc(d.duration)}</span>` : ''}
-          </div>
-          <div class="video-info">
-            <h3>${esc(d.title)}</h3>
-            <p>${esc(d.desc)}</p>
-            ${d.tag ? `<span class="tag">${esc(d.tag)}</span>` : ''}
-          </div>
-        </article>`).join('');
-      wireVideoCards();
-    }
-
-    // 8. Focus
-    if (c.focus && Array.isArray(c.focus.items) && c.focus.items.length){
-      document.getElementById('focusGrid').innerHTML = c.focus.items.map(f => `
-        <div class="focus-card">
-          <div class="card-img"><i class="${esc(f.icon)}"></i></div>
-          <h3>${esc(f.title)}</h3>
-          <p>${esc(f.desc)}</p>
-        </div>`).join('');
-    }
-
-    // 9. Careers
-    if (c.careers && Array.isArray(c.careers.items) && c.careers.items.length){
-      document.getElementById('careersGrid').innerHTML = c.careers.items.map(j => `
-        <div class="career-card">
-          <i class="${esc(j.icon)} role"></i>
-          <h3>${esc(j.title)}</h3>
-          <p class="location">${esc(j.location)}</p>
-          <p class="description">${esc(j.desc)}</p>
-          <a href="mailto:${esc(j.email)}?subject=Application%20for%20${encodeURIComponent(j.title)}%20Role" class="btn-sm">Apply Now</a>
-        </div>`).join('');
-    }
-
-    // 10. Contact
-    if (c.contact){
-      const phones = Array.isArray(c.contact.phones)
-        ? c.contact.phones.join('  |  ')
-        : (c.contact.phones || '');
-      const cp = document.getElementById('contactPhones');
-      const fp = document.getElementById('footerPhones');
-      if (cp) cp.textContent = phones;
-      if (fp) fp.textContent = phones;
-      if (c.contact.email){
-        const ce = document.getElementById('contactEmail');
-        const fe = document.getElementById('footerEmail');
-        if (ce){ ce.textContent = c.contact.email; ce.href = 'mailto:' + c.contact.email; }
-        if (fe){ fe.textContent = c.contact.email; fe.href = 'mailto:' + c.contact.email; }
-      }
-    }
-
-    // 11. Custom sections (page builder)
-    renderCustomSections(c.customSections || []);
-  }
-
-  /* ============================================================
-     PARTNER CHIP
-     ============================================================ */
-  function chipHTML(p){
-    const inner = p.image
-      ? `<img src="${esc(p.image)}" alt="${esc(p.label)}" onerror="this.replaceWith(Object.assign(document.createElement('i'),{className:'${esc(p.icon||'fas fa-star')}'}))">`
-      : `<i class="${esc(p.icon||'fas fa-star')}"></i>`;
-    return `<div class="logo-chip">${inner} <span>${esc(p.label)}</span></div>`;
-  }
-  function duplicateMarquee(){
-    ['marqueeRow1','marqueeRow2'].forEach(id => {
-      const t = document.getElementById(id);
-      if (!t || t.dataset.duped) return;
-      t.insertAdjacentHTML('beforeend', t.innerHTML);
-      t.dataset.duped = '1';
-    });
-  }
-
-  /* ============================================================
-     CUSTOM SECTIONS — text/image/video/split/marquee/cards/cta/hero
-     ============================================================ */
-  function renderCustomSections(sections){
-    const root = document.getElementById('customSectionsRoot');
-    if (!sections || !sections.length){ root.innerHTML = ''; return; }
-    root.innerHTML = sections.map(renderCustomSection).join('');
-    // Duplicate any marquees so they loop
-    root.querySelectorAll('.cs-marquee__track').forEach(t => {
-      t.insertAdjacentHTML('beforeend', t.innerHTML);
-    });
-    // Wire any custom cards that contain videos
-    wireVideoCards();
-    // Make them fade in on scroll
-    root.querySelectorAll('.cs-section').forEach(el => {
-      el.classList.add('fade-section');
-      io.observe(el);
-    });
-  }
-
-  function renderCustomSection(sec){
-    switch (sec.type){
-      case 'text':    return csText(sec);
-      case 'image':   return csImage(sec);
-      case 'video':   return csVideo(sec);
-      case 'split':   return csSplit(sec);
-      case 'marquee': return csMarquee(sec);
-      case 'cards':   return csCards(sec);
-      case 'cta':     return csCta(sec);
-      case 'hero':    return csHero(sec);
-      default:        return '';
-    }
-  }
-
-  function csText(s){
-    const align = s.align === 'left' ? '' : ' cs-center';
-    return `<section class="cs-section${align}"><div class="cs-inner">
-      ${s.eyebrow ? `<div class="cs-eyebrow">${esc(s.eyebrow)}</div>` : ''}
-      ${s.title   ? `<h2 class="cs-title">${esc(s.title)}</h2>` : ''}
-      ${s.body    ? `<p class="cs-body">${esc(s.body)}</p>` : ''}
-    </div></section>`;
-  }
-  function csImage(s){
-    const full = s.width === 'full';
-    return `<section class="cs-section" style="padding-left:0;padding-right:0"><div class="cs-inner" style="max-width:${full?'100%':'1280px'}">
-      <div class="${full ? 'cs-image-full' : 'cs-image-boxed'}">
-        ${s.imageUrl ? `<img src="${esc(s.imageUrl)}" alt="${esc(s.caption||'')}" loading="lazy">` : '<div style="color:#5a5a5a;text-align:center;padding:4rem 2rem;border:1px dashed #333;border-radius:20px">Image not set</div>'}
-      </div>
-      ${s.caption ? `<div class="cs-caption">${esc(s.caption)}</div>` : ''}
-    </div></section>`;
-  }
-  function csVideo(s){
-    return `<section class="cs-section"><div class="cs-inner">
-      <div class="cs-image-boxed">
-        ${s.videoUrl
-          ? `<video src="${esc(s.videoUrl)}" controls playsinline preload="metadata" poster="${esc(s.posterUrl||'')}" style="width:100%;border-radius:20px;display:block;background:#000"></video>`
-          : '<div style="color:#5a5a5a;text-align:center;padding:4rem 2rem;border:1px dashed #333;border-radius:20px">Video not set</div>'}
-      </div>
-      ${s.caption ? `<div class="cs-caption">${esc(s.caption)}</div>` : ''}
-    </div></section>`;
-  }
-  function csSplit(s){
-    const reverse = s.reverse ? ' cs-reverse' : '';
-    const bullets = (s.bullets||[]).filter(b => b && (b.value || b)).map(b => `<li>${esc(b.value || b)}</li>`).join('');
-    const mediaKind = s.mediaType === 'video' ? 'video' : 'image';
-    const media = s.mediaUrl
-      ? (mediaKind === 'video'
-          ? `<video src="${esc(s.mediaUrl)}" controls playsinline preload="metadata" style="width:100%;border-radius:20px;display:block;background:#000"></video>`
-          : `<img src="${esc(s.mediaUrl)}" alt="" loading="lazy">`)
-      : `<div style="color:#5a5a5a;text-align:center;padding:4rem 2rem;border:1px dashed #333;border-radius:20px">Media not set</div>`;
-    return `<section class="cs-section"><div class="cs-inner">
-      <div class="cs-split${reverse}">
-        <div class="cs-split__copy">
-          ${s.eyebrow ? `<div class="cs-eyebrow">${esc(s.eyebrow)}</div>` : ''}
-          ${s.title   ? `<h2 class="cs-title">${esc(s.title)}</h2>` : ''}
-          ${s.text    ? `<p class="cs-body">${esc(s.text)}</p>` : ''}
-          ${bullets   ? `<ul class="cs-split__bullets">${bullets}</ul>` : ''}
-        </div>
-        <div class="cs-split__media">${media}</div>
-      </div>
-    </div></section>`;
-  }
-  function csMarquee(s){
-    const items = (s.items||[]).map(v => `<span>${esc(v.value || v)}</span>`).join('');
-    return `<section class="cs-section" style="padding-left:0;padding-right:0">
-      <div class="cs-marquee"><div class="cs-marquee__track">${items}</div></div>
-    </section>`;
-  }
-  function csCards(s){
-    const cards = (s.items||[]).map(it => `
-      <div class="cs-card">
-        ${it.imageUrl ? `<img src="${esc(it.imageUrl)}" alt="${esc(it.title||'')}" loading="lazy">` : ''}
-        <h3>${esc(it.title||'')}</h3>
-        <p>${esc(it.text||'')}</p>
-      </div>`).join('');
-    return `<section class="cs-section"><div class="cs-inner">
-      ${s.eyebrow ? `<div class="cs-eyebrow" style="text-align:center">${esc(s.eyebrow)}</div>` : ''}
-      ${s.title   ? `<h2 class="cs-title" style="text-align:center">${esc(s.title)}</h2>` : ''}
-      <div class="cs-cards" style="margin-top:2rem">${cards}</div>
-    </div></section>`;
-  }
-  function csCta(s){
-    const p = s.primaryLabel ? `<a href="#${esc(s.primaryAction||'contact')}" class="btn btn-primary">${esc(s.primaryLabel)}</a>` : '';
-    const sec = s.secondaryLabel ? `<a href="#${esc(s.secondaryAction||'demos')}" class="btn btn-outline">${esc(s.secondaryLabel)}</a>` : '';
-    return `<section class="cs-section"><div class="cs-inner">
-      <div class="cs-cta">
-        ${s.bgImage ? `<div class="cs-cta__bg" style="background-image:url('${esc(s.bgImage)}')"></div>` : ''}
-        <h2>${esc(s.title||'')}</h2>
-        ${s.text ? `<p>${esc(s.text)}</p>` : ''}
-        <div class="cs-cta__btns">${p}${sec}</div>
-      </div>
-    </div></section>`;
-  }
-  function csHero(s){
-    const bg = s.bgVideo
-      ? `<video src="${esc(s.bgVideo)}" autoplay muted loop playsinline preload="metadata"></video>`
-      : (s.bgImage ? `<img src="${esc(s.bgImage)}" alt="" loading="eager">` : '');
-    const p = s.primaryLabel ? `<a href="#${esc(s.primaryAction||'demos')}" class="btn btn-primary">${esc(s.primaryLabel)}</a>` : '';
-    return `<section class="cs-hero">
-      <div class="cs-hero__bg">${bg}</div>
-      <div class="cs-hero__scrim"></div>
-      <div class="cs-hero__inner">
-        <h1>${esc(s.title||'')}</h1>
-        ${s.subtitle ? `<p>${esc(s.subtitle)}</p>` : ''}
-        <div class="cs-hero__btns">${p}</div>
-      </div>
-    </section>`;
-  }
-
-  /* ============================================================
-     INTERACTIONS
-     ============================================================ */
-  // Mobile menu
-  const toggle = document.querySelector('.menu-toggle');
-  const navMenu = document.querySelector('.nav-links');
-  const icon = toggle ? toggle.querySelector('i') : null;
-  if (toggle){
-    toggle.addEventListener('click', e => {
-      e.stopPropagation();
-      navMenu.classList.toggle('active');
-      const open = navMenu.classList.contains('active');
-      if (icon){ icon.classList.toggle('fa-bars', !open); icon.classList.toggle('fa-times', open); }
-    });
-  }
-  $$('.nav-links a').forEach(a => a.addEventListener('click', () => {
-    navMenu.classList.remove('active');
-    if (icon){ icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
-  }));
-
-  // Scroll progress
-  const bar = document.getElementById('scrollProgress');
-  const upBar = () => {
-    const h = document.documentElement.scrollHeight - window.innerHeight;
-    bar.style.width = (h > 0 ? (window.scrollY/h)*100 : 0) + '%';
-  };
-  window.addEventListener('scroll', upBar, { passive:true });
-  upBar();
-
-  // Fade-in observer (reusable for custom sections)
-  const io = ('IntersectionObserver' in window)
-    ? new IntersectionObserver(es => es.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('visible');
-      }), { threshold:.12, rootMargin:'0px 0px -40px 0px' })
-    : { observe: el => el.classList.add('visible') };
-
-  $$('.fade-section').forEach(el => io.observe(el));
-
-  // Smooth scroll with navbar offset
-  const navbar = document.querySelector('.navbar');
-  document.addEventListener('click', e => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const href = a.getAttribute('href');
-    if (!href || href === '#') return;
-    const t = document.querySelector(href);
-    if (!t) return;
-    e.preventDefault();
-    const top = t.getBoundingClientRect().top + window.scrollY - navbar.offsetHeight - 12;
-    window.scrollTo({ top, behavior:'smooth' });
-  });
-
-  // Video modal
-  const modal = document.getElementById('videoModal');
-  const modalVideo = document.getElementById('modalVideo');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalDesc  = document.getElementById('modalDesc');
-
-  function openVideo(src, title, desc){
-    if (!src) return;
-    modalVideo.src = src;
-    modalTitle.textContent = title || '';
-    modalDesc.textContent  = desc  || '';
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    modalVideo.play().catch(()=>{});
-  }
-  function closeVideo(){
-    modalVideo.pause();
-    modalVideo.removeAttribute('src');
-    modalVideo.load();
-    modal.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  function wireVideoCards(){
-    $$('[data-video]').forEach(el => {
-      if (el.dataset.wired) return;
-      el.dataset.wired = '1';
-      el.addEventListener('click', () => {
-        openVideo(el.dataset.video, el.dataset.title, el.dataset.desc);
-      });
-    });
-  }
-  modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeVideo));
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && modal.classList.contains('open')) closeVideo();
-  });
-
-  // Showreel button (set up after content loads — but bind a default now)
-  const showreelBtn = document.getElementById('showreelBtn');
-  showreelBtn.addEventListener('click', () => {
-    openVideo(showreelBtn.dataset.video, showreelBtn.dataset.title, showreelBtn.dataset.desc);
-  });
-
-  // Pause hero video on hidden tab
-  const heroVideo = document.getElementById('heroVideo');
-  if (heroVideo){
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) heroVideo.pause();
-      else heroVideo.play().catch(()=>{});
-    });
-  }
-
-  // Preview mode banner
-  if (PREVIEW){
-    const banner = document.createElement('div');
-    banner.style.cssText = 'position:fixed;bottom:1rem;left:1rem;z-index:9999;background:#c8f542;color:#0a0a0a;padding:.6rem 1rem;border-radius:999px;font-size:.78rem;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.5);font-family:Inter,sans-serif;letter-spacing:.05em';
-    banner.textContent = '● PREVIEW MODE — reading from admin localStorage';
-    document.body.appendChild(banner);
-  }
-
-  /* ============================================================
-     GO
-     ============================================================ */
-  loadContent().then(applyContent).catch(err => console.warn('[Thazham VR]', err));
-})();
-</script>
-</body>
-</html>
+      <a href
