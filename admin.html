@@ -75,6 +75,15 @@ input,textarea,select{outline:none}
 .icon-picker{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
 .icon-picker button{width:30px;height:30px;border-radius:7px;background:var(--bg-2);border:1px solid var(--line);color:var(--txt-2);font-size:.85rem;display:grid;place-items:center;transition:.15s var(--ease)}
 .icon-picker button:hover{border-color:var(--lime-line);color:var(--lime);background:var(--lime-dim)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;background:var(--bg-2);border:1px solid var(--line-2);border-radius:12px;margin-bottom:18px}
+.toggle-row__label{font-weight:600;font-size:.88rem;color:var(--txt)}
+.toggle-row__hint{font-size:.75rem;color:var(--txt-2);margin-top:2px;line-height:1.45}
+.toggle{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle__slider{position:absolute;inset:0;background:#3a3a3a;border-radius:999px;transition:.2s var(--ease)}
+.toggle input:checked + .toggle__slider{background:var(--lime)}
+.toggle__knob{position:absolute;top:2px;left:2px;width:20px;height:20px;background:#0a0a0a;border-radius:50%;transition:.2s var(--ease);pointer-events:none}
+.toggle input:checked ~ .toggle__knob{left:22px}
 .list-item{border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:12px;background:var(--bg-2);transition:.2s var(--ease)}
 .list-item:hover{border-color:var(--line-2);background:var(--bg-3)}
 .list-item__head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
@@ -148,7 +157,7 @@ input,textarea,select{outline:none}
   </aside>
   <main class="main">
     <header class="topbar">
-      <div class="topbar__title" id="pageTitle">Home <small>Edit content without touching code</small></div>
+      <div class="topbar__title" id="pageTitle">Hero <small>Edit content without touching code</small></div>
       <div class="topbar__actions">
         <button class="btn btn--ghost btn--sm" id="btnPreview">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -230,7 +239,7 @@ input,textarea,select{outline:none}
   }
 
   /* ============================================================
-     DEFAULT CONTENT — mirrors content.json structure
+     DEFAULT CONTENT
      ============================================================ */
   const DEFAULT_CONTENT = {
     site: {
@@ -239,14 +248,20 @@ input,textarea,select{outline:none}
       tagline: "Immersive Culture. Experiential Education. Future Innovation.",
       logoUrl: ""
     },
+    visibility: {
+      stats: true, partners: true, demos: true, about: true,
+      focus: true, projects: true, careers: true, contact: true, footer: true
+    },
     hero: {
       eyebrow: "Immersive Technology Studio · Chennai, India",
       title: "Reimagining Culture, Education & Heritage Through Virtual Reality",
       subtitle: "Thazham VR is an immersive technology company focused on preserving knowledge, transforming education, and creating innovative experiences through Virtual Reality.",
       heroVideo: "",
-      button1Label: "Watch Showreel",
-      button2Label: "Explore Demos",
-      button3Label: "Partner With Us",
+      buttons: [
+        { label: "Watch Showreel", action: "showreel", style: "primary" },
+        { label: "Explore Demos",  action: "demos",    style: "outline" },
+        { label: "Partner With Us", action: "contact", style: "outline" }
+      ],
       showreel: {
         url: "",
         title: "Thazham VR — Studio Showreel",
@@ -388,7 +403,22 @@ input,textarea,select{outline:none}
   function loadContent() {
     try {
       const saved = localStorage.getItem(LS_KEY);
-      if (saved) content = deepMerge(JSON.parse(JSON.stringify(DEFAULT_CONTENT)), JSON.parse(saved));
+      if (saved){
+        content = deepMerge(JSON.parse(JSON.stringify(DEFAULT_CONTENT)), JSON.parse(saved));
+
+        // Migration: old fixed hero buttons → array
+        if (!Array.isArray(content.hero.buttons) || content.hero.buttons.length === 0){
+          const old = content.hero;
+          const migrated = [];
+          if (old.button1Label) migrated.push({ label: old.button1Label, action: 'showreel', style: 'primary' });
+          if (old.button2Label) migrated.push({ label: old.button2Label, action: 'demos',    style: 'outline' });
+          if (old.button3Label) migrated.push({ label: old.button3Label, action: 'contact',  style: 'outline' });
+          content.hero.buttons = migrated.length ? migrated : JSON.parse(JSON.stringify(DEFAULT_CONTENT.hero.buttons));
+        }
+
+        // Migration: ensure visibility block exists
+        if (!content.visibility) content.visibility = JSON.parse(JSON.stringify(DEFAULT_CONTENT.visibility));
+      }
     } catch (e) {
       console.warn('localStorage load failed:', e);
       localStorage.removeItem(LS_KEY);
@@ -554,10 +584,23 @@ input,textarea,select{outline:none}
         field('Main Heading', 'textarea', 'hero.title', h.title),
         field('Sub-heading', 'textarea', 'hero.subtitle', h.subtitle)
       ])}
-      ${card('Hero Buttons', 'Three calls-to-action under the hero.', [
-        field('Button 1 (Primary)', 'text', 'hero.button1Label', h.button1Label),
-        field('Button 2 (Outline)', 'text', 'hero.button2Label', h.button2Label),
-        field('Button 3 (Outline)', 'text', 'hero.button3Label', h.button3Label)
+      ${listCard('Hero Buttons', 'Calls-to-action under the hero. Add, remove or reorder freely.', 'hero.buttons', h.buttons || [], [
+        { key:'label',  label:'Button Label', type:'text' },
+        { key:'style',  label:'Style', type:'select', options:[
+            { value:'primary', label:'Primary — white fill' },
+            { value:'outline', label:'Outline — bordered' }
+        ]},
+        { key:'action', label:'Action', type:'select', options:[
+            { value:'showreel', label:'Open Showreel video' },
+            { value:'demos',    label:'Scroll to Video Demos' },
+            { value:'about',    label:'Scroll to About' },
+            { value:'focus',    label:'Scroll to Focus Areas' },
+            { value:'projects', label:'Scroll to Projects' },
+            { value:'careers',  label:'Scroll to Careers' },
+            { value:'contact',  label:'Scroll to Contact' },
+            { value:'url',      label:'Custom URL (see below)' }
+        ]},
+        { key:'url',    label:'Custom URL (only when Action = Custom URL)', type:'text' }
       ])}
       ${card('Hero Background Video', 'Muted looping video behind the hero copy.', [
         mediaFieldHTML({ label:'Background Video', kind:'video', path:'hero.heroVideo', value: h.heroVideo })
@@ -570,14 +613,17 @@ input,textarea,select{outline:none}
   }
 
   function renderStats() {
-    return listCard('Stats Row', 'Three highlight numbers shown under the hero.', 'stats', content.stats, [
-      { key:'value', label:'Value', type:'text' },
-      { key:'label', label:'Label', type:'text' }
-    ]);
+    return `
+      ${toggleRow('Show Stats Bar', 'visibility.stats', content.visibility?.stats !== false, 'The 3-stat row that floats under the hero.')}
+      ${listCard('Stats Row', 'Three highlight numbers shown under the hero.', 'stats', content.stats, [
+        { key:'value', label:'Value', type:'text' },
+        { key:'label', label:'Label', type:'text' }
+      ])}`;
   }
 
   function renderPartners() {
     return `
+      ${toggleRow('Show Partners Section', 'visibility.partners', content.visibility?.partners !== false, 'The two scrolling partner logo rows.')}
       ${card('Section Title', 'Small heading above the logo marquee.', [
         field('Section Title', 'text', 'partners.title', content.partners.title)
       ])}
@@ -596,6 +642,7 @@ input,textarea,select{outline:none}
   function renderDemos() {
     const d = content.demos;
     return `
+      ${toggleRow('Show Video Demos', 'visibility.demos', content.visibility?.demos !== false, 'Grid of demo video cards with modal player.')}
       ${card('Section Header', 'Section title block above the demo grid.', [
         field('Eyebrow', 'text', 'demos.eyebrow', d.eyebrow),
         field('Title', 'textarea', 'demos.title', d.title),
@@ -614,6 +661,7 @@ input,textarea,select{outline:none}
   function renderAbout() {
     const a = content.about;
     return `
+      ${toggleRow('Show About Section', 'visibility.about', content.visibility?.about !== false, 'Company story + vision card.')}
       ${card('About Copy', 'Company story and vision.', [
         field('Heading', 'text', 'about.heading', a.heading),
         field('Lead Paragraph', 'textarea', 'about.lead', a.lead),
@@ -628,6 +676,7 @@ input,textarea,select{outline:none}
   function renderFocus() {
     const f = content.focus;
     return `
+      ${toggleRow('Show Focus Areas', 'visibility.focus', content.visibility?.focus !== false, 'Grid of focus area cards.')}
       ${card('Section Header', '', [
         field('Title', 'text', 'focus.title', f.title),
         field('Subtitle', 'text', 'focus.subtitle', f.subtitle)
@@ -640,15 +689,18 @@ input,textarea,select{outline:none}
   }
 
   function renderProjects() {
-    return card('Projects Section', 'Currently a "Coming Soon" block.', [
-      field('Big Heading', 'text', 'projects.title', content.projects.title),
-      field('Supporting Text', 'textarea', 'projects.text', content.projects.text)
-    ]);
+    return `
+      ${toggleRow('Show Projects Section', 'visibility.projects', content.visibility?.projects !== false, 'The "Coming Soon" block.')}
+      ${card('Projects Section', 'Currently a "Coming Soon" block.', [
+        field('Big Heading', 'text', 'projects.title', content.projects.title),
+        field('Supporting Text', 'textarea', 'projects.text', content.projects.text)
+      ])}`;
   }
 
   function renderCareers() {
     const c = content.careers;
     return `
+      ${toggleRow('Show Careers Section', 'visibility.careers', content.visibility?.careers !== false, 'Open roles with Apply buttons.')}
       ${card('Section Header', '', [
         field('Heading', 'text', 'careers.heading', c.heading),
         field('Intro Paragraph', 'textarea', 'careers.intro', c.intro)
@@ -668,6 +720,7 @@ input,textarea,select{outline:none}
   function renderContact() {
     const c = content.contact;
     return `
+      ${toggleRow('Show Contact Section', 'visibility.contact', content.visibility?.contact !== false, 'Contact card with phones, email and address.')}
       ${card('Contact Card', 'Shown in the contact section and footer.', [
         field('Company Name', 'text', 'contact.company', c.company),
         field('Location Line', 'text', 'contact.location', c.location),
@@ -682,6 +735,7 @@ input,textarea,select{outline:none}
   function renderFooter() {
     const f = content.footer;
     return `
+      ${toggleRow('Show Footer', 'visibility.footer', content.visibility?.footer !== false, 'Tagline, links and copyright at the bottom of every page.')}
       ${card('Footer Text', 'Tagline and copyright line at the bottom.', [
         field('Tagline', 'textarea', 'footer.tagline', f.tagline),
         field('Copyright', 'text', 'footer.copyright', f.copyright)
@@ -742,7 +796,7 @@ input,textarea,select{outline:none}
                ]);
         break;
       case 'marquee':
-        body = listCard('Items', 'Scrolls horizontally.', path+'.items', (sec.items || []).map(v => ({ value:v })), [
+        body = listCard('Items', 'Scrolls horizontally.', path+'.items', (sec.items || []).map(v => ({ value: typeof v === 'object' ? v.value : v })), [
           { key:'value', label:'Text', type:'text' }
         ]);
         break;
@@ -831,6 +885,21 @@ input,textarea,select{outline:none}
   }
   function fieldRow(a, b){ return `<div class="field-row">${a}${b}</div>`; }
 
+  function toggleRow(label, path, value, hint){
+    const checked = value ? 'checked' : '';
+    return `<div class="toggle-row">
+      <div>
+        <div class="toggle-row__label">${label}</div>
+        ${hint ? `<div class="toggle-row__hint">${hint}</div>` : ''}
+      </div>
+      <label class="toggle">
+        <input type="checkbox" data-toggle-path="${path}" ${checked}>
+        <span class="toggle__slider"></span>
+        <span class="toggle__knob"></span>
+      </label>
+    </div>`;
+  }
+
   function field(label, type, path, value, mediaType, options) {
     const v = esc(value);
     if (type === 'textarea') return `<div class="field"><label class="field__label">${label}</label><textarea class="field__textarea" data-path="${path}">${v}</textarea></div>`;
@@ -894,6 +963,7 @@ input,textarea,select{outline:none}
           if (f.type === 'textarea') return `<div class="field"><label class="field__label">${f.label}</label><textarea class="field__textarea" data-list-path="${path}" data-list-index="${i}" data-list-key="${f.key}">${esc(val)}</textarea></div>`;
           if (f.type === 'media')    return mediaFieldHTML({ label: f.label, kind: f.mediaType || 'image', listPath: path, listIndex: i, listKey: f.key, value: val });
           if (f.type === 'icon')     return iconFieldInline(f.label, path, i, f.key, val);
+          if (f.type === 'select' && f.options) return `<div class="field"><label class="field__label">${f.label}</label><select class="field__select" data-list-path="${path}" data-list-index="${i}" data-list-key="${f.key}">${f.options.map(o => `<option value="${o.value}" ${String(val) === String(o.value) ? 'selected' : ''}>${o.label}</option>`).join('')}</select></div>`;
           return `<div class="field"><label class="field__label">${f.label}</label><input class="field__input" data-list-path="${path}" data-list-index="${i}" data-list-key="${f.key}" value="${esc(val)}"></div>`;
         }).join('')}
       </div>`;
@@ -934,10 +1004,17 @@ input,textarea,select{outline:none}
     area.querySelectorAll('[data-typo-preset]').forEach(btn => btn.addEventListener('click', () => applyTypoPreset(btn.dataset.typoPreset)));
     area.querySelectorAll('[data-spacing-preset]').forEach(btn => btn.addEventListener('click', () => applySpacingPreset(btn.dataset.spacingPreset)));
 
+    // Visibility toggles
+    area.querySelectorAll('[data-toggle-path]').forEach(el => {
+      el.addEventListener('change', () => {
+        setByPath(content, el.dataset.togglePath, el.checked);
+        scheduleSave();
+      });
+    });
+
     // Icon quick-pickers — plain fields
     area.querySelectorAll('[data-icon-suggest]').forEach(btn => btn.addEventListener('click', () => {
-      const path = btn.dataset.iconTarget;
-      setByPath(content, path, btn.dataset.iconSuggest);
+      setByPath(content, btn.dataset.iconTarget, btn.dataset.iconSuggest);
       scheduleSave();
       renderSection(currentSection);
     }));
@@ -990,7 +1067,7 @@ input,textarea,select{outline:none}
     if (arr.length > 0 && typeof arr[0] === 'object' && arr[0] !== null) {
       for (const k of Object.keys(arr[0])) {
         const v = arr[0][k];
-        newItem[k] = typeof v === 'string' ? '' : (typeof v === 'number' ? 0 : (Array.isArray(v) ? [] : {}));
+        newItem[k] = typeof v === 'string' ? '' : (typeof v === 'number' ? 0 : (typeof v === 'boolean' ? false : (Array.isArray(v) ? [] : {})));
       }
     } else newItem = { value: '' };
     arr.push(newItem);
@@ -1076,7 +1153,6 @@ input,textarea,select{outline:none}
       const err = await putRes.json().catch(() => ({}));
       throw new Error(err.message || 'Upload failed (' + putRes.status + ')');
     }
-    // Return the raw URL that will work with <img>/<video> on the site
     return `https://raw.githubusercontent.com/${repo}/${branch}/${targetPath}`;
   }
 
@@ -1158,7 +1234,7 @@ input,textarea,select{outline:none}
     document.getElementById('btnPreview').addEventListener('click', () => {
       localStorage.setItem(LS_KEY, JSON.stringify(content));
       toast('Saved locally. Opening preview...', 'info');
-      window.open('../index.html?preview=1', '_blank');
+      window.open('index.html?preview=1', '_blank');
     });
     document.getElementById('btnReset').addEventListener('click', () => {
       confirmAction('Discard all local changes?', 'This will delete everything you have edited but not yet published.', () => {
